@@ -378,12 +378,6 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
             }
 
             @Override
-            public void onDate()
-            {
-                resolverReference.set(parseDate(element, fieldName, dataType, defaultValue));
-            }
-
-            @Override
             public void onDateTime()
             {
                 if (Calendar.class.isAssignableFrom(dataType.getRawType()))
@@ -392,7 +386,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
                 }
                 else
                 {
-                    onDate();
+                    resolverReference.set(parseDate(element, fieldName, dataType, defaultValue));
                 }
             }
         };

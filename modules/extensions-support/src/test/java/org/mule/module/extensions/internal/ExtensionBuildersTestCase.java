@@ -15,15 +15,15 @@ import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
 import static org.mule.extensions.introspection.DataQualifier.LIST;
 import static org.mule.extensions.introspection.DataQualifier.STRING;
 import static org.mule.module.extensions.internal.introspection.ImmutableDataType.of;
+import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.Configuration;
-import org.mule.extensions.introspection.Operation;
-import org.mule.extensions.introspection.Parameter;
 import org.mule.extensions.introspection.NoSuchConfigurationException;
 import org.mule.extensions.introspection.NoSuchOperationException;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.tck.junit4.AbstractMuleTestCase;
@@ -114,8 +114,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
                 .addOperation(builder.newOperation()
                                       .setName(CONSUMER)
                                       .setDescription(GO_GET_THEM_TIGER)
-                                      .addInputType(of(String.class))
-                                      .setOutputType(of(String.class))
                                       .setDeclaringClass(DECLARING_CLASS)
                                       .addParameter(builder.newParameter()
                                                             .setName(OPERATION)
@@ -133,8 +131,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
                 ).addOperation(builder.newOperation()
                                        .setName(BROADCAST)
                                        .setDescription(BROADCAST_DESCRIPTION)
-                                       .addInputType(of(String.class))
-                                       .setOutputType(of(List.class, String.class))
                                        .setDeclaringClass(DECLARING_CLASS)
                                        .addParameter(builder.newParameter()
                                                              .setName(OPERATION)
@@ -237,45 +233,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         assertBroadcastOperation(operations);
     }
 
-    @Test
-    public void defaultOperationInputType() throws Exception
-    {
-        final String operationName = "operation";
-        extension = builder.addOperation(builder.newOperation()
-                                                 .setName(operationName)
-                                                 .setDeclaringClass(DECLARING_CLASS)
-                                                 .setDescription("description")
-                                                 .setOutputType(of(String.class)))
-                .build();
-
-        List<DataType> inputTypes = extension.getOperation(operationName).getInputTypes();
-        assertEquals(1, inputTypes.size());
-
-        DataType type = inputTypes.get(0);
-        assertEquals(Object.class, type.getRawType());
-        assertTrue(Arrays.equals(new Class<?>[] {}, type.getGenericTypes()));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void operationWithoutOutputType() throws Exception
-    {
-        builder.addOperation(builder.newOperation()
-                                     .setName("operation")
-                                     .setDescription("description")
-                                     .setDeclaringClass(DECLARING_CLASS)
-        ).build();
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void operationWithoutDeclaringClass() throws Exception
-    {
-        builder.addOperation(builder.newOperation()
-                                     .setName("operation")
-                                     .setDescription("description")
-                                     .setOutputType(STRING_DATA_TYPE)
-        ).build();
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void badExtensionVersion()
     {
@@ -319,9 +276,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     {
         builder.addOperation(builder.newOperation()
                                      .setName(CONFIG_NAME)
-                                     .setDescription("")
-                                     .addInputType(STRING_DATA_TYPE)
-                                     .setOutputType(STRING_DATA_TYPE))
+                                     .setDescription(""))
                 .build();
     }
 
@@ -331,8 +286,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         builder.addOperation(builder.newOperation()
                                      .setName("invalidOperation")
                                      .setDescription("")
-                                     .addInputType(STRING_DATA_TYPE)
-                                     .setOutputType(STRING_DATA_TYPE)
                                      .addParameter(builder.newParameter()
                                                            .setName("name")
                                                            .setType(STRING_DATA_TYPE)))
@@ -378,8 +331,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
 
         assertEquals(CONSUMER, operation.getName());
         assertEquals(GO_GET_THEM_TIGER, operation.getDescription());
-        strictTypeAssert(operation.getInputTypes(), String.class);
-        strictTypeAssert(operation.getOutputType(), String.class);
 
         List<Parameter> parameters = operation.getParameters();
         assertEquals(2, parameters.size());
@@ -394,8 +345,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
 
         assertEquals(BROADCAST, operation.getName());
         assertEquals(BROADCAST_DESCRIPTION, operation.getDescription());
-        strictTypeAssert(operation.getInputTypes(), String.class);
-        strictTypeAssert(operation.getOutputType(), List.class, new Class[] {String.class});
 
         List<Parameter> parameters = operation.getParameters();
         assertEquals(3, parameters.size());

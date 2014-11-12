@@ -14,14 +14,9 @@ import org.mule.tck.size.SmallTest;
 import org.mule.tck.testmodels.fruit.Apple;
 import org.mule.tck.testmodels.fruit.Banana;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +29,6 @@ import org.junit.Test;
 @SmallTest
 public class DataQualifierFactoryTestCase extends AbstractMuleTestCase
 {
-
-    @Test
-    public void voidQualifier()
-    {
-        doAssert(DataQualifier.VOID, void.class, Void.class);
-    }
 
     @Test
     public void bool()
@@ -84,21 +73,9 @@ public class DataQualifierFactoryTestCase extends AbstractMuleTestCase
     }
 
     @Test
-    public void date()
-    {
-        doAssert(DataQualifier.DATE, Date.class, java.sql.Date.class);
-    }
-
-    @Test
     public void dateTime()
     {
         doAssert(DataQualifier.DATE_TIME, java.sql.Time.class, java.sql.Timestamp.class, Calendar.class, XMLGregorianCalendar.class);
-    }
-
-    @Test
-    public void stream()
-    {
-        doAssert(DataQualifier.STREAM, InputStream.class, OutputStream.class, Reader.class, Writer.class);
     }
 
     @Test

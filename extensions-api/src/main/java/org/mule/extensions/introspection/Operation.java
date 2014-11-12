@@ -25,28 +25,5 @@ public interface Operation extends Described
      */
     List<Parameter> getParameters();
 
-    /**
-     * Returns the data types that are considered valid as input
-     * for this operation. Notice that what this operation considers as input
-     * is the payload of the current message. This does not refer to the parameters
-     * returned by {@link #getParameters()}
-     * <p/>
-     * This list will not be {@code null} and will have at least one element.
-     * If the operation can take any type or simply does not care about the payload because
-     * it works solely on the parameters, then it must contain
-     * at least the {@link java.lang.Class} corresponding to the {@link java.lang.Object} type
-     *
-     * @return an immutable {@link java.util.List} containing instances of {@link DataType}.
-     */
-    List<DataType> getInputTypes();
-
-    /**
-     * Returns the possible output types for this operation.
-     * This list will not be {@code null} and will have at least one element
-     *
-     * @return a {@link DataType}
-     */
-    DataType getOutputType();
-
     Class<?> getDeclaringClass();
 }

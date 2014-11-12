@@ -20,7 +20,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mule.extensions.annotation.Extension.DEFAULT_CONFIG_NAME;
 import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
-import static org.mule.extensions.introspection.DataQualifier.DATE;
 import static org.mule.extensions.introspection.DataQualifier.DATE_TIME;
 import static org.mule.extensions.introspection.DataQualifier.DECIMAL;
 import static org.mule.extensions.introspection.DataQualifier.ENUM;
@@ -42,11 +41,11 @@ import org.mule.config.ServiceRegistry;
 import org.mule.extensions.annotation.Configurable;
 import org.mule.extensions.annotation.Configurations;
 import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.ExtensionDescriber;
 import org.mule.extensions.introspection.ExtensionDescribingContext;
 import org.mule.extensions.introspection.Operation;
@@ -200,7 +199,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         assertParameter(parameters.get(3), "money", "", BigDecimal.class, DECIMAL, true, true, null);
         assertParameter(parameters.get(4), "cancer", "", boolean.class, BOOLEAN, true, true, null);
         assertParameter(parameters.get(4), "cancer", "", boolean.class, BOOLEAN, true, true, null);
-        assertParameter(parameters.get(5), "dateOfBirth", "", Date.class, DATE, true, true, null);
+        assertParameter(parameters.get(5), "dateOfBirth", "", Date.class, DATE_TIME, true, true, null);
         assertParameter(parameters.get(6), "dateOfDeath", "", Calendar.class, DATE_TIME, true, true, null);
         assertParameter(parameters.get(7), "recipe", "", Map.class, MAP, false, true, null);
         assertParameter(parameters.get(8), "ricinPacks", "", Set.class, LIST, false, true, null);
@@ -223,12 +222,12 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
     private void assertTestModuleOperations(Extension extension) throws Exception
     {
         assertEquals(6, extension.getOperations().size());
-        assertOperation(extension, SAY_MY_NAME_OPERATION, "", new Class<?>[] {Object.class}, String.class);
-        assertOperation(extension, GET_ENEMY_OPERATION, "", new Class<?>[] {Object.class}, String.class);
-        assertOperation(extension, KILL_OPERATION, "", new Class<?>[] {Object.class}, String.class);
-        assertOperation(extension, KILL_CUSTOM_OPERATION, "", new Class<?>[] {Object.class}, String.class);
-        assertOperation(extension, HIDE_METH_IN_EVENT_OPERATION, "", new Class<?>[] {Object.class}, void.class);
-        assertOperation(extension, HIDE_METH_IN_MESSAGE_OPERATION, "", new Class<?>[] {Object.class}, void.class);
+        assertOperation(extension, SAY_MY_NAME_OPERATION, "");
+        assertOperation(extension, GET_ENEMY_OPERATION, "");
+        assertOperation(extension, KILL_OPERATION, "");
+        assertOperation(extension, KILL_CUSTOM_OPERATION, "");
+        assertOperation(extension, HIDE_METH_IN_EVENT_OPERATION, "");
+        assertOperation(extension, HIDE_METH_IN_MESSAGE_OPERATION, "");
 
         Operation operation = extension.getOperation(SAY_MY_NAME_OPERATION);
         assertNotNull(operation);
@@ -261,17 +260,13 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
 
     private void assertOperation(Extension extension,
                                  String operationName,
-                                 String operationDescription,
-                                 Class<?>[] inputTypes,
-                                 Class<?> outputType) throws Exception
+                                 String operationDescription) throws Exception
     {
 
         Operation operation = extension.getOperation(operationName);
 
         assertEquals(operationName, operation.getName());
         assertEquals(operationDescription, operation.getDescription());
-        match(operation.getInputTypes(), inputTypes);
-        assertEquals(outputType, operation.getOutputType().getRawType());
     }
 
     private void assertParameter(Parameter param,

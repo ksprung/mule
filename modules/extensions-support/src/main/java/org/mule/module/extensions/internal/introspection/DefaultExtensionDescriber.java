@@ -167,10 +167,8 @@ public final class DefaultExtensionDescriber implements ExtensionDescriber
 
             operation
                     .setName(resolveOperationName(method, annotation))
-                    .setDeclaringClass(declaringClass)
-                    .setOutputType(IntrospectionUtils.getMethodReturnType(method));
+                    .setDeclaringClass(declaringClass);
 
-            resolveOperationInputTypes(annotation, operation);
             parseOperationParameters(method, builder, operation);
 
             builder.addOperation(operation);
@@ -199,18 +197,6 @@ public final class DefaultExtensionDescriber implements ExtensionDescriber
     private String resolveOperationName(Method method, Operation operation)
     {
         return StringUtils.isBlank(operation.name()) ? method.getName() : operation.name();
-    }
-
-    private void resolveOperationInputTypes(Operation operation, ExtensionOperationBuilder builder)
-    {
-        Class<?>[] acceptedTypes = operation.acceptedPayloadTypes();
-        if (acceptedTypes != null)
-        {
-            for (Class<?> type : acceptedTypes)
-            {
-                builder.addInputType(IntrospectionUtils.getClassDataType(type));
-            }
-        }
     }
 
     private void applyPostProcessors(ExtensionDescribingContext context)

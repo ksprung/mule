@@ -9,28 +9,11 @@ package org.mule.extensions.introspection;
 /**
  * Provides a high level definition about the &quot;family&quot;
  * a given {@link DataType}
- * belongs to. For example, the {@link #STREAM} qualifier denotes a
- * type used for streaming, no matter if it's an {@link java.io.InputStream},
- * a {@link java.io.Reader} or whatever type used for that purpose.
- * At the same time, a {@link #DECIMAL} referes to a floating point numeric type and
- * a {@link #POJO} refers to a pojo implementing the bean contract
  *
  * @since 1.0
  */
 public enum DataQualifier
 {
-
-    /**
-     * A void type. Means no value
-     */
-    VOID
-            {
-                @Override
-                public void accept(DataQualifierVisitor visitor)
-                {
-                    visitor.onVoid();
-                }
-            },
 
     /**
      * A boolean type.
@@ -92,17 +75,6 @@ public enum DataQualifier
                 }
             },
 
-    /**
-     * A short number
-     */
-    SHORT
-            {
-                @Override
-                public void accept(DataQualifierVisitor visitor)
-                {
-                    visitor.onShort();
-                }
-            },
 
     /**
      * A long integer
@@ -128,17 +100,6 @@ public enum DataQualifier
                 }
             },
 
-    /**
-     * A streaming, consumible type
-     */
-    STREAM
-            {
-                @Override
-                public void accept(DataQualifierVisitor visitor)
-                {
-                    visitor.onStream();
-                }
-            },
 
     /**
      * An {@link java.lang.Enum} type
@@ -149,18 +110,6 @@ public enum DataQualifier
                 public void accept(DataQualifierVisitor visitor)
                 {
                     visitor.onEnum();
-                }
-            },
-
-    /**
-     * A date type
-     */
-    DATE
-            {
-                @Override
-                public void accept(DataQualifierVisitor visitor)
-                {
-                    visitor.onDate();
                 }
             },
 

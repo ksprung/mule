@@ -20,11 +20,6 @@ public interface DataQualifierVisitor
 {
 
     /**
-     * Invoked when visiting {@link DataQualifier#VOID}
-     */
-    void onVoid();
-
-    /**
      * Invoked when visiting {@link DataQualifier#BOOLEAN}
      */
     void onBoolean();
@@ -50,11 +45,6 @@ public interface DataQualifierVisitor
     void onString();
 
     /**
-     * Invoked when visiting {@link DataQualifier#SHORT}
-     */
-    void onShort();
-
-    /**
      * Invoked when visiting {@link DataQualifier#LONG}
      */
     void onLong();
@@ -65,19 +55,9 @@ public interface DataQualifierVisitor
     void onByte();
 
     /**
-     * Invoked when visiting {@link DataQualifier#STREAM}
-     */
-    void onStream();
-
-    /**
      * Invoked when visiting {@link DataQualifier#ENUM}
      */
     void onEnum();
-
-    /**
-     * Invoked when visiting {@link DataQualifier#DATE}
-     */
-    void onDate();
 
     /**
      * Invoked when visiting {@link DataQualifier#DATE_TIME}

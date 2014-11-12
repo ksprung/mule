@@ -34,7 +34,6 @@ public class SimpleTypeDataQualifierVisitorTestCase extends AbstractMuleTestCase
             DataQualifier.DOUBLE,
             DataQualifier.DECIMAL,
             DataQualifier.STRING,
-            DataQualifier.SHORT,
             DataQualifier.LONG,
             DataQualifier.BYTE,
             DataQualifier.ENUM};

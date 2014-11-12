@@ -10,10 +10,6 @@ import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.Operation;
 import org.mule.util.Preconditions;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
@@ -114,9 +110,6 @@ final class DataQualifierFactory
         }
     }
 
-    private static final DataTypeQualifierEvaluator VOID_EVALUATOR = new DefaultQualifierEvaluator(
-            new Class[] {void.class, Void.class}, DataQualifier.VOID);
-
     private static final DataTypeQualifierEvaluator BOOLEAN_EVALUATOR = new DefaultQualifierEvaluator(
             new Class[] {boolean.class, Boolean.class}, DataQualifier.BOOLEAN);
 
@@ -139,14 +132,8 @@ final class DataQualifierFactory
             new Class[] {byte.class, Byte.class}, DataQualifier.BYTE);
 
     private static final DataTypeQualifierEvaluator DATE_TIME_EVALUATOR = new DefaultQualifierEvaluator(
-            new Class[] {Calendar.class, XMLGregorianCalendar.class, java.sql.Time.class,
+            new Class[] {Date.class, java.sql.Date.class, Calendar.class, XMLGregorianCalendar.class, java.sql.Time.class,
                     java.sql.Timestamp.class}, DataQualifier.DATE_TIME);
-
-    private static final DataTypeQualifierEvaluator DATE_EVALUATOR = new DefaultQualifierEvaluator(
-            new Class[] {Date.class, java.sql.Date.class}, DataQualifier.DATE);
-
-    private static final DataTypeQualifierEvaluator STREAM_EVALUATOR = new DefaultQualifierEvaluator(
-            new Class[] {InputStream.class, OutputStream.class, Reader.class, Writer.class}, DataQualifier.STREAM);
 
     private static final DataTypeQualifierEvaluator ENUM_EVALUATOR = new EnumDataTypeQualifierEvaluator();
 
@@ -162,7 +149,6 @@ final class DataQualifierFactory
     private static final DataTypeQualifierEvaluator POJO_EVALUATOR = new PojoTypeQualifierEvaluator();
 
     private static final DataTypeQualifierEvaluator[] evaluators = new DataTypeQualifierEvaluator[] {
-            VOID_EVALUATOR,
             BOOLEAN_EVALUATOR,
             STRING_EVALUATOR,
             INTEGER_EVALUATOR,
@@ -171,8 +157,6 @@ final class DataQualifierFactory
             DECIMAL_EVALUATOR,
             BYTE_EVALUATOR,
             DATE_TIME_EVALUATOR,
-            DATE_EVALUATOR,
-            STREAM_EVALUATOR,
             ENUM_EVALUATOR,
             LIST_EVALUATOR,
             MAP_EVALUATOR,

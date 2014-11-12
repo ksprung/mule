@@ -15,10 +15,6 @@ public interface ExtensionOperationBuilder extends Builder<Operation>
 
     ExtensionOperationBuilder setDeclaringClass(Class<?> declaringClass);
 
-    ExtensionOperationBuilder addInputType(DataType... type);
-
-    ExtensionOperationBuilder setOutputType(DataType type);
-
     ExtensionOperationBuilder addParameter(ExtensionParameterBuilder parameter);
 
 }

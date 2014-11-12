@@ -22,12 +22,6 @@ public class BaseDataQualifierVisitor implements DataQualifierVisitor
 {
 
     @Override
-    public void onVoid()
-    {
-        defaultOperation();
-    }
-
-    @Override
     public void onBoolean()
     {
         defaultOperation();
@@ -58,12 +52,6 @@ public class BaseDataQualifierVisitor implements DataQualifierVisitor
     }
 
     @Override
-    public void onShort()
-    {
-        defaultOperation();
-    }
-
-    @Override
     public void onLong()
     {
         defaultOperation();
@@ -76,19 +64,7 @@ public class BaseDataQualifierVisitor implements DataQualifierVisitor
     }
 
     @Override
-    public void onStream()
-    {
-        defaultOperation();
-    }
-
-    @Override
     public void onEnum()
-    {
-        defaultOperation();
-    }
-
-    @Override
-    public void onDate()
     {
         defaultOperation();
     }

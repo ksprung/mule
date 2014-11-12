@@ -6,7 +6,6 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.ExtensionOperationBuilder;
 import org.mule.extensions.introspection.ExtensionParameterBuilder;
 
@@ -20,10 +19,6 @@ public interface NavigableExtensionOperationBuilder extends ExtensionOperationBu
     String getDescription();
 
     Class<?> getDeclaringClass();
-
-    List<DataType> getInputDataTypes();
-
-    DataType getOutputDataType();
 
     List<ExtensionParameterBuilder> getParameters();
 }

@@ -6,15 +6,13 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.DataType;
-import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.ExtensionOperationBuilder;
 import org.mule.extensions.introspection.ExtensionParameterBuilder;
+import org.mule.extensions.introspection.Operation;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +24,6 @@ final class DefaultExtensionOperationBuilder implements NavigableExtensionOperat
     private String name;
     private String description = StringUtils.EMPTY;
     private Class<?> declaringClass;
-    private List<DataType> inputTypes = new LinkedList<>();
-    private DataType outputType = null;
     private List<ExtensionParameterBuilder> parameters = new LinkedList<>();
 
     DefaultExtensionOperationBuilder()
@@ -76,35 +72,6 @@ final class DefaultExtensionOperationBuilder implements NavigableExtensionOperat
      * {@inheritDoc}
      */
     @Override
-    public ExtensionOperationBuilder addInputType(DataType... type)
-    {
-        inputTypes.addAll(Arrays.asList(type));
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<DataType> getInputDataTypes()
-    {
-        return ImmutableList.copyOf(inputTypes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ExtensionOperationBuilder setOutputType(DataType type)
-    {
-        outputType = type;
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Class<?> getDeclaringClass()
     {
         return declaringClass;
@@ -115,15 +82,6 @@ final class DefaultExtensionOperationBuilder implements NavigableExtensionOperat
     {
         this.declaringClass = declaringClass;
         return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public DataType getOutputDataType()
-    {
-        return outputType;
     }
 
     /**
@@ -151,16 +109,9 @@ final class DefaultExtensionOperationBuilder implements NavigableExtensionOperat
     @Override
     public Operation build()
     {
-        if (inputTypes.isEmpty())
-        {
-            inputTypes.add(ImmutableDataType.of(Object.class));
-        }
-
         return new ImmutableOperation(name,
-                                               description,
-                                               declaringClass,
-                                               inputTypes,
-                                               outputType,
-                                               MuleExtensionUtils.build(parameters));
+                                      description,
+                                      declaringClass,
+                                      MuleExtensionUtils.build(parameters));
     }
 }
