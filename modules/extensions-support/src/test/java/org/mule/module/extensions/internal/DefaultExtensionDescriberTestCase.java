@@ -18,18 +18,18 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mule.extensions.api.annotation.Extension.DEFAULT_CONFIG_NAME;
-import static org.mule.extensions.introspection.api.DataQualifier.BOOLEAN;
-import static org.mule.extensions.introspection.api.DataQualifier.DATE;
-import static org.mule.extensions.introspection.api.DataQualifier.DATE_TIME;
-import static org.mule.extensions.introspection.api.DataQualifier.DECIMAL;
-import static org.mule.extensions.introspection.api.DataQualifier.ENUM;
-import static org.mule.extensions.introspection.api.DataQualifier.INTEGER;
-import static org.mule.extensions.introspection.api.DataQualifier.LIST;
-import static org.mule.extensions.introspection.api.DataQualifier.MAP;
-import static org.mule.extensions.introspection.api.DataQualifier.OPERATION;
-import static org.mule.extensions.introspection.api.DataQualifier.POJO;
-import static org.mule.extensions.introspection.api.DataQualifier.STRING;
+import static org.mule.extensions.annotation.Extension.DEFAULT_CONFIG_NAME;
+import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
+import static org.mule.extensions.introspection.DataQualifier.DATE;
+import static org.mule.extensions.introspection.DataQualifier.DATE_TIME;
+import static org.mule.extensions.introspection.DataQualifier.DECIMAL;
+import static org.mule.extensions.introspection.DataQualifier.ENUM;
+import static org.mule.extensions.introspection.DataQualifier.INTEGER;
+import static org.mule.extensions.introspection.DataQualifier.LIST;
+import static org.mule.extensions.introspection.DataQualifier.MAP;
+import static org.mule.extensions.introspection.DataQualifier.OPERATION;
+import static org.mule.extensions.introspection.DataQualifier.POJO;
+import static org.mule.extensions.introspection.DataQualifier.STRING;
 import static org.mule.module.extensions.HeisenbergExtension.AGE;
 import static org.mule.module.extensions.HeisenbergExtension.EXTENSION_DESCRIPTION;
 import static org.mule.module.extensions.HeisenbergExtension.EXTENSION_NAME;
@@ -38,19 +38,19 @@ import static org.mule.module.extensions.HeisenbergExtension.HEISENBERG;
 import static org.mule.module.extensions.HeisenbergExtension.NAMESPACE;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_LOCATION;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
-import org.mule.api.config.ServiceRegistry;
-import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.Configurations;
-import org.mule.extensions.api.annotation.capability.Xml;
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.ExtensionDescriber;
-import org.mule.extensions.introspection.api.ExtensionDescribingContext;
-import org.mule.extensions.introspection.api.Operation;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.config.ServiceRegistry;
+import org.mule.extensions.annotation.Configurable;
+import org.mule.extensions.annotation.Configurations;
+import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.ExtensionDescriber;
+import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
 import org.mule.module.extensions.Door;
 import org.mule.module.extensions.HealthStatus;
@@ -308,14 +308,14 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         }
     }
 
-    @org.mule.extensions.api.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations(HeisenbergExtension.class)
     public static class HeisenbergPointer extends HeisenbergExtension
     {
     }
 
-    @org.mule.extensions.api.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations({HeisenbergExtension.class, NamedHeisenbergAlternateConfig.class})
     public static class HeisengergPointerPlusExternalConfig
@@ -323,7 +323,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @org.mule.extensions.api.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations({HeisenbergExtension.class, HeisenbergAlternateConfig.class})
     public static class HeisengergPointerPlusUnnamedExternalConfig
@@ -331,7 +331,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @org.mule.extensions.api.annotation.Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
+    @org.mule.extensions.annotation.Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
     public static class NamedHeisenbergAlternateConfig extends HeisenbergAlternateConfig
     {
 

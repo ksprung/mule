@@ -8,10 +8,10 @@ package org.mule.module.extensions.internal.config;
 
 import static org.mule.util.Preconditions.checkState;
 import org.mule.config.spring.MuleArtifactContext;
-import org.mule.extensions.api.ExtensionsManager;
-import org.mule.extensions.introspection.api.Described;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.ExtensionsManager;
+import org.mule.extensions.introspection.Described;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.util.ClassUtils;
 
 import java.util.Collection;
@@ -27,11 +27,11 @@ import org.w3c.dom.Element;
 
 /**
  * Generic implementation of {@link org.springframework.beans.factory.xml.NamespaceHandler}
- * capable of parsing configurations and operations for any given {@link org.mule.extensions.introspection.api.Extension}
+ * capable of parsing configurations and operations for any given {@link Extension}
  * which supports the given namespace.
  * <p/>
- * For this namespace handler to function, an instance of {@link org.mule.extensions.api.ExtensionsManager}
- * has to be accessible and the {@link org.mule.extensions.api.ExtensionsManager#discoverExtensions(ClassLoader)}
+ * For this namespace handler to function, an instance of {@link ExtensionsManager}
+ * has to be accessible and the {@link ExtensionsManager#discoverExtensions(ClassLoader)}
  * needs to have successfully discovered and register extensions.
  *
  * @since 3.7.0
@@ -43,7 +43,7 @@ public class ExtensionsNamespaceHandler extends NamespaceHandlerSupport
     private Map<String, Extension> handledExtensions = new HashMap<>();
 
     /**
-     * Attempts to get a hold on a {@link org.mule.extensions.api.ExtensionsManager}
+     * Attempts to get a hold on a {@link ExtensionsManager}
      * instance
      *
      * @throws java.lang.IllegalStateException if no extension manager could be found

@@ -6,14 +6,14 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.Described;
+import org.mule.extensions.introspection.Described;
 import org.mule.util.Preconditions;
 
 import org.apache.commons.lang.StringUtils;
 
 /**
  * Abstract implementation to act as a convenience superclass for
- * implementations of {@link org.mule.extensions.introspection.api.Described}
+ * implementations of {@link Described}
  *
  * @since 3.7.0
  */

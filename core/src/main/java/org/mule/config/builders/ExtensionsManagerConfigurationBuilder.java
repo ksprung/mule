@@ -8,12 +8,12 @@ package org.mule.config.builders;
 
 import org.mule.DefaultMuleContext;
 import org.mule.api.MuleContext;
-import org.mule.extensions.api.ExtensionsManager;
+import org.mule.extensions.ExtensionsManager;
 import org.mule.util.ClassUtils;
 
 /**
  * Implementation of {@link org.mule.api.config.ConfigurationBuilder}
- * that register a {@link org.mule.extensions.api.ExtensionsManager} if
+ * that register a {@link ExtensionsManager} if
  * it's present in the classpath
  *
  * @since 3.7.0

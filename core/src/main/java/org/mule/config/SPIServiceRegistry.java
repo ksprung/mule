@@ -6,16 +6,14 @@
  */
 package org.mule.config;
 
-import org.mule.api.config.ServiceRegistry;
-
 import java.util.Iterator;
 
 /**
- * Implementation of {@link org.mule.api.config.ServiceRegistry}
+ * Implementation of {@link ServiceRegistry}
  * that uses standard {@link java.util.ServiceLoader} to get
  * the providers
  *
- * @since 3.6
+ * @since 3.7.0
  */
 public class SPIServiceRegistry implements ServiceRegistry
 {

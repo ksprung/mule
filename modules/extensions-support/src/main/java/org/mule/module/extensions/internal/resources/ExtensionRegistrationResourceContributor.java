@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.resources;
 
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.resources.api.ResourcesGenerator;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.extensions.resources.spi.GenerableResourceContributor;
 
 /**

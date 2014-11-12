@@ -7,8 +7,8 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Parameter;
 
 import com.google.common.collect.ImmutableSet;
 

@@ -6,14 +6,15 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionDescriber;
+import org.mule.extensions.ExtensionsManager;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionDescriber;
 
 import java.util.List;
 
 /**
  * A component capable of searching the classpath for extensions
- * according to the algorithm described in {@link org.mule.extensions.api.ExtensionsManager#discoverExtensions(ClassLoader)}
+ * according to the algorithm described in {@link ExtensionsManager#discoverExtensions(ClassLoader)}
  *
  * @since 3.7.0
  */
@@ -22,12 +23,12 @@ public interface ExtensionDiscoverer
 
     /**
      * Performs a search for extensions
-     * according to the algorithm described in {@link org.mule.extensions.api.ExtensionsManager#discoverExtensions(ClassLoader)}
+     * according to the algorithm described in {@link ExtensionsManager#discoverExtensions(ClassLoader)}
      *
      * @param classLoader the {@link java.lang.ClassLoader} in which path perform the search
-     * @param describer   a not {@code null} {@link org.mule.extensions.introspection.api.ExtensionDescriber} to introspect the
+     * @param describer   a not {@code null} {@link ExtensionDescriber} to introspect the
      *                    extension types
-     * @return a {@link java.util.List} of {@link org.mule.extensions.introspection.api.Extension}. Might be empty
+     * @return a {@link java.util.List} of {@link Extension}. Might be empty
      * but it will never be {@code null}
      */
     List<Extension> discover(ClassLoader classLoader, ExtensionDescriber describer);

@@ -18,7 +18,7 @@ import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.lifecycle.LifecycleUtils;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.runtime.DefaultObjectBuilder;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;

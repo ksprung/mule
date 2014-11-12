@@ -11,11 +11,11 @@ import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkN
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNullOrRepeatedNames;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.toMap;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.Operation;
-import org.mule.extensions.introspection.api.NoSuchConfigurationException;
-import org.mule.extensions.introspection.api.NoSuchOperationException;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.NoSuchConfigurationException;
+import org.mule.extensions.introspection.NoSuchOperationException;
 
 import com.google.common.collect.ImmutableList;
 
@@ -26,7 +26,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.Extension}
+ * Immutable implementation of {@link Extension}
  *
  * @since 3.7.0
  */

@@ -9,7 +9,8 @@ package org.mule.module.extensions.internal.resources;
 
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import org.mule.extensions.resources.api.GenerableResource;
+import org.mule.extensions.resources.GenerableResource;
+import org.mule.extensions.resources.ResourcesGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -18,7 +19,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 
 /**
- * Implementation of {@link org.mule.extensions.resources.api.ResourcesGenerator}
+ * Implementation of {@link ResourcesGenerator}
  * that writes files using a {@link javax.annotation.processing.Filer} obtained
  * through a annotation {@link javax.annotation.processing.Processor} context
  *

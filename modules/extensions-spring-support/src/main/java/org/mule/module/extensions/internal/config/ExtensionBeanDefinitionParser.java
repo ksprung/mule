@@ -10,9 +10,9 @@ import static org.mule.module.extensions.internal.util.MuleExtensionUtils.isExpr
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
-import org.mule.extensions.introspection.api.DataQualifierVisitor;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.DataQualifierVisitor;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.SchemaConstants;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
@@ -186,7 +186,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
      * @param element           the XML element which has the bean as a child
      * @param fieldName         the name of the field in which the parsed pojo is going to be assigned
      * @param parentElementName the name of the the bean's top level XML element
-     * @param pojoType          a {@link org.mule.extensions.introspection.api.DataType} describing the bean's type
+     * @param pojoType          a {@link DataType} describing the bean's type
      * @return a {@link org.springframework.beans.factory.config.BeanDefinition} if the bean could be parsed, {@code null}
      * if the bean is not present on the XML definition
      */

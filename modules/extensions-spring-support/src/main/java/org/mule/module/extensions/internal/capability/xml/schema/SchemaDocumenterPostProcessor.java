@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.capability.xml.schema;
 
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.ExtensionDescribingContext;
+import org.mule.extensions.introspection.ExtensionDescribingContext;
 import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 

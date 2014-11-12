@@ -6,7 +6,7 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataType;
+import org.mule.extensions.introspection.DataType;
 
 class ParameterDescriptor
 {

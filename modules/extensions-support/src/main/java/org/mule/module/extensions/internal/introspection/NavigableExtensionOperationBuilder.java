@@ -6,9 +6,9 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
-import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.ExtensionOperationBuilder;
+import org.mule.extensions.introspection.ExtensionParameterBuilder;
 
 import java.util.List;
 

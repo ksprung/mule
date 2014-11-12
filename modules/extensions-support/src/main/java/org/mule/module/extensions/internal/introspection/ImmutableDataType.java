@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.DataType;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.DataType;
 import org.mule.util.ArrayUtils;
 import org.mule.util.Preconditions;
 
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.DataType}
+ * Immutable implementation of {@link DataType}
  *
  * @since 3.7.0
  */
@@ -27,7 +27,7 @@ public final class ImmutableDataType implements DataType
     private final DataQualifier qualifier;
 
     /**
-     * Returns a new {@link org.mule.extensions.introspection.api.DataType} that
+     * Returns a new {@link DataType} that
      * represents the given type. The returned instance will return an empty array
      * when queried for {@link #getGenericTypes()}
      *
@@ -41,7 +41,7 @@ public final class ImmutableDataType implements DataType
     }
 
     /**
-     * Returns a new {@link org.mule.extensions.introspection.api.DataType} that
+     * Returns a new {@link DataType} that
      * represents the given type with the optional generic types.
      *
      * @param clazz        a not {@code null} {@link java.lang.Class}
@@ -69,12 +69,12 @@ public final class ImmutableDataType implements DataType
     }
 
     /**
-     * Returns a new {@link org.mule.extensions.introspection.api.DataType} that
-     * represents the given class and has the already provided {@link org.mule.extensions.introspection.api.DataType}s
+     * Returns a new {@link DataType} that
+     * represents the given class and has the already provided {@link DataType}s
      * as {@link #getGenericTypes()}
      *
      * @param clazz        a not {@code null} {@link java.lang.Class}
-     * @param genericTypes an optional array of {@link org.mule.extensions.introspection.api.DataType} types accessible through {@link #getGenericTypes()}
+     * @param genericTypes an optional array of {@link DataType} types accessible through {@link #getGenericTypes()}
      * @return a new {@link ImmutableDataType}
      * @throws java.lang.IllegalArgumentException if the argument is null
      */
@@ -152,7 +152,7 @@ public final class ImmutableDataType implements DataType
 
     /**
      * Defines equality by checking that the given object is a
-     * {@link org.mule.extensions.introspection.api.DataType} with matching
+     * {@link DataType} with matching
      * {@link #getRawType()} and {@link #getQualifier()}, which also
      * returns a {@link #getGenericTypes()} which every element (if any) also matches
      * the one in this instance

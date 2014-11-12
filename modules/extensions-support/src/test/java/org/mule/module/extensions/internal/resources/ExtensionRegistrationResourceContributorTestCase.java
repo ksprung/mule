@@ -10,8 +10,8 @@ import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.resources.api.ResourcesGenerator;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 

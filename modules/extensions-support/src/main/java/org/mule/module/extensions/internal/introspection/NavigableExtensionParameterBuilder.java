@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.ExtensionParameterBuilder;
 
 public interface NavigableExtensionParameterBuilder extends ExtensionParameterBuilder
 {

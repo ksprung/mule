@@ -8,13 +8,13 @@ package org.mule.module.extensions.internal.resources;
 
 import static org.mule.util.Preconditions.checkState;
 import org.mule.config.SPIServiceRegistry;
-import org.mule.extensions.introspection.api.CapabilityAwareBuilder;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionDescriber;
-import org.mule.extensions.introspection.api.ExtensionDescribingContext;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
-import org.mule.extensions.resources.api.ResourcesGenerator;
+import org.mule.extensions.introspection.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.ExtensionDescriber;
+import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.XmlCapabilityExtractor;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor;
@@ -39,8 +39,8 @@ import javax.tools.Diagnostic;
 
 /**
  * Annotation processor that picks up all the extensions annotated with
- * {@link org.mule.extensions.introspection.api.Extension} and use a
- * {@link org.mule.extensions.resources.api.ResourcesGenerator} to generated
+ * {@link Extension} and use a
+ * {@link ResourcesGenerator} to generated
  * the required resources.
  * <p/>
  * This annotation processor will automatically generate and package into the output jar
@@ -124,7 +124,7 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
 
     private List<TypeElement> findExtensions(RoundEnvironment env)
     {
-        return ImmutableList.copyOf(ElementFilter.typesIn(env.getElementsAnnotatedWith(org.mule.extensions.api.annotation.Extension.class)));
+        return ImmutableList.copyOf(ElementFilter.typesIn(env.getElementsAnnotatedWith(org.mule.extensions.annotation.Extension.class)));
     }
 
     private void log(String message)

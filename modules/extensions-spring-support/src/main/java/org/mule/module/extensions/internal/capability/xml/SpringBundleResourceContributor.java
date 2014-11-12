@@ -6,9 +6,9 @@
  */
 package org.mule.module.extensions.internal.capability.xml;
 
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
-import org.mule.extensions.resources.api.ResourcesGenerator;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.extensions.resources.spi.GenerableResourceContributor;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaGenerator;
 import org.mule.module.extensions.internal.capability.xml.schema.model.SchemaConstants;

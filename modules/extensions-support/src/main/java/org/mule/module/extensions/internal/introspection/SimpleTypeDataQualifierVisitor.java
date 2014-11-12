@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.DataQualifierVisitor;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.DataQualifierVisitor;
 import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 
 /**

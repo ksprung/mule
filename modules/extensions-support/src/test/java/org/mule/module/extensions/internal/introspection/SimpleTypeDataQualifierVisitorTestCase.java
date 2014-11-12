@@ -9,8 +9,8 @@ package org.mule.module.extensions.internal.introspection;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.runners.Parameterized.Parameters;
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.DataQualifierVisitor;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.DataQualifierVisitor;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 

@@ -6,11 +6,13 @@
  */
 package org.mule.extensions.introspection.spi;
 
-import org.mule.extensions.introspection.api.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.Capable;
+import org.mule.extensions.introspection.Extension;
 
 /**
  * A component capable of extracting one specific capability
- * out of a {@link java.lang.Class} that composes a {@link org.mule.extensions.introspection.api.Extension}
+ * out of a {@link java.lang.Class} that composes a {@link Extension}
  * <p/>
  * Because actual capabilities might be defined across several modules (or even extensions!)
  * the actual extractors are fetched through SPI, using the standard {@link java.util.ServiceLoader}
@@ -31,7 +33,7 @@ public interface CapabilityExtractor
      * the found capability is returned (or {@code null} if not found)
      *
      * @param extensionType a type maybe holding a capability
-     * @param builder       the builder describing the processed {@link org.mule.extensions.introspection.api.Capable} object
+     * @param builder       the builder describing the processed {@link Capable} object
      * @return a capability object or {@code null}
      */
     Object extractCapability(Class<?> extensionType, CapabilityAwareBuilder<?, ?> builder);

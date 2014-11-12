@@ -10,9 +10,9 @@ import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkI
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.immutableList;
 import static org.mule.util.Preconditions.checkArgument;
 import static org.mule.util.Preconditions.checkState;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Operation;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.Parameter;
 
 import java.util.List;
 

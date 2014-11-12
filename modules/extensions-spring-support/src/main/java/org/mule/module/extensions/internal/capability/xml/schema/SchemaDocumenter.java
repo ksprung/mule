@@ -10,11 +10,12 @@ import static org.mule.module.extensions.internal.capability.xml.schema.Annotati
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getJavaDocSummary;
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getMethodDocumentation;
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getMethodsAnnotatedWith;
-import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.Operation;
-import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
-import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
-import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
+import org.mule.extensions.annotation.Configurable;
+import org.mule.extensions.annotation.Operation;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionConfigurationBuilder;
+import org.mule.extensions.introspection.ExtensionOperationBuilder;
+import org.mule.extensions.introspection.ExtensionParameterBuilder;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionConfigurationBuilder;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionOperationBuilder;
@@ -30,7 +31,7 @@ import javax.lang.model.element.VariableElement;
 
 /**
  * Utility class that picks a {@link org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder}
- * on which a {@link org.mule.extensions.introspection.api.Extension} has already been described
+ * on which a {@link Extension} has already been described
  * and enriches such description with the javadocs extracted from the extension's acting classes.
  * <p/>
  * This is necessary because such documentation is not available on runtime, thus this class

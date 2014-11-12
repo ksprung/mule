@@ -7,7 +7,7 @@
 
 package org.mule.module.extensions.internal.capability.xml.schema.model;
 
-import org.mule.extensions.introspection.api.DataType;
+import org.mule.extensions.introspection.DataType;
 
 import javax.xml.namespace.QName;
 

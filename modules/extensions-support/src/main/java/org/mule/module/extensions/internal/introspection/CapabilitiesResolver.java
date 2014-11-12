@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.CapabilityAwareBuilder;
 import org.mule.extensions.introspection.spi.CapabilityExtractor;
 
 import com.google.common.collect.ImmutableList;
@@ -31,7 +31,7 @@ public final class CapabilitiesResolver
      * {@code builder}
      *
      * @param extensionType a not {@code null} {@link java.lang.Class}
-     * @param builder       a not {@code null} {@link org.mule.extensions.introspection.api.CapabilityAwareBuilder}
+     * @param builder       a not {@code null} {@link CapabilityAwareBuilder}
      * @throws java.lang.IllegalArgumentException if {@code extensionType} or {@code builder} are {@code null}
      */
     public void resolveCapabilities(Class<?> extensionType, CapabilityAwareBuilder<?, ?> builder)

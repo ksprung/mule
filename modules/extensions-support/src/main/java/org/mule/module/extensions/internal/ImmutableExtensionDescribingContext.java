@@ -6,14 +6,14 @@
  */
 package org.mule.module.extensions.internal;
 
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionDescribingContext;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.ExtensionDescribingContext;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.ExtensionDescribingContext}.
+ * Immutable implementation of {@link ExtensionDescribingContext}.
  * The fact that this class's attributes are immutable, doesn't mean that their inner state
  * is in fact immutable also.
  *

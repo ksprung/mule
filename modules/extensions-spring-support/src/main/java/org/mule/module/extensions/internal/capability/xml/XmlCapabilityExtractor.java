@@ -7,16 +7,16 @@
 package org.mule.module.extensions.internal.capability.xml;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
-import org.mule.extensions.api.annotation.capability.Xml;
-import org.mule.extensions.introspection.api.CapabilityAwareBuilder;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.introspection.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.extensions.introspection.spi.CapabilityExtractor;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 
 /**
  * Implementation of {@link org.mule.extensions.introspection.spi.CapabilityExtractor}
- * that verifies if the extension is annotated with {@link org.mule.extensions.introspection.api.capability.XmlCapability}
- * and if so, registers into the builder a {@link org.mule.extensions.introspection.api.capability.XmlCapability
+ * that verifies if the extension is annotated with {@link org.mule.extensions.introspection.capability.XmlCapability}
+ * and if so, registers into the builder a {@link org.mule.extensions.introspection.capability.XmlCapability
  *
  * @since 3.7.0
  */

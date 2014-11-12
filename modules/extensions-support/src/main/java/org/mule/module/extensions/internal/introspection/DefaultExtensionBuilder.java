@@ -8,13 +8,13 @@ package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.common.MuleVersion;
-import org.mule.extensions.introspection.api.Described;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
-import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
-import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
+import org.mule.extensions.introspection.Described;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.ExtensionConfigurationBuilder;
+import org.mule.extensions.introspection.ExtensionOperationBuilder;
+import org.mule.extensions.introspection.ExtensionParameterBuilder;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.mule.extensions.introspection.api.ExtensionBuilder}
+ * Default implementation of {@link ExtensionBuilder}
  * which builds instances of {@link ImmutableExtension}
  *
  * @since 3.7.0

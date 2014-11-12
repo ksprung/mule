@@ -6,7 +6,8 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.Capable;
+import org.mule.extensions.introspection.Capable;
+import org.mule.extensions.introspection.Described;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -14,8 +15,8 @@ import java.util.Set;
 
 /**
  * Abstract implementation for a class that implements both
- * the {@link org.mule.extensions.introspection.api.Described} and
- * {@link org.mule.extensions.introspection.api.Capable} contracts
+ * the {@link Described} and
+ * {@link Capable} contracts
  *
  * @since 3.7.0
  */

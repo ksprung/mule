@@ -6,10 +6,10 @@
  */
 package org.mule.module.extensions.internal.resources;
 
-import org.mule.extensions.resources.api.GenerableResource;
+import org.mule.extensions.resources.GenerableResource;
 
 /**
- * Immutable implementation of a {@link org.mule.extensions.resources.api.GenerableResource
+ * Immutable implementation of a {@link GenerableResource
  *
  * @since 3.7.0}
  */

@@ -6,9 +6,9 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
-import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.ExtensionConfigurationBuilder;
+import org.mule.extensions.introspection.ExtensionOperationBuilder;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ package org.mule.module.extensions.internal.introspection;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 

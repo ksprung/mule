@@ -15,12 +15,12 @@ import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.transport.PropertyScope;
-import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.Extension;
-import org.mule.extensions.api.annotation.Operation;
-import org.mule.extensions.api.annotation.capability.Xml;
-import org.mule.extensions.api.annotation.param.Optional;
-import org.mule.extensions.api.annotation.param.Payload;
+import org.mule.extensions.annotation.Configurable;
+import org.mule.extensions.annotation.Extension;
+import org.mule.extensions.annotation.Operation;
+import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.annotation.param.Optional;
+import org.mule.extensions.annotation.param.Payload;
 
 import java.math.BigDecimal;
 import java.util.Calendar;

@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.config;
 
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.Configuration;
 import org.mule.module.extensions.internal.runtime.resolver.ModuleConfigurationValueResolver;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 

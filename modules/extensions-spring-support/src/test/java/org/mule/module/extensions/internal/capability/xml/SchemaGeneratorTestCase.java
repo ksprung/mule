@@ -8,9 +8,9 @@ package org.mule.module.extensions.internal.capability.xml;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaGenerator;

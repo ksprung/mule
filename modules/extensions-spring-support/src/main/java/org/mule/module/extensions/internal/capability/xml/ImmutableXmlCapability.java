@@ -6,10 +6,10 @@
  */
 package org.mule.module.extensions.internal.capability.xml;
 
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.introspection.capability.XmlCapability;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.capability.XmlCapability}
+ * Immutable implementation of {@link org.mule.extensions.introspection.capability.XmlCapability}
  *
  * @since 3.7.0
  */

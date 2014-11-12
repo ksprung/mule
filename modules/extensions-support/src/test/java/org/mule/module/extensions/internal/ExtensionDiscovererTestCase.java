@@ -7,8 +7,8 @@
 package org.mule.module.extensions.internal;
 
 import static junit.framework.Assert.assertEquals;
-import org.mule.extensions.api.ExtensionsManager;
-import org.mule.extensions.introspection.api.Extension;
+import org.mule.extensions.ExtensionsManager;
+import org.mule.extensions.introspection.Extension;
 import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
 import org.mule.module.extensions.internal.introspection.ExtensionDiscoverer;

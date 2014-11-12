@@ -9,8 +9,8 @@ package org.mule.module.extensions.internal.introspection;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkInstantiable;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNullOrRepeatedNames;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkSetters;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
 
 import java.util.List;

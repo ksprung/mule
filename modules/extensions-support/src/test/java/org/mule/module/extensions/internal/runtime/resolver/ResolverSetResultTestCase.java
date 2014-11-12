@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mule.module.extensions.internal.util.ExtensionsTestUtils.getParameter;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.HealthStatus;
 import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.tck.junit4.AbstractMuleTestCase;

@@ -8,10 +8,10 @@ package org.mule.module.extensions.internal.capability.xml.schema;
 
 import static org.mule.util.Preconditions.checkArgument;
 import static org.mule.util.Preconditions.checkState;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.Operation;
-import org.mule.extensions.introspection.api.capability.XmlCapability;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.internal.capability.xml.schema.model.NamespaceFilter;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Schema;
 import org.mule.module.extensions.internal.capability.xml.schema.model.SchemaConstants;
@@ -27,8 +27,8 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.XMLWriter;
 
 /**
- * Generator class that takes a {@link org.mule.extensions.introspection.api.Extension}
- * with a {@link org.mule.extensions.introspection.api.capability.XmlCapability} and returns
+ * Generator class that takes a {@link Extension}
+ * with a {@link org.mule.extensions.introspection.capability.XmlCapability} and returns
  * a XSD schema as a String
  *
  * @since 3.7.0

@@ -8,21 +8,21 @@ package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.module.extensions.internal.introspection.MuleExtensionAnnotationParser.getDefaultValue;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.api.config.ServiceRegistry;
+import org.mule.config.ServiceRegistry;
 import org.mule.config.SPIServiceRegistry;
-import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.Configuration;
-import org.mule.extensions.api.annotation.Configurations;
-import org.mule.extensions.api.annotation.Extension;
-import org.mule.extensions.api.annotation.Operation;
-import org.mule.extensions.api.annotation.Operations;
-import org.mule.extensions.api.annotation.param.Optional;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
-import org.mule.extensions.introspection.api.ExtensionDescriber;
-import org.mule.extensions.introspection.api.ExtensionDescribingContext;
-import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
+import org.mule.extensions.annotation.Configurable;
+import org.mule.extensions.annotation.Configuration;
+import org.mule.extensions.annotation.Configurations;
+import org.mule.extensions.annotation.Extension;
+import org.mule.extensions.annotation.Operation;
+import org.mule.extensions.annotation.Operations;
+import org.mule.extensions.annotation.param.Optional;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.introspection.ExtensionConfigurationBuilder;
+import org.mule.extensions.introspection.ExtensionDescriber;
+import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.ExtensionOperationBuilder;
 import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.util.ClassUtils;
@@ -35,7 +35,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Default implementation of {@link org.mule.extensions.introspection.api.ExtensionDescriber}
+ * Default implementation of {@link ExtensionDescriber}
  *
  * @since 3.7.0
  */

@@ -6,8 +6,8 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.Operation;
 import org.mule.util.Preconditions;
 
 import java.io.InputStream;
@@ -27,7 +27,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * Factory pattern implementation that provides a
- * {@link org.mule.extensions.introspection.api.DataQualifier} for a given
+ * {@link DataQualifier} for a given
  * {@link java.lang.Class}
  *
  * @since 3.7.0
@@ -181,11 +181,11 @@ final class DataQualifierFactory
     };
 
     /**
-     * Returns a {@link org.mule.extensions.introspection.api.DataQualifier}
+     * Returns a {@link DataQualifier}
      * that corresponds to the given {@link java.lang.Class}
      *
      * @param clazz a not {@code null} {@link java.lang.Class}
-     * @return a not {@code null} {@link org.mule.extensions.introspection.api.DataQualifier}
+     * @return a not {@code null} {@link DataQualifier}
      * @throws java.lang.IllegalArgumentException if the argument is {@code null}
      * @throws java.lang.IllegalArgumentException If no qualifier can be assigned to the given type
      */

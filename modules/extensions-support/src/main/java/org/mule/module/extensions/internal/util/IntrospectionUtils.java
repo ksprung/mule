@@ -16,11 +16,11 @@ import static org.reflections.ReflectionUtils.withParameters;
 import static org.reflections.ReflectionUtils.withParametersCount;
 import static org.reflections.ReflectionUtils.withPrefix;
 import static org.reflections.ReflectionUtils.withReturnType;
-import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.param.Ignore;
-import org.mule.extensions.api.annotation.param.Optional;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.annotation.Configurable;
+import org.mule.extensions.annotation.param.Ignore;
+import org.mule.extensions.annotation.param.Optional;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.repackaged.internal.org.springframework.core.ResolvableType;
 import org.mule.util.ArrayUtils;
@@ -46,7 +46,7 @@ public class IntrospectionUtils
 {
 
     /**
-     * Returns a {@link org.mule.extensions.introspection.api.DataType} representing the
+     * Returns a {@link DataType} representing the
      * given clazz
      */
     public static DataType getClassDataType(Class<?> clazz)
@@ -55,10 +55,10 @@ public class IntrospectionUtils
     }
 
     /**
-     * Returns a {@link org.mule.extensions.introspection.api.DataType} representing
+     * Returns a {@link DataType} representing
      * the given {@link java.lang.reflect.Method}'s return type
      *
-     * @return a {@link org.mule.extensions.introspection.api.DataType}
+     * @return a {@link DataType}
      * @throws java.lang.IllegalArgumentException is method is {@code null}
      */
     public static DataType getMethodReturnType(Method method)
@@ -68,12 +68,12 @@ public class IntrospectionUtils
     }
 
     /**
-     * Returns an array of {@link org.mule.extensions.introspection.api.DataType}
+     * Returns an array of {@link DataType}
      * representing each of the given {@link java.lang.reflect.Method}'s argument
      * types.
      *
      * @param method a not {@code null} {@link java.lang.reflect.Method}
-     * @return an array of {@link org.mule.extensions.introspection.api.DataType} matching
+     * @return an array of {@link DataType} matching
      * the method's arguments. If the method doesn't take any, then the array will be empty
      * @throws java.lang.IllegalArgumentException is method is {@code null}
      */
@@ -97,11 +97,11 @@ public class IntrospectionUtils
     }
 
     /**
-     * Returns a {@link org.mule.extensions.introspection.api.DataType} describing
+     * Returns a {@link DataType} describing
      * the given {@link java.lang.reflect.Field}'s type
      *
      * @param field a not {@code null} {@link java.lang.reflect.Field}
-     * @return a {@link org.mule.extensions.introspection.api.DataType} matching the field's type
+     * @return a {@link DataType} matching the field's type
      * @throws java.lang.IllegalArgumentException if field is {@code null}
      */
     public static DataType getFieldDataType(Field field)

@@ -16,7 +16,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.transformer.MessageTransformer;
 import org.mule.api.transformer.Transformer;
 import org.mule.api.transformer.TransformerException;
-import org.mule.extensions.introspection.api.DataType;
+import org.mule.extensions.introspection.DataType;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.util.TemplateParser;
 

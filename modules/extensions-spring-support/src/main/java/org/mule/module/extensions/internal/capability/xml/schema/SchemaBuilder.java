@@ -7,16 +7,17 @@
 package org.mule.module.extensions.internal.capability.xml.schema;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mule.extensions.introspection.api.DataQualifier.LIST;
-import static org.mule.extensions.introspection.api.DataQualifier.OPERATION;
+import static org.mule.extensions.introspection.DataQualifier.LIST;
+import static org.mule.extensions.introspection.DataQualifier.OPERATION;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isDynamic;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isIgnored;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isRequired;
-import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.Configuration;
-import org.mule.extensions.introspection.api.Operation;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.DataQualifier;
+import org.mule.extensions.introspection.DataType;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Annotation;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Attribute;
@@ -65,7 +66,7 @@ import javax.xml.namespace.QName;
 
 /**
  * Builder class to generate a XSD schema that describes a
- * {@link org.mule.extensions.introspection.api.Extension}
+ * {@link Extension}
  *
  * @since 3.7.0
  */
@@ -282,7 +283,7 @@ public class SchemaBuilder
      * top level type while assigning it a name. This method will not register
      * the same type twice even if requested to
      *
-     * @param type        a {@link org.mule.extensions.introspection.api.DataType} referencing a pojo type
+     * @param type        a {@link DataType} referencing a pojo type
      * @param description the type's description
      * @return the reference name of the complexType
      */

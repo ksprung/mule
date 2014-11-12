@@ -10,7 +10,7 @@ import org.mule.api.MuleContext;
 import org.mule.api.NamedObject;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.Configuration;
 
 /**
  * Base class for {@link ValueResolver} instances which

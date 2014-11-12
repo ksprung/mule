@@ -7,10 +7,10 @@
 package org.mule.tck.junit4;
 
 import org.mule.api.MuleContext;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.resources.api.GenerableResource;
-import org.mule.extensions.resources.api.ResourcesGenerator;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionBuilder;
+import org.mule.extensions.resources.GenerableResource;
+import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.extensions.resources.spi.GenerableResourceContributor;
 import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
@@ -41,7 +41,7 @@ import org.reflections.Reflections;
  * {@link org.mule.tck.junit4.FunctionalTestCase} is that before creating
  * the {@link org.mule.api.MuleContext}, it scans certain packages of the
  * classpath and discovers extensions. Once those are discovered and described,
- * a {@link org.mule.extensions.resources.api.ResourcesGenerator} is used to automatically
+ * a {@link ResourcesGenerator} is used to automatically
  * generate any backing resources needed (for example, XSD schemas, spring bundles,
  * service registration files, etc).
  * <p/>
@@ -100,7 +100,7 @@ public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
         Class<?>[] managedExtensionTypes = getManagedExtensionTypes();
         final boolean filtersExtensions = managedExtensionTypes != null && managedExtensionTypes.length > 0;
 
-        for (Class<?> extensionType : reflections.getTypesAnnotatedWith(org.mule.extensions.api.annotation.Extension.class))
+        for (Class<?> extensionType : reflections.getTypesAnnotatedWith(org.mule.extensions.annotation.Extension.class))
         {
             if (filtersExtensions && !ArrayUtils.contains(managedExtensionTypes, extensionType))
             {

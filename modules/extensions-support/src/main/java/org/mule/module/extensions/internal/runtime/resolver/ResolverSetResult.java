@@ -8,7 +8,7 @@ package org.mule.module.extensions.internal.runtime.resolver;
 
 import static org.mule.util.ClassUtils.instanciateClass;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.repackaged.internal.org.springframework.util.ReflectionUtils;

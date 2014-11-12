@@ -8,9 +8,9 @@ package org.mule.module.extensions.internal;
 
 import org.mule.common.MuleVersion;
 import org.mule.config.SPIServiceRegistry;
-import org.mule.extensions.api.ExtensionsManager;
-import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionDescriber;
+import org.mule.extensions.ExtensionsManager;
+import org.mule.extensions.introspection.Extension;
+import org.mule.extensions.introspection.ExtensionDescriber;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
 import org.mule.module.extensions.internal.introspection.ExtensionDiscoverer;
 import org.mule.util.Preconditions;
@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Default implementation of {@link org.mule.extensions.api.ExtensionsManager}
+ * Default implementation of {@link ExtensionsManager}
  *
  * @since 3.7.0
  */

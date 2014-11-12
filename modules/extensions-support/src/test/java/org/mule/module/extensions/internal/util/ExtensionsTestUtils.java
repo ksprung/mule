@@ -18,7 +18,7 @@ import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.Initialisable;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.extensions.introspection.api.Parameter;
+import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 
