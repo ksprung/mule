@@ -5,7 +5,6 @@ description = ' A Mule transport for Jetty Http Connectivity or binding to other
 
 dependencies {
     compile project(':transports:servlet'),
-        project(':modules:logging'),
         "org.eclipse.jetty:jetty-server:$jettyVersion",
         "org.eclipse.jetty:jetty-deploy:$jettyVersion",
         "org.eclipse.jetty:jetty-util:$jettyVersion",

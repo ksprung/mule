@@ -15,6 +15,7 @@ allprojects {
     repositories {
         mavenLocal()
         maven { url "https://repository.mulesoft.org/nexus/content/repositories/public/" }
+        maven { url "http://xqj.net/maven" }
     }
 }
 
@@ -65,9 +66,10 @@ subprojects {
 
 //    compile configurations.log
     testCompile 'com.googlecode.multithreadedtc:multithreadedtc:1.01',
-            'junit:junit:4.11',
+            'org.hamcrest:hamcrest-library:1.3',
             'org.mockito:mockito-core:1.9.0',
-            'xmlunit:xmlunit:1.1'
+            'xmlunit:xmlunit:1.1',
+            'junit:junit:4.11'
     }
 }
 
@@ -141,7 +143,6 @@ dependencies {
 
     libBoot project(':modules:boot')
     libBoot project(':modules:reboot')
-    libBoot project(':modules:logging')
 }
 
 def realProjects = subprojects - dummyProjects

@@ -8,11 +8,11 @@ dependencies {
 //        "commons-codec:commons-codec",
         "commons-httpclient:commons-httpclient:3.1",
         "org.apache.geronimo.specs:geronimo-servlet_3.0_spec:1.0", // provided
-        "tomcat:tomcat-util:5.5.23",
+        "org.apache.tomcat:coyote:6.0.29",
         "org.samba.jcifs:jcifs:1.3.3",
-        "joda-time:joda-time:1.6"
+        "joda-time:joda-time:2.5"
 
-    compile("org.mule.modules:mule-module-http:3.6.0-M2-SNAPSHOT") {
+    compile("org.mule.modules:mule-module-http:3.6.0-M3-SNAPSHOT") {
         exclude group: "org.mule"
         exclude group: "org.mule.modules"
     }

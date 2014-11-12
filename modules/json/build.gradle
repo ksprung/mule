@@ -9,7 +9,8 @@ dependencies {
         "org.codehaus.jackson:jackson-core-asl:$jacksonVersion",
         "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion",
         "de.odysseus.staxon:staxon:1.2",
-        "org.kitchen-eel:json-schema-validator:1.2.2"
+        "org.kitchen-eel:json-schema-validator:1.2.2",
+        "com.github.fge:json-schema-validator:2.2.5"
 
 
     testCompile project(":tests:functional"),
