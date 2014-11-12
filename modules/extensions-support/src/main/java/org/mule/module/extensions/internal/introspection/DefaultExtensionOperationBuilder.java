@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.introspection;
 
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionOperation;
+import org.mule.extensions.introspection.api.Operation;
 import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
 import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
@@ -149,14 +149,14 @@ final class DefaultExtensionOperationBuilder implements NavigableExtensionOperat
      * {@inheritDoc}
      */
     @Override
-    public ExtensionOperation build()
+    public Operation build()
     {
         if (inputTypes.isEmpty())
         {
             inputTypes.add(ImmutableDataType.of(Object.class));
         }
 
-        return new ImmutableExtensionOperation(name,
+        return new ImmutableOperation(name,
                                                description,
                                                declaringClass,
                                                inputTypes,

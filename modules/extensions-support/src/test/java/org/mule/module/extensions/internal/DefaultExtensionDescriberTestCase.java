@@ -19,17 +19,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mule.extensions.api.annotation.Extension.DEFAULT_CONFIG_NAME;
-import static org.mule.extensions.api.annotation.Extension.MIN_MULE_VERSION;
-import static org.mule.extensions.introspection.api.DataQualifier.ENUM;
-import static org.mule.extensions.introspection.api.DataQualifier.POJO;
 import static org.mule.extensions.introspection.api.DataQualifier.BOOLEAN;
 import static org.mule.extensions.introspection.api.DataQualifier.DATE;
 import static org.mule.extensions.introspection.api.DataQualifier.DATE_TIME;
 import static org.mule.extensions.introspection.api.DataQualifier.DECIMAL;
+import static org.mule.extensions.introspection.api.DataQualifier.ENUM;
 import static org.mule.extensions.introspection.api.DataQualifier.INTEGER;
 import static org.mule.extensions.introspection.api.DataQualifier.LIST;
 import static org.mule.extensions.introspection.api.DataQualifier.MAP;
 import static org.mule.extensions.introspection.api.DataQualifier.OPERATION;
+import static org.mule.extensions.introspection.api.DataQualifier.POJO;
 import static org.mule.extensions.introspection.api.DataQualifier.STRING;
 import static org.mule.module.extensions.HeisenbergExtension.AGE;
 import static org.mule.module.extensions.HeisenbergExtension.EXTENSION_DESCRIPTION;
@@ -41,18 +40,17 @@ import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_LOCATION;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
 import org.mule.api.config.ServiceRegistry;
 import org.mule.extensions.api.annotation.Configurable;
-import org.mule.extensions.api.annotation.Configuration;
 import org.mule.extensions.api.annotation.Configurations;
 import org.mule.extensions.api.annotation.capability.Xml;
 import org.mule.extensions.introspection.api.DataQualifier;
 import org.mule.extensions.introspection.api.DataType;
 import org.mule.extensions.introspection.api.Extension;
 import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
+import org.mule.extensions.introspection.api.Configuration;
 import org.mule.extensions.introspection.api.ExtensionDescriber;
 import org.mule.extensions.introspection.api.ExtensionDescribingContext;
-import org.mule.extensions.introspection.api.ExtensionOperation;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
 import org.mule.module.extensions.Door;
 import org.mule.module.extensions.HealthStatus;
@@ -171,7 +169,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         assertExtensionProperties(extension);
 
         assertThat(extension.getConfigurations().size(), equalTo(2));
-        ExtensionConfiguration configuration = extension.getConfiguration(EXTENDED_CONFIG_NAME);
+        Configuration configuration = extension.getConfiguration(EXTENDED_CONFIG_NAME);
         assertThat(configuration, notNullValue());
         assertThat(configuration.getParameters().size(), equalTo(1));
         assertParameter(configuration.getParameters().get(0), "extendedProperty", "", String.class, STRING, true, true, null);
@@ -190,10 +188,10 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
     private void assertTestModuleConfiguration(Extension extension) throws Exception
     {
         assertEquals(1, extension.getConfigurations().size());
-        ExtensionConfiguration conf = extension.getConfigurations().get(0);
+        Configuration conf = extension.getConfigurations().get(0);
         assertSame(conf, extension.getConfiguration(DEFAULT_CONFIG_NAME));
 
-        List<ExtensionParameter> parameters = conf.getParameters();
+        List<Parameter> parameters = conf.getParameters();
         assertEquals(13, parameters.size());
 
         assertParameter(parameters.get(0), "myName", "", String.class, STRING, false, true, HEISENBERG);
@@ -220,7 +218,6 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         assertEquals(EXTENSION_NAME, extension.getName());
         assertEquals(EXTENSION_DESCRIPTION, extension.getDescription());
         assertEquals(EXTENSION_VERSION, extension.getVersion());
-        assertEquals(MIN_MULE_VERSION, extension.getMinMuleVersion());
     }
 
     private void assertTestModuleOperations(Extension extension) throws Exception
@@ -233,7 +230,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         assertOperation(extension, HIDE_METH_IN_EVENT_OPERATION, "", new Class<?>[] {Object.class}, void.class);
         assertOperation(extension, HIDE_METH_IN_MESSAGE_OPERATION, "", new Class<?>[] {Object.class}, void.class);
 
-        ExtensionOperation operation = extension.getOperation(SAY_MY_NAME_OPERATION);
+        Operation operation = extension.getOperation(SAY_MY_NAME_OPERATION);
         assertNotNull(operation);
         assertTrue(operation.getParameters().isEmpty());
 
@@ -245,13 +242,13 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         operation = extension.getOperation(KILL_OPERATION);
         assertNotNull(operation);
         assertEquals(1, operation.getParameters().size());
-        assertParameter(operation.getParameters().get(0), "enemiesLookup", "", ExtensionOperation.class, OPERATION, true, true, null);
+        assertParameter(operation.getParameters().get(0), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
 
         operation = extension.getOperation(KILL_CUSTOM_OPERATION);
         assertNotNull(operation);
         assertEquals(2, operation.getParameters().size());
         assertParameter(operation.getParameters().get(0), "goodbyeMessage", "", String.class, STRING, false, true, "#[payload]");
-        assertParameter(operation.getParameters().get(1), "enemiesLookup", "", ExtensionOperation.class, OPERATION, true, true, null);
+        assertParameter(operation.getParameters().get(1), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
 
         operation = extension.getOperation(HIDE_METH_IN_EVENT_OPERATION);
         assertNotNull(operation);
@@ -269,7 +266,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
                                  Class<?> outputType) throws Exception
     {
 
-        ExtensionOperation operation = extension.getOperation(operationName);
+        Operation operation = extension.getOperation(operationName);
 
         assertEquals(operationName, operation.getName());
         assertEquals(operationDescription, operation.getDescription());
@@ -277,7 +274,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         assertEquals(outputType, operation.getOutputType().getRawType());
     }
 
-    private void assertParameter(ExtensionParameter param,
+    private void assertParameter(Parameter param,
                                  String name,
                                  String description,
                                  Class<?> type,
@@ -334,7 +331,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
+    @org.mule.extensions.api.annotation.Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
     public static class NamedHeisenbergAlternateConfig extends HeisenbergAlternateConfig
     {
 

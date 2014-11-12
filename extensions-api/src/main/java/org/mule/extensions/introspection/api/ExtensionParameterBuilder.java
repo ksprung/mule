@@ -6,7 +6,7 @@
  */
 package org.mule.extensions.introspection.api;
 
-public interface ExtensionParameterBuilder extends Builder<ExtensionParameter>
+public interface ExtensionParameterBuilder extends Builder<Parameter>
 {
 
     ExtensionParameterBuilder setName(String name);

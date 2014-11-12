@@ -10,12 +10,12 @@ import org.mule.api.MuleContext;
 import org.mule.api.NamedObject;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Lifecycle;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
+import org.mule.extensions.introspection.api.Configuration;
 
 /**
  * Base class for {@link ValueResolver} instances which
  * return extension's configurations (not refering to
- * instances of {@link ExtensionConfiguration} but an actual
+ * instances of {@link Configuration} but an actual
  * configuration instance
  *
  * @since 3.7.0

@@ -9,27 +9,27 @@ package org.mule.module.extensions.internal.introspection;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkInstantiable;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNullOrRepeatedNames;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkSetters;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
 
 import java.util.List;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.ExtensionConfiguration}
+ * Immutable implementation of {@link Configuration}
  *
- * @since 1.0
+ * @since 3.7.0
  */
-final class ImmutableExtensionConfiguration extends AbstractImmutableDescribed implements ExtensionConfiguration
+final class ImmutableConfiguration extends AbstractImmutableDescribed implements Configuration
 {
 
-    private final List<ExtensionParameter> parameters;
+    private final List<Parameter> parameters;
     private final Class<?> declaringClass;
 
-    protected ImmutableExtensionConfiguration(String name,
-                                              String description,
-                                              Class<?> declaringClass,
-                                              List<ExtensionParameter> parameters)
+    protected ImmutableConfiguration(String name,
+                                     String description,
+                                     Class<?> declaringClass,
+                                     List<Parameter> parameters)
     {
         super(name, description);
         checkInstantiable(declaringClass);
@@ -44,7 +44,7 @@ final class ImmutableExtensionConfiguration extends AbstractImmutableDescribed i
      * {@inheritDoc}
      */
     @Override
-    public final List<ExtensionParameter> getParameters()
+    public final List<Parameter> getParameters()
     {
         return parameters;
     }

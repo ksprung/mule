@@ -6,7 +6,7 @@
  */
 package org.mule.extensions.introspection.api;
 
-public interface ExtensionOperationBuilder extends Builder<ExtensionOperation>
+public interface ExtensionOperationBuilder extends Builder<Operation>
 {
 
     ExtensionOperationBuilder setName(String name);

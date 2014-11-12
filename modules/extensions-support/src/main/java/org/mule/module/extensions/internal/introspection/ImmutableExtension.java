@@ -12,8 +12,8 @@ import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkN
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.toMap;
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionOperation;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Operation;
 import org.mule.extensions.introspection.api.NoSuchConfigurationException;
 import org.mule.extensions.introspection.api.NoSuchOperationException;
 
@@ -28,24 +28,22 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Immutable implementation of {@link org.mule.extensions.introspection.api.Extension}
  *
- * @since 1.0
+ * @since 3.7.0
  */
 final class ImmutableExtension extends AbstractImmutableCapableDescribed implements Extension
 {
 
     private final String version;
-    private final String minMuleVersion;
     private final Class<?> declaringClass;
-    private final Map<String, ExtensionConfiguration> configurations;
-    private final Map<String, ExtensionOperation> operations;
+    private final Map<String, Configuration> configurations;
+    private final Map<String, Operation> operations;
 
     protected ImmutableExtension(String name,
                                  String description,
                                  String version,
-                                 String minMuleVersion,
                                  Class<?> declaringClass,
-                                 List<ExtensionConfiguration> configurations,
-                                 List<ExtensionOperation> operations,
+                                 List<Configuration> configurations,
+                                 List<Operation> operations,
                                  Set<Object> capabilities)
     {
         super(name, description, capabilities);
@@ -62,9 +60,6 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
 
         checkArgument(!StringUtils.isBlank(version), "version cannot be blank");
         this.version = version;
-
-        checkArgument(!StringUtils.isBlank(minMuleVersion), "minMuleVersion cannot be blank");
-        this.minMuleVersion = minMuleVersion;
     }
 
 
@@ -72,7 +67,7 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
      * {@inheritDoc}
      */
     @Override
-    public List<ExtensionConfiguration> getConfigurations()
+    public List<Configuration> getConfigurations()
     {
         return ImmutableList.copyOf(configurations.values());
     }
@@ -81,22 +76,22 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
      * {@inheritDoc}
      */
     @Override
-    public ExtensionConfiguration getConfiguration(String name) throws NoSuchConfigurationException
+    public Configuration getConfiguration(String name) throws NoSuchConfigurationException
     {
-        ExtensionConfiguration extensionConfiguration = configurations.get(name);
-        if (extensionConfiguration == null)
+        Configuration configuration = configurations.get(name);
+        if (configuration == null)
         {
             throw new NoSuchConfigurationException(this, name);
         }
 
-        return extensionConfiguration;
+        return configuration;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<ExtensionOperation> getOperations()
+    public List<Operation> getOperations()
     {
         return ImmutableList.copyOf(operations.values());
     }
@@ -114,15 +109,6 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
      * {@inheritDoc}
      */
     @Override
-    public String getMinMuleVersion()
-    {
-        return minMuleVersion;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Class<?> getDeclaringClass()
     {
         return declaringClass;
@@ -132,14 +118,14 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
      * {@inheritDoc}
      */
     @Override
-    public ExtensionOperation getOperation(String name) throws NoSuchOperationException
+    public Operation getOperation(String name) throws NoSuchOperationException
     {
-        ExtensionOperation extensionOperation = operations.get(name);
-        if (extensionOperation == null)
+        Operation operation = operations.get(name);
+        if (operation == null)
         {
             throw new NoSuchOperationException(this, name);
         }
 
-        return extensionOperation;
+        return operation;
     }
 }

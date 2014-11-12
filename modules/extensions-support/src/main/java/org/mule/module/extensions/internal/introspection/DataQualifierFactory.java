@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.introspection;
 
 import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.ExtensionOperation;
+import org.mule.extensions.introspection.api.Operation;
 import org.mule.util.Preconditions;
 
 import java.io.InputStream;
@@ -157,7 +157,7 @@ final class DataQualifierFactory
             Map.class, DataQualifier.MAP);
 
     private static final DataTypeQualifierEvaluator OPERATION_EVALUATOR = new DefaultQualifierEvaluator(
-            ExtensionOperation.class, DataQualifier.OPERATION);
+            Operation.class, DataQualifier.OPERATION);
 
     private static final DataTypeQualifierEvaluator POJO_EVALUATOR = new PojoTypeQualifierEvaluator();
 

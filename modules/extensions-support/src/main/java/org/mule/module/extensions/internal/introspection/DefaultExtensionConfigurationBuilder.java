@@ -6,7 +6,7 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
+import org.mule.extensions.introspection.api.Configuration;
 import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
 import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
@@ -102,9 +102,9 @@ final class DefaultExtensionConfigurationBuilder implements NavigableExtensionCo
      * {@inheritDoc}
      */
     @Override
-    public ExtensionConfiguration build()
+    public Configuration build()
     {
-        return new ImmutableExtensionConfiguration(name, description, declaringClass, MuleExtensionUtils.build(parameters));
+        return new ImmutableConfiguration(name, description, declaringClass, MuleExtensionUtils.build(parameters));
     }
 
 }

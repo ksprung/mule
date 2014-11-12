@@ -14,9 +14,9 @@ import static org.mule.module.extensions.internal.util.IntrospectionUtils.isIgno
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isRequired;
 import org.mule.extensions.introspection.api.DataQualifier;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionOperation;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Annotation;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Attribute;
@@ -203,7 +203,7 @@ public class SchemaBuilder
         return simpleType;
     }
 
-    public SchemaBuilder registerConfigElement(final ExtensionConfiguration configuration)
+    public SchemaBuilder registerConfigElement(final Configuration configuration)
     {
         Map<QName, String> otherAttributes = new HashMap<>();
         final ExtensionType config = registerExtension(configuration.getName(), otherAttributes);
@@ -213,7 +213,7 @@ public class SchemaBuilder
         config.setSequence(all);
 
 
-        for (final ExtensionParameter parameter : configuration.getParameters())
+        for (final Parameter parameter : configuration.getParameters())
         {
             parameter.getType().getQualifier().accept(new BaseDataQualifierVisitor()
             {
@@ -268,7 +268,7 @@ public class SchemaBuilder
         return createAttribute(SchemaConstants.ATTRIBUTE_NAME_NAME, ImmutableDataType.of(String.class), true, false);
     }
 
-    public SchemaBuilder registerOperation(ExtensionOperation operation)
+    public SchemaBuilder registerOperation(Operation operation)
     {
         String typeName = StringUtils.capitalize(operation.getName()) + SchemaConstants.TYPE_SUFFIX;
         registerProcessorElement(operation.getName(), typeName, operation.getDescription());
@@ -493,7 +493,7 @@ public class SchemaBuilder
         return complexContentExtension;
     }
 
-    private Attribute createAttribute(ExtensionParameter parameter, boolean required)
+    private Attribute createAttribute(Parameter parameter, boolean required)
     {
         return createAttribute(parameter.getName(), parameter.getDescription(), parameter.getType(), required, parameter.isDynamic());
     }
@@ -544,7 +544,7 @@ public class SchemaBuilder
         return attribute;
     }
 
-    private void generateCollectionElement(ExplicitGroup all, ExtensionParameter parameter, boolean forceOptional)
+    private void generateCollectionElement(ExplicitGroup all, Parameter parameter, boolean forceOptional)
     {
         boolean required = isRequired(parameter, forceOptional);
         generateCollectionElement(all, parameter.getName(), parameter.getDescription(), parameter.getType(), required);
@@ -641,7 +641,7 @@ public class SchemaBuilder
         schema.getSimpleTypeOrComplexTypeOrGroup().add(element);
     }
 
-    private void registerExtendedType(QName base, String name, List<ExtensionParameter> parameters)
+    private void registerExtendedType(QName base, String name, List<Parameter> parameters)
     {
         TopLevelComplexType complexType = new TopLevelComplexType();
         complexType.setName(name);
@@ -660,7 +660,7 @@ public class SchemaBuilder
 
         int requiredChildElements = countRequiredChildElements(parameters);
 
-        for (final ExtensionParameter parameter : parameters)
+        for (final Parameter parameter : parameters)
         {
             DataType parameterType = parameter.getType();
             DataQualifier parameterQualifier = parameterType.getQualifier();
@@ -706,10 +706,10 @@ public class SchemaBuilder
         schema.getSimpleTypeOrComplexTypeOrGroup().add(complexType);
     }
 
-    private int countRequiredChildElements(List<ExtensionParameter> parameters)
+    private int countRequiredChildElements(List<Parameter> parameters)
     {
         int requiredChildElements = 0;
-        for (ExtensionParameter parameter : parameters)
+        for (Parameter parameter : parameters)
         {
             DataType type = parameter.getType();
             if (requiresChildElements(type))
@@ -736,7 +736,7 @@ public class SchemaBuilder
                 OPERATION.equals(genericTypes[0].getQualifier()));
     }
 
-    private void registerProcessorType(String name, ExtensionOperation operation)
+    private void registerProcessorType(String name, Operation operation)
     {
         registerExtendedType(SchemaConstants.MULE_ABSTRACT_MESSAGE_PROCESSOR_TYPE, name, operation.getParameters());
     }

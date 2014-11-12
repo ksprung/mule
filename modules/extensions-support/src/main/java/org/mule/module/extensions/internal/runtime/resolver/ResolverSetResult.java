@@ -8,7 +8,7 @@ package org.mule.module.extensions.internal.runtime.resolver;
 
 import static org.mule.util.ClassUtils.instanciateClass;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.repackaged.internal.org.springframework.util.ReflectionUtils;
@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 
 /**
  * This class represents the outcome of the evaluation of a {@link ResolverSet}.
- * This class maps a set of {@link ExtensionParameter} to a set of result {@link Object}s.
+ * This class maps a set of {@link Parameter} to a set of result {@link Object}s.
  * <p/>
  * This classes {@link #equals(Object)} and {@link #hashCode()} methods have been redefined
  * to be consistent with the result objects. This is so that given two instances of this class
@@ -47,7 +47,7 @@ public class ResolverSetResult
     {
 
         private int hashCode = 1;
-        private Map<ExtensionParameter, Object> values = new LinkedHashMap<>();
+        private Map<Parameter, Object> values = new LinkedHashMap<>();
 
         private Builder()
         {
@@ -56,12 +56,12 @@ public class ResolverSetResult
         /**
          * Adds a new result {@code value} for the given {@code parameter}
          *
-         * @param parameter a not {@code null} {@link ExtensionParameter}
+         * @param parameter a not {@code null} {@link Parameter}
          * @param value     the associated value. It can be {@code null}
          * @return this builder
          * @throws IllegalArgumentException is {@code parameter} is {@code null}
          */
-        public Builder add(ExtensionParameter parameter, Object value)
+        public Builder add(Parameter parameter, Object value)
         {
             checkArgument(parameter != null, "parameter cannot be null");
             values.put(parameter, value);
@@ -91,10 +91,10 @@ public class ResolverSetResult
         return new Builder();
     }
 
-    private final Map<ExtensionParameter, Object> evaluationResult;
+    private final Map<Parameter, Object> evaluationResult;
     private final int hashCode;
 
-    private ResolverSetResult(Map<ExtensionParameter, Object> evaluationResult, int hashCode)
+    private ResolverSetResult(Map<Parameter, Object> evaluationResult, int hashCode)
     {
         this.evaluationResult = evaluationResult;
         this.hashCode = hashCode;
@@ -103,11 +103,11 @@ public class ResolverSetResult
     /**
      * Returns the value associated with the given {@code parameter}
      *
-     * @param parameter a {@link ExtensionParameter} which was registered with the builder
+     * @param parameter a {@link Parameter} which was registered with the builder
      * @return the value associated to that {@code parameter}
      * @throws NoSuchElementException if the {@code parameter} has not been registered through the builder
      */
-    public Object get(ExtensionParameter parameter)
+    public Object get(Parameter parameter)
     {
         if (!evaluationResult.containsKey(parameter))
         {
@@ -131,7 +131,7 @@ public class ResolverSetResult
     {
         T object = instanciateClass(prototypeClass);
 
-        for (Map.Entry<ExtensionParameter, Object> entry : evaluationResult.entrySet())
+        for (Map.Entry<Parameter, Object> entry : evaluationResult.entrySet())
         {
             Method setter = IntrospectionUtils.getSetter(prototypeClass, entry.getKey());
             ReflectionUtils.invokeMethod(setter, object, entry.getValue());
@@ -143,7 +143,7 @@ public class ResolverSetResult
     /**
      * Defines equivalence by comparing the values in both objects. To consider that
      * two instances are equal, they both must have equivalent results for every
-     * registered {@link ExtensionParameter}. Values will be tested for equality using
+     * registered {@link Parameter}. Values will be tested for equality using
      * their own implementation of {@link Object#equals(Object)}. For the case of a
      * {@code null} value, equality requires the other one to be {@code null} as well.
      * <p/>
@@ -159,7 +159,7 @@ public class ResolverSetResult
         if (obj instanceof ResolverSetResult)
         {
             ResolverSetResult other = (ResolverSetResult) obj;
-            for (Map.Entry<ExtensionParameter, Object> entry : evaluationResult.entrySet())
+            for (Map.Entry<Parameter, Object> entry : evaluationResult.entrySet())
             {
                 Object otherValue = other.get(entry.getKey());
                 if (!Objects.equal(entry.getValue(), otherValue))

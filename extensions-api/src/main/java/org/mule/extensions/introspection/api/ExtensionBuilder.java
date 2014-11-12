@@ -25,8 +25,6 @@ public interface ExtensionBuilder extends CapabilityAwareBuilder<Extension, Exte
 
     ExtensionBuilder setVersion(String version);
 
-    ExtensionBuilder setMinMuleVersion(String minMuleVersion);
-
     ExtensionBuilder setDeclaringClass(Class<?> declaringClass);
 
     ExtensionBuilder addConfiguration(ExtensionConfigurationBuilder configuration);

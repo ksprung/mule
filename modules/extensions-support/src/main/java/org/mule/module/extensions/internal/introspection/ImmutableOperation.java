@@ -11,32 +11,32 @@ import static org.mule.module.extensions.internal.util.MuleExtensionUtils.immuta
 import static org.mule.util.Preconditions.checkArgument;
 import static org.mule.util.Preconditions.checkState;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionOperation;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.api.Parameter;
 
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
 /**
- * Immutable concrete implementation of {@link org.mule.extensions.introspection.api.ExtensionOperation}
+ * Immutable concrete implementation of {@link Operation}
  *
- * @since 1.0
+ * @since 3.7.0
  */
-final class ImmutableExtensionOperation extends AbstractImmutableDescribed implements ExtensionOperation
+final class ImmutableOperation extends AbstractImmutableDescribed implements Operation
 {
 
     private final List<DataType> inputTypes;
     private final DataType outputType;
-    private final List<ExtensionParameter> parameters;
+    private final List<Parameter> parameters;
     private final Class<?> declaringClass;
 
-    ImmutableExtensionOperation(String name,
-                                String description,
-                                Class<?> declaringClass,
-                                List<DataType> inputTypes,
-                                DataType outputType,
-                                List<ExtensionParameter> parameters)
+    ImmutableOperation(String name,
+                       String description,
+                       Class<?> declaringClass,
+                       List<DataType> inputTypes,
+                       DataType outputType,
+                       List<Parameter> parameters)
     {
         super(name, description);
 
@@ -54,7 +54,7 @@ final class ImmutableExtensionOperation extends AbstractImmutableDescribed imple
      * {@inheritDoc}
      */
     @Override
-    public List<ExtensionParameter> getParameters()
+    public List<Parameter> getParameters()
     {
         return parameters;
     }

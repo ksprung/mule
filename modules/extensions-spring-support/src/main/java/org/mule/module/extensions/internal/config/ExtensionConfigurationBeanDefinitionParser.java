@@ -8,8 +8,8 @@ package org.mule.module.extensions.internal.config;
 
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
 import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.runtime.resolver.ResolverSet;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 
@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 
 /**
  * Generic implementation of {@link org.springframework.beans.factory.xml.BeanDefinitionParser}
- * capable of parsing any {@link org.mule.extensions.introspection.api.ExtensionConfiguration}
+ * capable of parsing any {@link Configuration}
  * <p/>
  * It supports simple attributes, pojos, lists/sets of simple attributes, list/sets of beans,
  * and maps of simple attributes
@@ -34,9 +34,9 @@ abstract class ExtensionConfigurationBeanDefinitionParser extends ExtensionBeanD
 {
 
     private final Extension extension;
-    protected final ExtensionConfiguration configuration;
+    protected final Configuration configuration;
 
-    public ExtensionConfigurationBeanDefinitionParser(Extension extension, ExtensionConfiguration configuration)
+    public ExtensionConfigurationBeanDefinitionParser(Extension extension, Configuration configuration)
     {
         this.extension = extension;
         this.configuration = configuration;
@@ -66,7 +66,7 @@ abstract class ExtensionConfigurationBeanDefinitionParser extends ExtensionBeanD
     {
         ResolverSet resolverSet = new ResolverSet();
 
-        for (ExtensionParameter parameter : configuration.getParameters())
+        for (Parameter parameter : configuration.getParameters())
         {
             resolverSet.add(parameter, parseParameter(element, parameter));
         }

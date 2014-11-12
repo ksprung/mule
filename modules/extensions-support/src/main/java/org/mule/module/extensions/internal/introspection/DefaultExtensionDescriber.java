@@ -82,8 +82,7 @@ public final class DefaultExtensionDescriber implements ExtensionDescriber
                 .setName(extension.name())
                 .setDescription(extension.description())
                 .setVersion(extension.version())
-                .setDeclaringClass(context.getExtensionType())
-                .setMinMuleVersion(extension.minMuleVersion());
+                .setDeclaringClass(context.getExtensionType());
     }
 
 

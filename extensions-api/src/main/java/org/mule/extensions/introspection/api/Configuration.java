@@ -31,17 +31,17 @@ import java.util.List;
  *
  * @since 1.0
  */
-public interface ExtensionConfiguration extends Described
+public interface Configuration extends Described
 {
 
     /**
-     * Returns the {@link ExtensionParameter}s
+     * Returns the {@link Parameter}s
      * available for this configuration
      *
-     * @return a immutable {@link java.util.List} with {@link ExtensionParameter}
+     * @return a immutable {@link java.util.List} with {@link Parameter}
      * instances. It might be empty but it will never be {@code null}
      */
-    List<ExtensionParameter> getParameters();
+    List<Parameter> getParameters();
 
     /**
      * The java which implements this configuration in runtime.

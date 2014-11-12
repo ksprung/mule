@@ -13,17 +13,17 @@ import java.util.List;
  *
  * @since 1.0
  */
-public interface ExtensionOperation extends Described
+public interface Operation extends Described
 {
 
     /**
      * Returns the parameters that this operation takes.
      *
      * @return an immutable {@link java.util.List} with instances of
-     * {@link ExtensionParameter}. It might be
+     * {@link Parameter}. It might be
      * empty if the operation takes no parameters, but it will never be {@code null}
      */
-    List<ExtensionParameter> getParameters();
+    List<Parameter> getParameters();
 
     /**
      * Returns the data types that are considered valid as input

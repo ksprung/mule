@@ -13,9 +13,9 @@ import org.mule.extensions.introspection.api.Builder;
 import org.mule.extensions.introspection.api.DataQualifier;
 import org.mule.extensions.introspection.api.DataType;
 import org.mule.extensions.introspection.api.Described;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionOperation;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 import org.mule.util.TemplateParser;
 
@@ -61,7 +61,7 @@ public final class MuleExtensionUtils
      * which means that name clashes can only occur against each other and not within the
      * inner elements of each collection
      */
-    public static void checkNamesClashes(Collection<ExtensionConfiguration> configurations, Collection<ExtensionOperation> operations)
+    public static void checkNamesClashes(Collection<Configuration> configurations, Collection<Operation> operations)
     {
         List<Described> all = new ArrayList<>(configurations.size() + operations.size());
         all.addAll(configurations);
@@ -157,10 +157,10 @@ public final class MuleExtensionUtils
                of.equals(type.getGenericTypes()[0].getQualifier());
     }
 
-    public static void checkSetters(Class<?> declaringClass, Collection<ExtensionParameter> parameters)
+    public static void checkSetters(Class<?> declaringClass, Collection<Parameter> parameters)
     {
-        Set<ExtensionParameter> faultParameters = new HashSet<>(parameters.size());
-        for (ExtensionParameter parameter : parameters)
+        Set<Parameter> faultParameters = new HashSet<>(parameters.size());
+        for (Parameter parameter : parameters)
         {
             if (!IntrospectionUtils.hasSetter(declaringClass, parameter))
             {
@@ -173,7 +173,7 @@ public final class MuleExtensionUtils
             StringBuilder message = new StringBuilder("The following attributes don't have a valid setter on class ")
                     .append(declaringClass.getName()).append(":\n");
 
-            for (ExtensionParameter parameter : faultParameters)
+            for (Parameter parameter : faultParameters)
             {
                 message.append(parameter.getName()).append("\n");
             }

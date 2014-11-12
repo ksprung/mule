@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.config;
 
 import org.mule.extensions.introspection.api.Extension;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
+import org.mule.extensions.introspection.api.Configuration;
 import org.mule.module.extensions.internal.runtime.resolver.ModuleConfigurationValueResolver;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 
@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 public class ModuleConfigurationBeanDefinitionParser extends ExtensionConfigurationBeanDefinitionParser
 {
 
-    public ModuleConfigurationBeanDefinitionParser(Extension extension, ExtensionConfiguration configuration)
+    public ModuleConfigurationBeanDefinitionParser(Extension extension, Configuration configuration)
     {
         super(extension, configuration);
     }

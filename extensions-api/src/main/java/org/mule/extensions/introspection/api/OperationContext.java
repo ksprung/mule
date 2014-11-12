@@ -35,8 +35,8 @@ public interface OperationContext
      *
      * @since 1.0
      */
-    OperationContext setParameter(ExtensionParameter param, Object value);
+    OperationContext setParameter(Parameter param, Object value);
 
-    ExtensionOperation getOperation();
+    Operation getOperation();
 
 }

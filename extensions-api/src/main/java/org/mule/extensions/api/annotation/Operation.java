@@ -6,6 +6,8 @@
  */
 package org.mule.extensions.api.annotation;
 
+import org.mule.extensions.introspection.api.Parameter;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -15,10 +17,10 @@ import java.lang.annotation.Target;
 /**
  * This annotation marks a method inside a extension class as a callable
  * from within a Mule runtime, defining a
- * {@link org.mule.extensions.introspection.api.ExtensionOperation}.
+ * {@link org.mule.extensions.introspection.api.Operation}.
  * <p/>
  * Each argument on this method will be featured as an
- * {@link org.mule.extensions.introspection.api.ExtensionParameter}
+ * {@link Parameter}
  *
  * @since 1.0
  */

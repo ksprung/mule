@@ -8,7 +8,7 @@ package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -17,11 +17,11 @@ import java.util.Set;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Immutable implementation of {@link org.mule.extensions.introspection.api.ExtensionParameter}
+ * Immutable implementation of {@link Parameter}
  *
- * @since 1.0
+ * @since 3.7.0
  */
-final class ImmutableExtensionParameter extends AbstractImmutableDescribed implements ExtensionParameter
+final class ImmutableParameter extends AbstractImmutableDescribed implements Parameter
 {
 
     private static final Set<String> reservedNames = ImmutableSet.<String>builder().add("name").build();
@@ -31,12 +31,12 @@ final class ImmutableExtensionParameter extends AbstractImmutableDescribed imple
     private final boolean dynamic;
     private final Object defaultValue;
 
-    protected ImmutableExtensionParameter(String name,
-                                          String description,
-                                          DataType type,
-                                          boolean required,
-                                          boolean dynamic,
-                                          Object defaultValue)
+    protected ImmutableParameter(String name,
+                                 String description,
+                                 DataType type,
+                                 boolean required,
+                                 boolean dynamic,
+                                 Object defaultValue)
     {
         super(name, description);
 

@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.introspection;
 
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
 
 import org.apache.commons.lang.StringUtils;
@@ -144,14 +144,14 @@ final class DefaultExtensionParameterBuilder implements NavigableExtensionParame
      * {@inheritDoc}
      */
     @Override
-    public ExtensionParameter build()
+    public Parameter build()
     {
         if (required && defaultValue != null)
         {
             throw new IllegalStateException("If a parameter is required then it cannot have a default value");
         }
 
-        return new ImmutableExtensionParameter(name,
+        return new ImmutableParameter(name,
                                                description,
                                                type,
                                                required,

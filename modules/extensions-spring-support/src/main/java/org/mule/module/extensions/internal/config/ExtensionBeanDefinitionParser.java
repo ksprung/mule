@@ -12,7 +12,7 @@ import org.mule.api.lifecycle.Initialisable;
 import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.extensions.introspection.api.DataQualifierVisitor;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.SchemaConstants;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
@@ -335,7 +335,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         definition.setAttribute(MuleHierarchicalBeanDefinitionParserDelegate.MULE_NO_RECURSE, Boolean.TRUE);
     }
 
-    protected ValueResolver parseParameter(Element element, ExtensionParameter parameter)
+    protected ValueResolver parseParameter(Element element, Parameter parameter)
     {
         return parseElement(element, parameter.getName(), parameter.getType(), parameter.getDefaultValue());
     }

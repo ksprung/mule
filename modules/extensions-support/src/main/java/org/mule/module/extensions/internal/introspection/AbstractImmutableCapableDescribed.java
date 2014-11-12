@@ -17,7 +17,7 @@ import java.util.Set;
  * the {@link org.mule.extensions.introspection.api.Described} and
  * {@link org.mule.extensions.introspection.api.Capable} contracts
  *
- * @since 1.0
+ * @since 3.7.0
  */
 abstract class AbstractImmutableCapableDescribed extends AbstractImmutableDescribed implements Capable
 {

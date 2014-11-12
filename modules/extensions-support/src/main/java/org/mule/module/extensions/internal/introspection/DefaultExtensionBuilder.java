@@ -7,12 +7,11 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkArgument;
-import static org.mule.util.Preconditions.checkState;
 import org.mule.common.MuleVersion;
 import org.mule.extensions.introspection.api.Described;
 import org.mule.extensions.introspection.api.Extension;
 import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
+import org.mule.extensions.introspection.api.Configuration;
 import org.mule.extensions.introspection.api.ExtensionConfigurationBuilder;
 import org.mule.extensions.introspection.api.ExtensionOperationBuilder;
 import org.mule.extensions.introspection.api.ExtensionParameterBuilder;
@@ -26,25 +25,19 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Default implementation of {@link org.mule.extensions.introspection.api.ExtensionBuilder}
  * which builds instances of {@link ImmutableExtension}
  *
- * @since 1.0
+ * @since 3.7.0
  */
 public final class DefaultExtensionBuilder extends AbstractCapabilityAwareBuilder<Extension, ExtensionBuilder>
         implements NavigableExtensionBuilder
 {
 
-    private static final String MIN_MULE_VERSION = "3.6.0";
-    private static final MuleVersion DEFAULT_MIN_MULE_VERSION = new MuleVersion(MIN_MULE_VERSION);
-
     private String name;
     private String description;
     private String version;
-    private String minMuleVersion;
     private Class<?> declaringClass;
     private List<ExtensionConfigurationBuilder> configurations = new LinkedList<>();
     private List<ExtensionOperationBuilder> operations = new LinkedList<>();
@@ -110,25 +103,6 @@ public final class DefaultExtensionBuilder extends AbstractCapabilityAwareBuilde
     public String getVersion()
     {
         return version;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ExtensionBuilder setMinMuleVersion(String minMuleVersion)
-    {
-        this.minMuleVersion = minMuleVersion;
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getMinMuleVersion()
-    {
-        return minMuleVersion;
     }
 
     /**
@@ -202,7 +176,6 @@ public final class DefaultExtensionBuilder extends AbstractCapabilityAwareBuilde
         return new ImmutableExtension(name,
                                       description,
                                       version,
-                                      minMuleVersion,
                                       declaringClass,
                                       sortConfigurations(MuleExtensionUtils.build(configurations)),
                                       sort(MuleExtensionUtils.build(operations)),
@@ -212,19 +185,9 @@ public final class DefaultExtensionBuilder extends AbstractCapabilityAwareBuilde
     private void validateMuleVersion()
     {
         // make sure version is valid
-        parseVersion(version, "extension version");
-        checkState(!StringUtils.isBlank(minMuleVersion), "minimum Mule version cannot be blank");
-
-        MuleVersion minMuleVersion = parseVersion(this.minMuleVersion, "minimum Mule Version");
-        checkState(minMuleVersion.atLeast(DEFAULT_MIN_MULE_VERSION),
-                   String.format("Minimum Mule version must be at least %s", DEFAULT_MIN_MULE_VERSION.toString()));
-    }
-
-    private MuleVersion parseVersion(String version, String description)
-    {
         try
         {
-            return new MuleVersion(version);
+            new MuleVersion(version);
         }
         catch (IllegalArgumentException e)
         {
@@ -232,9 +195,9 @@ public final class DefaultExtensionBuilder extends AbstractCapabilityAwareBuilde
         }
     }
 
-    private List<ExtensionConfiguration> sortConfigurations(List<ExtensionConfiguration> configurations)
+    private List<Configuration> sortConfigurations(List<Configuration> configurations)
     {
-        List<ExtensionConfiguration> sorted = new ArrayList<>(configurations.size());
+        List<Configuration> sorted = new ArrayList<>(configurations.size());
         sorted.add(configurations.get(0));
 
         if (configurations.size() > 1)

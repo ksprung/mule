@@ -8,7 +8,7 @@ package org.mule.module.extensions.internal.introspection;
 
 import static junit.framework.Assert.assertEquals;
 import org.mule.extensions.introspection.api.DataQualifier;
-import org.mule.extensions.introspection.api.ExtensionOperation;
+import org.mule.extensions.introspection.api.Operation;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 import org.mule.tck.testmodels.fruit.Apple;
@@ -122,7 +122,7 @@ public class DataQualifierFactoryTestCase extends AbstractMuleTestCase
     @Test
     public void operation()
     {
-        doAssert(DataQualifier.OPERATION, ExtensionOperation.class);
+        doAssert(DataQualifier.OPERATION, Operation.class);
     }
 
     @Test

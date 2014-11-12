@@ -11,12 +11,12 @@ package org.mule.extensions.introspection.api;
  * <p>
  * A parameter provides a name and
  * </p>
- * It can apply either to a {@link ExtensionConfiguration} or a
- * {@link ExtensionOperation}
+ * It can apply either to a {@link Configuration} or a
+ * {@link Operation}
  *
  * @since 1.0
  */
-public interface ExtensionParameter extends Described
+public interface Parameter extends Described
 {
 
     /**

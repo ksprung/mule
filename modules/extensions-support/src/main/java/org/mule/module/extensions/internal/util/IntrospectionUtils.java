@@ -20,7 +20,7 @@ import org.mule.extensions.api.annotation.Configurable;
 import org.mule.extensions.api.annotation.param.Ignore;
 import org.mule.extensions.api.annotation.param.Optional;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.repackaged.internal.org.springframework.core.ResolvableType;
 import org.mule.util.ArrayUtils;
@@ -176,7 +176,7 @@ public class IntrospectionUtils
                              withReturnType(void.class));
     }
 
-    public static Method getSetter(Class<?> declaringClass, ExtensionParameter parameter)
+    public static Method getSetter(Class<?> declaringClass, Parameter parameter)
     {
         Set<Method> setters = getAllMethods(declaringClass, withModifier(Modifier.PUBLIC),
                                             withName(NameUtils.getSetterName(parameter.getName())),
@@ -187,7 +187,7 @@ public class IntrospectionUtils
         return CollectionUtils.isEmpty(setters) ? null : setters.iterator().next();
     }
 
-    public static boolean hasSetter(Class<?> declaringClass, ExtensionParameter parameter)
+    public static boolean hasSetter(Class<?> declaringClass, Parameter parameter)
     {
         return getSetter(declaringClass, parameter) != null;
     }
@@ -197,7 +197,7 @@ public class IntrospectionUtils
         return ClassUtils.getConstructor(clazz, new Class[] {}) != null;
     }
 
-    public static boolean isDescribable(Class<?> declaringClass, ExtensionParameter parameter)
+    public static boolean isDescribable(Class<?> declaringClass, Parameter parameter)
     {
         try
         {
@@ -247,7 +247,7 @@ public class IntrospectionUtils
         return object.getAnnotation(Optional.class) == null;
     }
 
-    public static boolean isRequired(ExtensionParameter parameter, boolean forceOptional)
+    public static boolean isRequired(Parameter parameter, boolean forceOptional)
     {
         return !forceOptional && parameter.isRequired();
     }

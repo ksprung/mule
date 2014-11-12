@@ -19,9 +19,9 @@ import org.mule.extensions.introspection.api.DataQualifier;
 import org.mule.extensions.introspection.api.DataType;
 import org.mule.extensions.introspection.api.Extension;
 import org.mule.extensions.introspection.api.ExtensionBuilder;
-import org.mule.extensions.introspection.api.ExtensionConfiguration;
-import org.mule.extensions.introspection.api.ExtensionOperation;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Configuration;
+import org.mule.extensions.introspection.api.Operation;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.extensions.introspection.api.NoSuchConfigurationException;
 import org.mule.extensions.introspection.api.NoSuchOperationException;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
@@ -49,7 +49,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     private static final String WS_CONSUMER = "WSConsumer";
     private static final String WS_CONSUMER_DESCRIPTION = "Generic Consumer for SOAP Web Services";
     private static final String VERSION = "3.6.0";
-    private static final String MIN_MULE_VERSION = VERSION;
     private static final String WSDL_LOCATION = "wsdlLocation";
     private static final String URI_TO_FIND_THE_WSDL = "URI to find the WSDL";
     private static final String SERVICE = "service";
@@ -79,7 +78,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         return builder.setName(WS_CONSUMER)
                 .setDescription(WS_CONSUMER_DESCRIPTION)
                 .setVersion(VERSION)
-                .setMinMuleVersion(MIN_MULE_VERSION)
                 .setDeclaringClass(ExtensionBuildersTestCase.class)
                 .addCapablity(new Date())
                 .addConfiguration(
@@ -154,7 +152,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
                                                               .setDescription(CALLBACK_DESCRIPTION)
                                                               .setRequired(true)
                                                               .setDynamic(false)
-                                                              .setType(of(ExtensionOperation.class))
+                                                              .setType(of(Operation.class))
                                        )
                 );
     }
@@ -172,7 +170,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         assertEquals(WS_CONSUMER, extension.getName());
         assertEquals(WS_CONSUMER_DESCRIPTION, extension.getDescription());
         assertEquals(VERSION, extension.getVersion());
-        assertEquals(MIN_MULE_VERSION, extension.getMinMuleVersion());
         assertEquals(1, extension.getConfigurations().size());
 
         Set<Date> capabilities = extension.getCapabilities(Date.class);
@@ -185,12 +182,12 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     @Test
     public void defaultConfiguration() throws Exception
     {
-        ExtensionConfiguration configuration = extension.getConfiguration(CONFIG_NAME);
+        Configuration configuration = extension.getConfiguration(CONFIG_NAME);
         assertNotNull(configuration);
         assertEquals(CONFIG_NAME, configuration.getName());
         assertEquals(CONFIG_DESCRIPTION, configuration.getDescription());
 
-        List<ExtensionParameter> parameters = configuration.getParameters();
+        List<Parameter> parameters = configuration.getParameters();
         assertEquals(4, parameters.size());
         assertParameter(parameters.get(0), WSDL_LOCATION, URI_TO_FIND_THE_WSDL, false, true, of(String.class), STRING, null);
         assertParameter(parameters.get(1), SERVICE, SERVICE_NAME, true, true, of(String.class), STRING, null);
@@ -231,16 +228,10 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         builder.addCapablity(null);
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void invalidMinMuleVersion() throws Exception
-    {
-        builder.setMinMuleVersion("3.5.0").build();
-    }
-
     @Test
     public void operations() throws Exception
     {
-        List<ExtensionOperation> operations = extension.getOperations();
+        List<Operation> operations = extension.getOperations();
         assertEquals(2, operations.size());
         assertConsumeOperation(operations);
         assertBroadcastOperation(operations);
@@ -291,12 +282,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         builder.setVersion("i'm new").build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void badMinMuleVersion()
-    {
-        builder.setMinMuleVersion("i'm new").build();
-    }
-
     @Test
     public void configurationsOrder()
     {
@@ -314,7 +299,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
                                           .setDeclaringClass(DECLARING_CLASS))
                 .build();
 
-        List<ExtensionConfiguration> configurations = extension.getConfigurations();
+        List<Configuration> configurations = extension.getConfigurations();
         assertEquals(3, configurations.size());
         assertEquals(CONFIG_NAME, configurations.get(0).getName());
         assertEquals(alpha, configurations.get(1).getName());
@@ -386,9 +371,9 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
                 .build();
     }
 
-    private void assertConsumeOperation(List<ExtensionOperation> operations) throws NoSuchOperationException
+    private void assertConsumeOperation(List<Operation> operations) throws NoSuchOperationException
     {
-        ExtensionOperation operation = operations.get(1);
+        Operation operation = operations.get(1);
         assertSame(operation, extension.getOperation(CONSUMER));
 
         assertEquals(CONSUMER, operation.getName());
@@ -396,15 +381,15 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         strictTypeAssert(operation.getInputTypes(), String.class);
         strictTypeAssert(operation.getOutputType(), String.class);
 
-        List<ExtensionParameter> parameters = operation.getParameters();
+        List<Parameter> parameters = operation.getParameters();
         assertEquals(2, parameters.size());
         assertParameter(parameters.get(0), OPERATION, THE_OPERATION_TO_USE, true, true, of(String.class), STRING, null);
         assertParameter(parameters.get(1), MTOM_ENABLED, MTOM_DESCRIPTION, true, false, of(Boolean.class), BOOLEAN, true);
     }
 
-    private void assertBroadcastOperation(List<ExtensionOperation> operations) throws NoSuchOperationException
+    private void assertBroadcastOperation(List<Operation> operations) throws NoSuchOperationException
     {
-        ExtensionOperation operation = operations.get(0);
+        Operation operation = operations.get(0);
         assertSame(operation, extension.getOperation(BROADCAST));
 
         assertEquals(BROADCAST, operation.getName());
@@ -412,14 +397,14 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         strictTypeAssert(operation.getInputTypes(), String.class);
         strictTypeAssert(operation.getOutputType(), List.class, new Class[] {String.class});
 
-        List<ExtensionParameter> parameters = operation.getParameters();
+        List<Parameter> parameters = operation.getParameters();
         assertEquals(3, parameters.size());
         assertParameter(parameters.get(0), OPERATION, THE_OPERATION_TO_USE, true, true, of(List.class, String.class), LIST, null);
         assertParameter(parameters.get(1), MTOM_ENABLED, MTOM_DESCRIPTION, true, false, of(Boolean.class), BOOLEAN, true);
-        assertParameter(parameters.get(2), CALLBACK, CALLBACK_DESCRIPTION, false, true, of(ExtensionOperation.class), DataQualifier.OPERATION, null);
+        assertParameter(parameters.get(2), CALLBACK, CALLBACK_DESCRIPTION, false, true, of(Operation.class), DataQualifier.OPERATION, null);
     }
 
-    private void assertParameter(ExtensionParameter parameter,
+    private void assertParameter(Parameter parameter,
                                  String name,
                                  String description,
                                  boolean acceptsExpressions,

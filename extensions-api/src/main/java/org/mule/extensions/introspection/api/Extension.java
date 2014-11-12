@@ -63,55 +63,48 @@ public interface Extension extends Described, Capable
     String getVersion();
 
     /**
-     * Returns the minimum mule version for which this extension is valid
-     *
-     * @return the version associated with the eldest mule runtime capable of using this extension
-     */
-    String getMinMuleVersion();
-
-    /**
-     * Returns the {@link ExtensionConfiguration}s
+     * Returns the {@link Configuration}s
      * available for this extension. Each configuration is guaranteed to have a unique name.
      * <p>
      * There is always at least one configuration. The first configuration is the preferred (default) one,
      * the rest of the configurations are ordered alphabetically.
      * </p>
      *
-     * @return an immutable {@link java.util.List} with the available {@link ExtensionConfiguration}s.
+     * @return an immutable {@link java.util.List} with the available {@link Configuration}s.
      */
-    List<ExtensionConfiguration> getConfigurations();
+    List<Configuration> getConfigurations();
 
     /**
-     * Returns the {@link ExtensionConfiguration}
+     * Returns the {@link Configuration}
      * that matches the given name.
      *
      * @param name case sensitive configuration name
-     * @return a {@link ExtensionConfiguration}
+     * @return a {@link Configuration}
      * @throws NoSuchConfigurationException if no configuration available for that name
      */
-    ExtensionConfiguration getConfiguration(String name) throws NoSuchConfigurationException;
+    Configuration getConfiguration(String name) throws NoSuchConfigurationException;
 
     /**
-     * Returns the {@link ExtensionOperation}s
+     * Returns the {@link Operation}s
      * available for this extension. Each operation is guaranteed to have a unique name, and that name
      * cannot be already in use by one of the available {@link #getConfigurations()}
      * <p>
      * There is always at least one operation, and operations will be sorted alphabetically.
      * </p>
      *
-     * @return an immutable {@link java.util.List} of {@link ExtensionOperation}
+     * @return an immutable {@link java.util.List} of {@link Operation}
      */
-    List<ExtensionOperation> getOperations();
+    List<Operation> getOperations();
 
     /**
-     * Returns the {@link ExtensionOperation} that matches
+     * Returns the {@link Operation} that matches
      * the given name.
      *
      * @param name case sensitive operation name
-     * @return a {@link ExtensionOperation}
+     * @return a {@link Operation}
      * @throws NoSuchOperationException if no operation matches the given name
      */
-    ExtensionOperation getOperation(String name) throws NoSuchOperationException;
+    Operation getOperation(String name) throws NoSuchOperationException;
 
     /**
      * The class on which this extension is defined

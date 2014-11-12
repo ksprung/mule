@@ -6,7 +6,7 @@
  */
 package org.mule.extensions.introspection.api;
 
-public interface ExtensionConfigurationBuilder extends Builder<ExtensionConfiguration>
+public interface ExtensionConfigurationBuilder extends Builder<Configuration>
 {
 
     ExtensionConfigurationBuilder setName(String name);

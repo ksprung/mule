@@ -16,7 +16,7 @@ import org.mule.extensions.api.annotation.param.Optional;
 import org.mule.extensions.api.annotation.param.Payload;
 import org.mule.extensions.introspection.api.DataQualifier;
 import org.mule.extensions.introspection.api.DataType;
-import org.mule.extensions.introspection.api.ExtensionOperation;
+import org.mule.extensions.introspection.api.Operation;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.util.ClassUtils;
 import org.mule.util.ParamReader;
@@ -150,7 +150,7 @@ final class MuleExtensionAnnotationParser
     {
         if (NestedProcessor.class.equals(type.getRawType()))
         {
-            return ImmutableDataType.of(ExtensionOperation.class);
+            return ImmutableDataType.of(Operation.class);
         }
 
         return type;

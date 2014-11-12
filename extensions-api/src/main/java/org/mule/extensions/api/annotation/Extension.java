@@ -45,12 +45,6 @@ public @interface Extension
     String version();
 
     /**
-     * The least mule runtime version necessary
-     * to execute this extension
-     */
-    String minMuleVersion() default MIN_MULE_VERSION;
-
-    /**
      * Name of the configuration element
      */
     String configElementName() default DEFAULT_CONFIG_NAME;
@@ -59,6 +53,4 @@ public @interface Extension
     String DEFAULT_CONFIG_NAME = "config";
 
     String DEFAULT_CONFIG_DESCRIPTION = "Default configuration";
-
-    String MIN_MULE_VERSION = "3.6.0";
 }

@@ -18,7 +18,7 @@ import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.lifecycle.LifecycleUtils;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
-import org.mule.extensions.introspection.api.ExtensionParameter;
+import org.mule.extensions.introspection.api.Parameter;
 import org.mule.module.extensions.internal.runtime.DefaultObjectBuilder;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A {@link ValueResolver} which is based on associating a set of
- * {@link ExtensionParameter}s to a {@link ValueResolver}. The result
+ * {@link Parameter}s to a {@link ValueResolver}. The result
  * of evaluating this resolver is a {@link ResolverSetResult}.public static final
  * <p/>
  * The general purpose of this class is to repeatedly evaluate a set of {@link ValueResolver}s
  * which results are to be used in the construction of an object, so that the structure
- * of such can be described only once (by the set of {@link ExtensionParameter}s and {@link ValueResolver}s
+ * of such can be described only once (by the set of {@link Parameter}s and {@link ValueResolver}s
  * but evaluated many times. With this goal in mind is that the return value of this resolver
  * will always be a {@link ResolverSetResult} and that this resolver includes the method
  * {@link #toObjectBuilderOf(Class)}, so that an {@link ObjectBuilder} can easily be derived from
@@ -52,12 +52,12 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResolverSet.class);
 
-    private Map<ExtensionParameter, ValueResolver> resolvers = new LinkedHashMap<>();
+    private Map<Parameter, ValueResolver> resolvers = new LinkedHashMap<>();
     private boolean dynamic = false;
     private MuleContext muleContext;
 
     /**
-     * Links the given {@link ValueResolver} to the given {@link ExtensionParameter}.
+     * Links the given {@link ValueResolver} to the given {@link Parameter}.
      * If such {@code parameter} was already added, then the associated {@code resolver}
      * is replaced.
      * <p/>
@@ -68,12 +68,12 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
      * <b>before</b> lifecycle is applied. Otherwise, adding more resolvers will be allowed
      * but you'll be in charge of whatever lifecycle phases it has missed
      *
-     * @param parameter a not {@code null} {@link ExtensionParameter}
+     * @param parameter a not {@code null} {@link Parameter}
      * @param resolver  a not {@code null} {@link ValueResolver}
      * @return this resolver set to allow chaining
      * @throws IllegalArgumentException is either {@code parameter} or {@code resolver} are {@code null}
      */
-    public ResolverSet add(ExtensionParameter parameter, ValueResolver resolver)
+    public ResolverSet add(Parameter parameter, ValueResolver resolver)
     {
         checkArgument(parameter != null, "parameter cannot be null");
         checkArgument(resolver != null, "resolver cannot be null");
@@ -110,7 +110,7 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
     public ResolverSetResult resolve(MuleEvent event) throws Exception
     {
         ResolverSetResult.Builder builder = ResolverSetResult.newBuilder();
-        for (Map.Entry<ExtensionParameter, ValueResolver> entry : resolvers.entrySet())
+        for (Map.Entry<Parameter, ValueResolver> entry : resolvers.entrySet())
         {
             builder.add(entry.getKey(), entry.getValue().resolve(event));
         }
@@ -121,7 +121,7 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
     /**
      * Returns a new instance of {@link ObjectBuilder} which builds instances
      * of {@code prototypeClass} using the {@link ValueResolver}s and
-     * {@link ExtensionParameter}s configured into this set
+     * {@link Parameter}s configured into this set
      *
      * @param prototypeClass the class which instances you want to create
      * @return a new {@link ObjectBuilder}
@@ -131,7 +131,7 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
         ObjectBuilder builder = new DefaultObjectBuilder();
         builder.setPrototypeClass(prototypeClass);
 
-        for (Map.Entry<ExtensionParameter, ValueResolver> entry : resolvers.entrySet())
+        for (Map.Entry<Parameter, ValueResolver> entry : resolvers.entrySet())
         {
             Method setter = IntrospectionUtils.getSetter(prototypeClass, entry.getKey());
             builder.addProperty(setter, entry.getValue());

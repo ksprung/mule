@@ -21,8 +21,6 @@ public interface NavigableExtensionBuilder extends ExtensionBuilder
 
     String getVersion();
 
-    String getMinMuleVersion();
-
     Class<?> getDeclaringClass();
 
     List<ExtensionConfigurationBuilder> getConfigurations();
