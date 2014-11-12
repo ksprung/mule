@@ -6,7 +6,7 @@
  */
 package org.mule.extensions.introspection.fluent;
 
-public interface WithConfig
+interface HasParameters
 {
-    ConfigDeclaration withConfig(String name);
+    void addParameter(ParameterDeclaration parameter);
 }

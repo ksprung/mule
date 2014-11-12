@@ -6,8 +6,6 @@
  */
 package org.mule.extensions.introspection.fluent;
 
-import org.mule.extensions.introspection.fluent.internal.Declaration;
-
 public class FluentDescriber
 {
 
@@ -15,7 +13,7 @@ public class FluentDescriber
 
     public void test() {
 
-        new Declaration("ws-consumer", "1.0").describedAs("Web Service Consumer")
+        new DeclarationConstruct("ws-consumer", "1.0").describedAs("Web Service Consumer")
                 .withConfig("config").declaredIn(String.class)
                     .with().requiredParameter("wsdl-location").describedAs("uri to find the wsdl").ofType(String.class).whichIsNotDynamic()
                     .with().requiredParameter("service").describedAs("serviceName").ofType(String.class)
