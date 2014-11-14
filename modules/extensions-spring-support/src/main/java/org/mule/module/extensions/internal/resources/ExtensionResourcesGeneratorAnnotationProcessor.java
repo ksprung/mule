@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.resources;
 
 import static org.mule.util.Preconditions.checkState;
-import org.mule.config.SPIServiceRegistry;
+import org.mule.api.registry.SPIServiceRegistry;
 import org.mule.extensions.introspection.CapabilityAwareBuilder;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.ExtensionBuilder;
@@ -15,11 +15,11 @@ import org.mule.extensions.introspection.ExtensionDescriber;
 import org.mule.extensions.introspection.ExtensionDescribingContext;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.extensions.resources.ResourcesGenerator;
-import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
+import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.XmlCapabilityExtractor;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
+import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.util.ClassUtils;
 import org.mule.util.ExceptionUtils;
 
@@ -67,7 +67,7 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
     {
         log("Starting Resources generator for Extensions");
 
-        ResourcesGenerator generator = new AnnotationProcessorResourceGenerator(processingEnv);
+        ResourcesGenerator generator = new AnnotationProcessorResourceGenerator(processingEnv, new SPIServiceRegistry());
         try
         {
             for (TypeElement extensionElement : findExtensions(roundEnv))
@@ -93,7 +93,7 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
         ExtensionBuilder builder = DefaultExtensionBuilder.newBuilder();
         Class<?> extensionClass = getClass(extensionElement);
 
-        ExtensionDescribingContext context = new ImmutableExtensionDescribingContext(extensionClass, builder);
+        ExtensionDescribingContext context = new ImmutableDescribingContext(extensionClass, builder);
         context.getCustomParameters().put(SchemaDocumenterPostProcessor.EXTENSION_ELEMENT, extensionElement);
         context.getCustomParameters().put(SchemaDocumenterPostProcessor.PROCESSING_ENVIRONMENT, processingEnv);
 
@@ -106,7 +106,7 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
 
     private ExtensionDescriber buildExtensionDescriber()
     {
-        ExtensionDescriber describer = new DefaultExtensionDescriber();
+        ExtensionDescriber describer = new AnnotationsBasedDescriber();
         describer.setServiceRegistry(new SPIServiceRegistry());
 
         return describer;

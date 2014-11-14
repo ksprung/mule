@@ -21,7 +21,6 @@ import org.mule.extensions.annotation.param.Ignore;
 import org.mule.extensions.annotation.param.Optional;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.repackaged.internal.org.springframework.core.ResolvableType;
 import org.mule.util.ArrayUtils;
 import org.mule.util.ClassUtils;
@@ -213,7 +212,7 @@ public class IntrospectionUtils
 
     private static DataType toDataType(ResolvableType type)
     {
-        return ImmutableDataType.of(type.getRawClass(), toRawTypes(type.getGenerics()));
+        return DataType.of(type.getRawClass(), toRawTypes(type.getGenerics()));
     }
 
     private static Class<?>[] toRawTypes(ResolvableType[] resolvableTypes)

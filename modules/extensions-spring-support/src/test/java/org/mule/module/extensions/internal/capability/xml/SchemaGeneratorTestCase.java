@@ -12,10 +12,10 @@ import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.ExtensionBuilder;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.HeisenbergExtension;
-import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
+import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaGenerator;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
+import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 import org.mule.util.IOUtils;
@@ -42,7 +42,7 @@ public class SchemaGeneratorTestCase extends AbstractMuleTestCase
     {
         String expectedSchema = IOUtils.getResourceAsString("heisenberg.xsd", getClass());
         ExtensionBuilder builder = DefaultExtensionBuilder.newBuilder();
-        new DefaultExtensionDescriber().describe(new ImmutableExtensionDescribingContext(HeisenbergExtension.class, builder));
+        new AnnotationsBasedDescriber().describe(new ImmutableDescribingContext(HeisenbergExtension.class, builder));
         Extension extension = builder.build();
         XmlCapability capability = extension.getCapabilities(XmlCapability.class).iterator().next();
 

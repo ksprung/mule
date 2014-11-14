@@ -7,6 +7,10 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.util.Preconditions.checkState;
+import static org.reflections.ReflectionUtils.getAllFields;
+import static org.reflections.ReflectionUtils.getAllMethods;
+import static org.reflections.ReflectionUtils.withAnnotation;
+import static org.reflections.ReflectionUtils.withModifier;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.NestedProcessor;
@@ -18,7 +22,6 @@ import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Operation;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
-import org.mule.util.ClassUtils;
 import org.mule.util.ParamReader;
 
 import com.google.common.collect.ImmutableList;
@@ -28,6 +31,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,8 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -53,24 +55,20 @@ final class MuleExtensionAnnotationParser
     {
         Extension extension = extensionType.getAnnotation(Extension.class);
         checkState(extension != null, String.format("%s is not a Mule extension since it's not annotated with %s",
-                                                                  extensionType.getName(), Extension.class.getName()));
+                                                    extensionType.getName(), Extension.class.getName()));
 
         return extension;
     }
 
     static Collection<Field> getConfigurableFields(Class<?> extensionType)
     {
-        List<Field> fields = ClassUtils.getDeclaredFields(extensionType, true);
-        return CollectionUtils.select(fields, new Predicate()
-        {
-            @Override
-            public boolean evaluate(Object object)
-            {
-                return ((Field) object).getAnnotation(Configurable.class) != null;
-            }
-        });
+        return getAllFields(extensionType, withAnnotation(Configurable.class));
     }
 
+    static Collection<Method> getOperationMethods(Class<?> extensionType)
+    {
+        return getAllMethods(extensionType, withAnnotation(org.mule.extensions.annotation.Operation.class), withModifier(Modifier.PUBLIC));
+    }
 
     public static List<ParameterDescriptor> parseParameter(Method method)
     {
@@ -150,7 +148,7 @@ final class MuleExtensionAnnotationParser
     {
         if (NestedProcessor.class.equals(type.getRawType()))
         {
-            return ImmutableDataType.of(Operation.class);
+            return DataType.of(Operation.class);
         }
 
         return type;

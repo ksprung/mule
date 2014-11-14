@@ -12,9 +12,9 @@ import org.mule.extensions.introspection.ExtensionBuilder;
 import org.mule.extensions.resources.GenerableResource;
 import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.extensions.resources.spi.GenerableResourceContributor;
-import org.mule.module.extensions.internal.ImmutableExtensionDescribingContext;
+import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
+import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.module.extensions.internal.resources.AbstractResourcesGenerator;
 import org.mule.util.ArrayUtils;
 import org.mule.util.IOUtils;
@@ -109,7 +109,7 @@ public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
 
             ExtensionBuilder builder = DefaultExtensionBuilder.newBuilder();
 
-            new DefaultExtensionDescriber().describe(new ImmutableExtensionDescribingContext(extensionType, builder));
+            new AnnotationsBasedDescriber().describe(new ImmutableDescribingContext(extensionType, builder));
 
             extensions.add(builder.build());
         }

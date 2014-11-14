@@ -7,7 +7,9 @@
 package org.mule.module.extensions.internal.capability.xml.schema;
 
 import static org.mule.util.Preconditions.checkArgument;
+import org.mule.extensions.introspection.DescribingContext;
 import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.spi.DescriberPostProcessor;
 import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
 import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 
@@ -18,24 +20,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of {@link org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor}
+ * Implementation of {@link DescriberPostProcessor}
  * that's only applicable when invoked in the context of an
  * annotations {@link javax.annotation.processing.Processor}.
  * <p/>
  * This post processor uses the APT api to access the AST tree and extract the extensions
  * javadocs which are used to enrich the extension's descriptions.
  * <p/>
- * For this to be possible, the provided builder is required to be an instance of
- * {@link org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder},
- * and the context should have as custom parameters a {@link javax.annotation.processing.ProcessingEnvironment}
- * and the corresponding {@link javax.lang.model.element.TypeElement}, which will be fetched in the
+ * For this to be possible, the context should have as custom parameters a {@link ProcessingEnvironment}
+ * and the corresponding {@link TypeElement}, which will be fetched in the
  * provided context under the keys {@link #PROCESSING_ENVIRONMENT} and {@link #EXTENSION_ELEMENT}
  * <p/>
  * If any of the above requirements is not met, then the post processor will skip the extension
  *
  * @since 3.7.0
  */
-public final class SchemaDocumenterPostProcessor implements ExtensionDescriberPostProcessor
+public final class SchemaDocumenterPostProcessor implements DescriberPostProcessor
 {
 
     private static Logger logger = LoggerFactory.getLogger(SchemaDocumenterPostProcessor.class);
@@ -44,14 +44,8 @@ public final class SchemaDocumenterPostProcessor implements ExtensionDescriberPo
     public static final String EXTENSION_ELEMENT = "EXTENSION_ELEMENT";
 
     @Override
-    public void postProcess(ExtensionDescribingContext context)
+    public void postProcess(DescribingContext context)
     {
-        if (!(context.getExtensionBuilder() instanceof NavigableExtensionBuilder))
-        {
-            logger.debug("builder does not implement {}... Skipping", NavigableExtensionBuilder.class.getName());
-            return;
-        }
-
         ProcessingEnvironment processingEnv = getCheckedParameter(context, PROCESSING_ENVIRONMENT, ProcessingEnvironment.class);
         TypeElement extensionElement = getCheckedParameter(context, EXTENSION_ELEMENT, TypeElement.class);
 

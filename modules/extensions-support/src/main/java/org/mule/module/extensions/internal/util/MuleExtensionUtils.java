@@ -10,10 +10,10 @@ import static org.mule.util.Preconditions.checkArgument;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
 import org.mule.extensions.introspection.Builder;
+import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Described;
-import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
@@ -30,6 +30,7 @@ import com.google.common.collect.Multisets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -227,4 +228,19 @@ public final class MuleExtensionUtils
         }
     }
 
+    public static <T extends Described> List<T> sort(List<T> list)
+    {
+        Collections.sort(list, new DescribedComparator());
+        return list;
+    }
+
+    private static class DescribedComparator implements Comparator<Described>
+    {
+
+        @Override
+        public int compare(Described o1, Described o2)
+        {
+            return o1.getName().compareTo(o2.getName());
+        }
+    }
 }

@@ -4,9 +4,12 @@
  * license, a copy of which has been included with this distribution in the
  * LICENSE.txt file.
  */
-package org.mule.config;
+package org.mule.api.registry;
 
-import java.util.Iterator;
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collection;
+import java.util.ServiceLoader;
 
 /**
  * Implementation of {@link ServiceRegistry}
@@ -22,17 +25,17 @@ public class SPIServiceRegistry implements ServiceRegistry
      * {@inheritDoc}
      */
     @Override
-    public <T> Iterator<T> lookupProviders(Class<T> providerClass, ClassLoader loader)
+    public <T> Collection<T> lookupProviders(Class<T> providerClass, ClassLoader classLoader)
     {
-        return javax.imageio.spi.ServiceRegistry.lookupProviders(providerClass, loader);
+        return ImmutableList.copyOf(ServiceLoader.load(providerClass, classLoader).iterator());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public <T> Iterator<T> lookupProviders(Class<T> providerClass)
+    public <T> Collection<T> lookupProviders(Class<T> providerClass)
     {
-        return javax.imageio.spi.ServiceRegistry.lookupProviders(providerClass);
+        return ImmutableList.copyOf(ServiceLoader.load(providerClass).iterator());
     }
 }

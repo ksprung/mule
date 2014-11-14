@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNull;
 import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
 import static org.mule.extensions.introspection.DataQualifier.LIST;
 import static org.mule.extensions.introspection.DataQualifier.STRING;
-import static org.mule.module.extensions.internal.introspection.ImmutableDataType.of;
+import static org.mule.extensions.introspection.DataType.of;
 import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
@@ -25,11 +25,9 @@ import org.mule.extensions.introspection.NoSuchOperationException;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +39,7 @@ import org.junit.Test;
 public class ExtensionBuildersTestCase extends AbstractMuleTestCase
 {
 
-    private static final DataType STRING_DATA_TYPE = ImmutableDataType.of(String.class);
+    private static final DataType STRING_DATA_TYPE = of(String.class);
     private static final Class<?> DECLARING_CLASS = ExtensionBuildersTestCase.class;
 
     private static final String CONFIG_NAME = "config";
@@ -67,7 +65,6 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     private static final String BROADCAST_DESCRIPTION = "consumes many services";
     private static final String CALLBACK = "callback";
     private static final String CALLBACK_DESCRIPTION = "async callback";
-
 
     private ExtensionBuilder builder;
     private Extension extension;
@@ -381,17 +378,17 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         }
     }
 
-    private void strictTypeAssert(List<DataType> types, Class<?> expected, Class<?>[]... genericTypes)
-    {
-        assertEquals(1, types.size());
-        strictTypeAssert(types.get(0), expected, genericTypes);
-    }
-
-    private void strictTypeAssert(DataType type, Class<?> expected, Class<?>[]... genericTypes)
-    {
-        assertEquals(expected, type.getRawType());
-        Arrays.equals(genericTypes, type.getGenericTypes());
-    }
+    //private void strictTypeAssert(List<DataType> types, Class<?> expected, Class<?>[]... genericTypes)
+    //{
+    //    assertEquals(1, types.size());
+    //    strictTypeAssert(types.get(0), expected, genericTypes);
+    //}
+    //
+    //private void strictTypeAssert(DataType type, Class<?> expected, Class<?>[]... genericTypes)
+    //{
+    //    assertEquals(expected, type.getRawType());
+    //    Arrays.equals(genericTypes, type.getGenericTypes());
+    //}
 
     @SuppressWarnings("unused")
     private static class WsConsumerConfig

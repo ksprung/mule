@@ -6,8 +6,9 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.Described;
-import org.mule.util.Preconditions;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -25,10 +26,10 @@ abstract class AbstractImmutableDescribed implements Described
 
     protected AbstractImmutableDescribed(String name, String description)
     {
-        Preconditions.checkArgument(!StringUtils.isBlank(name), "Name attribute cannot be null or blank");
+        checkArgument(!StringUtils.isBlank(name), "Name attribute cannot be null or blank");
 
         this.name = name;
-        this.description = description;
+        this.description = description != null ? description : EMPTY;
     }
 
     /**

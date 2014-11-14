@@ -9,6 +9,7 @@ package org.mule.module.extensions.internal.resources;
 
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 import static org.apache.commons.lang.StringUtils.EMPTY;
+import org.mule.api.registry.ServiceRegistry;
 import org.mule.extensions.resources.GenerableResource;
 import org.mule.extensions.resources.ResourcesGenerator;
 
@@ -30,8 +31,9 @@ final class AnnotationProcessorResourceGenerator extends AbstractResourcesGenera
 
     private final ProcessingEnvironment processingEnv;
 
-    public AnnotationProcessorResourceGenerator(ProcessingEnvironment processingEnv)
+    public AnnotationProcessorResourceGenerator(ProcessingEnvironment processingEnv, ServiceRegistry serviceRegistry)
     {
+        super(serviceRegistry);
         this.processingEnv = processingEnv;
     }
 

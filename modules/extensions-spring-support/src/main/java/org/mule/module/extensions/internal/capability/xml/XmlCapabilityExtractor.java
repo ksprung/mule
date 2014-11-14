@@ -8,10 +8,12 @@ package org.mule.module.extensions.internal.capability.xml;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 import org.mule.extensions.annotation.capability.Xml;
-import org.mule.extensions.introspection.CapabilityAwareBuilder;
 import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.introspection.declaration.Construct;
+import org.mule.extensions.introspection.declaration.Declaration;
+import org.mule.extensions.introspection.declaration.DeclarationConstruct;
+import org.mule.extensions.introspection.declaration.HasCapabilities;
 import org.mule.extensions.introspection.spi.CapabilityExtractor;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 
 /**
  * Implementation of {@link org.mule.extensions.introspection.spi.CapabilityExtractor}
@@ -26,13 +28,13 @@ public class XmlCapabilityExtractor implements CapabilityExtractor
     public static final String DEFAULT_SCHEMA_LOCATION_MASK = "http://www.mulesoft.org/schema/mule/extension/%s";
 
     @Override
-    public Object extractCapability(Class<?> extensionType, CapabilityAwareBuilder<?, ?> builder)
+    public Object extractCapability(DeclarationConstruct declaration, Class<?> capableType, HasCapabilities<? extends Construct> capableCallback)
     {
-        Xml xml = extensionType.getAnnotation(Xml.class);
+        Xml xml = capableType.getAnnotation(Xml.class);
         if (xml != null)
         {
-            XmlCapability capability = processCapability(xml, builder);
-            builder.addCapablity(capability);
+            XmlCapability capability = processCapability(xml, declaration);
+            capableCallback.withCapability(capability);
 
             return capability;
         }
@@ -40,29 +42,19 @@ public class XmlCapabilityExtractor implements CapabilityExtractor
         return null;
     }
 
-    private XmlCapability processCapability(Xml xml, CapabilityAwareBuilder<?, ?> builder)
+    private XmlCapability processCapability(Xml xml, DeclarationConstruct construct)
     {
-        if (builder instanceof NavigableExtensionBuilder)
-        {
-            return applyRules(xml, (NavigableExtensionBuilder) builder);
-        }
-        else
-        {
-            return new ImmutableXmlCapability(xml.schemaVersion(), xml.namespace(), xml.schemaLocation());
-        }
-    }
 
-    private XmlCapability applyRules(Xml xml, NavigableExtensionBuilder builder)
-    {
-        String schemaVersion = isBlank(xml.schemaVersion()) ? builder.getVersion() : xml.schemaVersion();
-        String schemaLocation = isBlank(xml.schemaLocation()) ? buildDefaultLocation(builder) : xml.schemaLocation();
+        Declaration declaration = construct.getDeclaration();
+        String schemaVersion = isBlank(xml.schemaVersion()) ? declaration.getVersion() : xml.schemaVersion();
+        String schemaLocation = isBlank(xml.schemaLocation()) ? buildDefaultLocation(declaration) : xml.schemaLocation();
 
         return new ImmutableXmlCapability(schemaVersion, xml.namespace(), schemaLocation);
     }
 
-    private String buildDefaultLocation(NavigableExtensionBuilder builder)
+    private String buildDefaultLocation(Declaration declaration)
     {
-        return String.format(DEFAULT_SCHEMA_LOCATION_MASK, builder.getName());
+        return String.format(DEFAULT_SCHEMA_LOCATION_MASK, declaration.getName());
     }
 
 }

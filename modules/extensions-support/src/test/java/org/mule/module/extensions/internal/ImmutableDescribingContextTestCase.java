@@ -23,10 +23,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @SmallTest
 @RunWith(MockitoJUnitRunner.class)
-public class ImmutableExtensionDescribingContextTestCase extends AbstractMuleTestCase
+public class ImmutableDescribingContextTestCase extends AbstractMuleTestCase
 {
 
-    private static final Class<?> extensionType = ImmutableExtensionDescribingContextTestCase.class;
+    private static final Class<?> extensionType = ImmutableDescribingContextTestCase.class;
 
     @Mock
     private ExtensionBuilder builder;
@@ -36,7 +36,7 @@ public class ImmutableExtensionDescribingContextTestCase extends AbstractMuleTes
     @Before
     public void before()
     {
-        context = new ImmutableExtensionDescribingContext(extensionType, builder);
+        context = new ImmutableDescribingContext(extensionType, builder);
     }
 
     @Test

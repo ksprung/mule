@@ -37,7 +37,7 @@ import static org.mule.module.extensions.HeisenbergExtension.HEISENBERG;
 import static org.mule.module.extensions.HeisenbergExtension.NAMESPACE;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_LOCATION;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
-import org.mule.config.ServiceRegistry;
+import org.mule.api.registry.ServiceRegistry;
 import org.mule.extensions.annotation.Configurable;
 import org.mule.extensions.annotation.Configurations;
 import org.mule.extensions.annotation.capability.Xml;
@@ -55,7 +55,7 @@ import org.mule.module.extensions.Door;
 import org.mule.module.extensions.HealthStatus;
 import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
+import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
@@ -77,7 +77,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 @SmallTest
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
+public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
 {
 
     private static final String EXTENDED_CONFIG_NAME = "extendedConfig";
@@ -103,13 +103,13 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
         builder = DefaultExtensionBuilder.newBuilder();
 
 
-        describer = new DefaultExtensionDescriber();
+        describer = new AnnotationsBasedDescriber();
         describer.setServiceRegistry(serviceRegistry);
 
         Iterator<ExtensionDescriberPostProcessor> emptyIterator = Collections.emptyIterator();
         when(serviceRegistry.lookupProviders(same(ExtensionDescriberPostProcessor.class))).thenReturn(emptyIterator);
         when(serviceRegistry.lookupProviders(same(ExtensionDescriberPostProcessor.class), any(ClassLoader.class))).thenReturn(emptyIterator);
-        describingContext = new ImmutableExtensionDescribingContext(HeisenbergExtension.class, builder);
+        describingContext = new ImmutableDescribingContext(HeisenbergExtension.class, builder);
     }
 
     @Test
@@ -154,14 +154,14 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
     @Test
     public void heisengergPointer() throws Exception
     {
-        describingContext = new ImmutableExtensionDescribingContext(HeisenbergPointer.class, builder);
+        describingContext = new ImmutableDescribingContext(HeisenbergPointer.class, builder);
         describeTestModule();
     }
 
     @Test
     public void heisengergPointerPlusExternalConfig() throws Exception
     {
-        describingContext = new ImmutableExtensionDescribingContext(HeisengergPointerPlusExternalConfig.class, builder);
+        describingContext = new ImmutableDescribingContext(HeisengergPointerPlusExternalConfig.class, builder);
         describer.describe(describingContext);
 
         Extension extension = builder.build();
@@ -177,7 +177,7 @@ public class DefaultExtensionDescriberTestCase extends AbstractMuleTestCase
     @Test(expected = IllegalArgumentException.class)
     public void heisengergPointerPlusUnnamedExternalConfig() throws Exception
     {
-        describingContext = new ImmutableExtensionDescribingContext(HeisengergPointerPlusUnnamedExternalConfig.class, builder);
+        describingContext = new ImmutableDescribingContext(HeisengergPointerPlusUnnamedExternalConfig.class, builder);
         describer.describe(describingContext);
 
         describingContext.getExtensionBuilder().build();

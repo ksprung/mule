@@ -6,48 +6,37 @@
  */
 package org.mule.module.extensions.internal;
 
-import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.DescribingContext;
+import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Immutable implementation of {@link ExtensionDescribingContext}.
+ * Immutable implementation of {@link DescribingContext}.
  * The fact that this class's attributes are immutable, doesn't mean that their inner state
  * is in fact immutable also.
  *
  * @since 3.7.0
  */
-public final class ImmutableExtensionDescribingContext implements ExtensionDescribingContext
+public final class ImmutableDescribingContext implements DescribingContext
 {
 
-    private final Class<?> extensionType;
-    private final ExtensionBuilder builder;
+    private final DeclarationConstruct declarationConstruct;
     private final Map<String, Object> customParameters = new HashMap<>();
 
-    public ImmutableExtensionDescribingContext(Class<?> extensionType, ExtensionBuilder builder)
+    public ImmutableDescribingContext(DeclarationConstruct declarationConstruct)
     {
-        this.extensionType = extensionType;
-        this.builder = builder;
+        this.declarationConstruct = declarationConstruct;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Class<?> getExtensionType()
+    public DeclarationConstruct getDeclarationConstruct()
     {
-        return extensionType;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public ExtensionBuilder getExtensionBuilder()
-    {
-        return builder;
+        return declarationConstruct;
     }
 
     /**

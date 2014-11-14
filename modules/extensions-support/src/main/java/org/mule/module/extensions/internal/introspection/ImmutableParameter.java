@@ -48,6 +48,11 @@ final class ImmutableParameter extends AbstractImmutableDescribed implements Par
 
         checkArgument(type != null, "Parameters must have a type");
 
+        if (required && defaultValue != null)
+        {
+            throw new IllegalStateException("If a parameter is required then it cannot have a default value");
+        }
+
         this.type = type;
         this.required = required;
         this.dynamic = dynamic;

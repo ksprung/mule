@@ -14,7 +14,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mule.config.ServiceRegistry;
+import org.mule.api.registry.ServiceRegistry;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.resources.GenerableResource;
 import org.mule.extensions.resources.ResourcesGenerator;

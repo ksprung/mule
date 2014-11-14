@@ -10,7 +10,7 @@ import static junit.framework.Assert.assertEquals;
 import org.mule.extensions.ExtensionsManager;
 import org.mule.extensions.introspection.Extension;
 import org.mule.module.extensions.HeisenbergExtension;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionDescriber;
+import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.module.extensions.internal.introspection.ExtensionDiscoverer;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
@@ -42,7 +42,7 @@ public class ExtensionDiscovererTestCase extends AbstractMuleTestCase
     @Test
     public void scan() throws Exception
     {
-        List<Extension> extensions = discoverer.discover(getClass().getClassLoader(), new DefaultExtensionDescriber());
+        List<Extension> extensions = discoverer.discover(getClass().getClassLoader(), new AnnotationsBasedDescriber());
         assertEquals(1, extensions.size());
 
         Extension extension = extensions.get(0);
@@ -52,7 +52,7 @@ public class ExtensionDiscovererTestCase extends AbstractMuleTestCase
     @Test(expected = IllegalArgumentException.class)
     public void nullClassLoader()
     {
-        discoverer.discover(null, new DefaultExtensionDescriber());
+        discoverer.discover(null, new AnnotationsBasedDescriber());
     }
 
     @Test(expected = IllegalArgumentException.class)

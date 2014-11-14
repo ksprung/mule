@@ -11,13 +11,13 @@ import static junit.framework.Assert.assertNotNull;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.HeisenbergExtension;
-import org.mule.module.extensions.internal.DefaultExtensionDescriberTestCase;
+import org.mule.module.extensions.internal.AnnotationsBasedDescriberTestCase;
 import org.mule.tck.size.SmallTest;
 
 import java.util.Set;
 
 @SmallTest
-public class XmlCapabilityExtensionDescriberTestCase extends DefaultExtensionDescriberTestCase
+public class XmlCapabilityExtensionDescriberTestCase extends AnnotationsBasedDescriberTestCase
 {
 
     @Override

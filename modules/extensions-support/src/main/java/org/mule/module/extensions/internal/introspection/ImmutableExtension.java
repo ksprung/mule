@@ -6,16 +6,15 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkInstantiable;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNamesClashes;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNullOrRepeatedNames;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.toMap;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Configuration;
-import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.NoSuchConfigurationException;
 import org.mule.extensions.introspection.NoSuchOperationException;
+import org.mule.extensions.introspection.Operation;
 
 import com.google.common.collect.ImmutableList;
 
@@ -34,14 +33,12 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
 {
 
     private final String version;
-    private final Class<?> declaringClass;
     private final Map<String, Configuration> configurations;
     private final Map<String, Operation> operations;
 
     protected ImmutableExtension(String name,
                                  String description,
                                  String version,
-                                 Class<?> declaringClass,
                                  List<Configuration> configurations,
                                  List<Operation> operations,
                                  Set<Object> capabilities)
@@ -49,19 +46,16 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
         super(name, description, capabilities);
 
         checkArgument(!name.contains(" "), "Extension name cannot contain spaces");
-        checkInstantiable(declaringClass);
-        this.declaringClass = declaringClass;
-
         checkNullOrRepeatedNames(configurations, "configurations");
         checkNullOrRepeatedNames(operations, "operations");
         checkNamesClashes(configurations, operations);
+
         this.configurations = toMap(configurations);
         this.operations = toMap(operations);
 
         checkArgument(!StringUtils.isBlank(version), "version cannot be blank");
         this.version = version;
     }
-
 
     /**
      * {@inheritDoc}
@@ -103,15 +97,6 @@ final class ImmutableExtension extends AbstractImmutableCapableDescribed impleme
     public String getVersion()
     {
         return version;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Class<?> getDeclaringClass()
-    {
-        return declaringClass;
     }
 
     /**
