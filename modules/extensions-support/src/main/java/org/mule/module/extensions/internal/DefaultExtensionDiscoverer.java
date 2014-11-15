@@ -13,8 +13,9 @@ import org.mule.extensions.introspection.Extension;
 import org.mule.module.extensions.internal.introspection.ExtensionDiscoverer;
 import org.mule.module.extensions.internal.introspection.ExtensionFactory;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collection;
 import java.util.List;
 
 final class DefaultExtensionDiscoverer implements ExtensionDiscoverer
@@ -37,14 +38,17 @@ final class DefaultExtensionDiscoverer implements ExtensionDiscoverer
     {
         checkArgument(classLoader != null, "classloader cannot be null");
 
-        Iterator<Describer> describers = serviceRegistry.lookupProviders(Describer.class, classLoader);
-        List<Extension> extensions = new LinkedList<>();
-        while (describers.hasNext())
-        {
-            Describer describer = describers.next();
-            extensions.add(extensionFactory.createFrom(describer.describe()));
+        Collection<Describer> describers = serviceRegistry.lookupProviders(Describer.class, classLoader);
+        if (describers.isEmpty()) {
+            return ImmutableList.of();
         }
 
-        return extensions;
+        ImmutableList.Builder<Extension> builder = ImmutableList.builder();
+        for (Describer describer : describers)
+        {
+            builder.add(extensionFactory.createFrom(describer.describe()));
+        }
+
+        return builder.build();
     }
 }

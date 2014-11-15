@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import org.mule.DefaultMuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.expression.DefaultExpressionManager;
-import org.mule.module.extensions.internal.introspection.ImmutableDataType;
+import org.mule.extensions.introspection.DataType;
 import org.mule.tck.junit4.AbstractMuleContextTestCase;
 
 import org.junit.Test;
@@ -104,7 +104,7 @@ public class EvaluateAndTransformValueResolverTestCase extends AbstractMuleConte
 
     private ValueResolver getResolver(String expression, Class<?> expectedType) throws Exception
     {
-        EvaluateAndTransformValueResolver resolver = new EvaluateAndTransformValueResolver(expression, ImmutableDataType.of(expectedType));
+        EvaluateAndTransformValueResolver resolver = new EvaluateAndTransformValueResolver(expression, DataType.of(expectedType));
         resolver.setMuleContext(muleContext);
         resolver.initialise();
 

@@ -6,17 +6,17 @@
  */
 package org.mule.module.extensions.internal;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.ExtensionDescriber;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.internal.introspection.ExtensionDiscoverer;
 import org.mule.tck.junit4.AbstractMuleTestCase;
@@ -76,7 +76,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
 
         classLoader = getClass().getClassLoader();
 
-        when(discoverer.discover(same(classLoader), any(ExtensionDescriber.class))).thenAnswer(new Answer<List<Extension>>()
+        when(discoverer.discover(same(classLoader))).thenAnswer(new Answer<List<Extension>>()
         {
             @Override
             public List<Extension> answer(InvocationOnMock invocation) throws Throwable
@@ -90,7 +90,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
     public void discover()
     {
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        verify(discoverer).discover(same(classLoader), any(ExtensionDescriber.class));
+        verify(discoverer).discover(same(classLoader));
         testEquals(getTestExtensions(), extensions);
     }
 
@@ -110,7 +110,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         discover();
         Set<Extension> extensions = extensionsManager.getExtensionsCapableOf(XmlCapability.class);
 
-        assertEquals(1, extensions.size());
+        assertThat(extensions, hasSize(1));
         testEquals(extension1, extensions.iterator().next());
     }
 
@@ -122,8 +122,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
 
         discover();
         Set<Extension> extensions = extensionsManager.getExtensionsCapableOf(XmlCapability.class);
-
-        assertTrue(extensions.isEmpty());
+        assertThat(extensions.isEmpty(), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -142,7 +141,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         when(extension1.getVersion()).thenReturn(NEWER_VERSION);
 
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        assertEquals(1, extensions.size());
+        assertThat(extensions, hasSize(1));
         testEquals(extension1, extensions.get(0));
     }
 
@@ -156,7 +155,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         when(extension1.getVersion()).thenReturn(OLDER_VERSION);
 
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        assertTrue(extensions.isEmpty());
+        assertThat(extensions.isEmpty(), is(true));
     }
 
     @Test
@@ -164,7 +163,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
     {
         discover();
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        assertTrue(extensions.isEmpty());
+        assertThat(extensions.isEmpty(), is(true));
     }
 
     @Test
@@ -177,7 +176,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         when(extension1.getVersion()).thenReturn("brandnew");
 
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        assertTrue(extensions.isEmpty());
+        assertThat(extensions.isEmpty(), is(true));
     }
 
     @Test
@@ -194,7 +193,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         when(extension2.getVersion()).thenReturn(NEWER_VERSION);
 
         List<Extension> extensions = extensionsManager.discoverExtensions(classLoader);
-        assertEquals(1, extensions.size());
+        assertThat(extensions, hasSize(1));
         testEquals(extension2, extensions.get(0));
     }
 
@@ -202,13 +201,13 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
     public void contextClassLoaderKept()
     {
         discover();
-        assertSame(classLoader, Thread.currentThread().getContextClassLoader());
+        assertThat(classLoader, sameInstance(Thread.currentThread().getContextClassLoader()));
     }
 
     @Test
     public void contextClassLoaderKeptAfterException()
     {
-        when(discoverer.discover(same(classLoader), any(ExtensionDescriber.class))).thenThrow(RuntimeException.class);
+        when(discoverer.discover(same(classLoader))).thenThrow(RuntimeException.class);
         try
         {
             discover();
@@ -216,7 +215,7 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
         }
         catch (RuntimeException e)
         {
-            assertSame(classLoader, Thread.currentThread().getContextClassLoader());
+            assertThat(classLoader, sameInstance(Thread.currentThread().getContextClassLoader()));
         }
     }
 
@@ -230,21 +229,21 @@ public class DefaultExtensionsManagerTestCase extends AbstractMuleTestCase
 
     private void testEquals(Collection<Extension> expected, Collection<Extension> obtained)
     {
-        assertEquals(expected.size(), obtained.size());
+        assertThat(obtained.size(), is(expected.size()));
         Iterator<Extension> expectedIterator = expected.iterator();
         Iterator<Extension> obtainedIterator = expected.iterator();
 
         while (expectedIterator.hasNext())
         {
-            assertTrue(obtainedIterator.hasNext());
+            assertThat(obtainedIterator.hasNext(), is(true));
             testEquals(expectedIterator.next(), obtainedIterator.next());
         }
     }
 
     private void testEquals(Extension expected, Extension obtained)
     {
-        assertEquals(expected.getName(), obtained.getName());
-        assertEquals(expected.getVersion(), obtained.getVersion());
+        assertThat(obtained.getName(), equalTo(expected.getName()));
+        assertThat(obtained.getVersion(), equalTo(expected.getVersion()));
     }
 
 }

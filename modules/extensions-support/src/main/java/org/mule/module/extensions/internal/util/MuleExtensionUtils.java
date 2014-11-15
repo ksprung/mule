@@ -9,10 +9,7 @@ package org.mule.module.extensions.internal.util;
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.api.MuleContext;
 import org.mule.api.context.MuleContextAware;
-import org.mule.extensions.introspection.Builder;
 import org.mule.extensions.introspection.Configuration;
-import org.mule.extensions.introspection.DataQualifier;
-import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Described;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
@@ -108,22 +105,6 @@ public final class MuleExtensionUtils
         return repeatedNames;
     }
 
-    public static <T> List<T> build(Collection<? extends Builder<T>> builders)
-    {
-        if (CollectionUtils.isEmpty(builders))
-        {
-            return Collections.emptyList();
-        }
-
-        List<T> built = new ArrayList<>(builders.size());
-        for (Builder<T> builder : builders)
-        {
-            built.add(builder.build());
-        }
-
-        return built;
-    }
-
     public static <T> List<T> immutableList(Collection<T> collection)
     {
         return collection != null ? ImmutableList.copyOf(collection) : ImmutableList.<T>of();
@@ -138,24 +119,6 @@ public final class MuleExtensionUtils
         }
 
         return map.build();
-    }
-
-    public static Map<Class<?>, Object> toClassMap(Collection<?> objects)
-    {
-        ImmutableMap.Builder<Class<?>, Object> map = ImmutableMap.builder();
-        for (Object object : objects)
-        {
-            map.put(object.getClass(), object);
-        }
-
-        return map.build();
-    }
-
-    public static boolean isListOf(DataType type, DataQualifier of)
-    {
-        return DataQualifier.LIST.equals(type.getQualifier()) &&
-               type.getGenericTypes().length > 0 &&
-               of.equals(type.getGenericTypes()[0].getQualifier());
     }
 
     public static void checkSetters(Class<?> declaringClass, Collection<Parameter> parameters)

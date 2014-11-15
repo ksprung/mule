@@ -6,18 +6,11 @@
  */
 package org.mule.module.extensions.internal;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mule.extensions.annotation.Extension.DEFAULT_CONFIG_NAME;
 import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
 import static org.mule.extensions.introspection.DataQualifier.DATE_TIME;
@@ -37,42 +30,37 @@ import static org.mule.module.extensions.HeisenbergExtension.HEISENBERG;
 import static org.mule.module.extensions.HeisenbergExtension.NAMESPACE;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_LOCATION;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
-import org.mule.api.registry.ServiceRegistry;
 import org.mule.extensions.annotation.Configurable;
 import org.mule.extensions.annotation.Configurations;
 import org.mule.extensions.annotation.capability.Xml;
-import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
-import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.ExtensionDescriber;
-import org.mule.extensions.introspection.ExtensionDescribingContext;
+import org.mule.extensions.introspection.Describer;
 import org.mule.extensions.introspection.Operation;
-import org.mule.extensions.introspection.Parameter;
-import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
+import org.mule.extensions.introspection.declaration.ConfigurationDeclaration;
+import org.mule.extensions.introspection.declaration.Construct;
+import org.mule.extensions.introspection.declaration.Declaration;
+import org.mule.extensions.introspection.declaration.OperationDeclaration;
+import org.mule.extensions.introspection.declaration.ParameterDeclaration;
 import org.mule.module.extensions.Door;
 import org.mule.module.extensions.HealthStatus;
 import org.mule.module.extensions.HeisenbergExtension;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
 import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
+import org.mule.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections.Predicate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @SmallTest
@@ -90,108 +78,78 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
     private static final String HIDE_METH_IN_EVENT_OPERATION = "hideMethInEvent";
     private static final String HIDE_METH_IN_MESSAGE_OPERATION = "hideMethInMessage";
 
-    @Mock
-    private ServiceRegistry serviceRegistry;
-
-    private ExtensionBuilder builder;
-    private ExtensionDescriber describer;
-    private ExtensionDescribingContext describingContext;
+    private Describer describer;
 
     @Before
     public void setUp()
     {
-        builder = DefaultExtensionBuilder.newBuilder();
+        describer = describerFor(HeisenbergExtension.class);
+    }
 
-
-        describer = new AnnotationsBasedDescriber();
-        describer.setServiceRegistry(serviceRegistry);
-
-        Iterator<ExtensionDescriberPostProcessor> emptyIterator = Collections.emptyIterator();
-        when(serviceRegistry.lookupProviders(same(ExtensionDescriberPostProcessor.class))).thenReturn(emptyIterator);
-        when(serviceRegistry.lookupProviders(same(ExtensionDescriberPostProcessor.class), any(ClassLoader.class))).thenReturn(emptyIterator);
-        describingContext = new ImmutableDescribingContext(HeisenbergExtension.class, builder);
+    protected Describer describerFor(final Class<?> type) {
+        return new AnnotationsBasedDescriber()
+        {
+            @Override
+            protected Class<?> getExtensionType()
+            {
+                return type;
+            }
+        };
     }
 
     @Test
     public void describeTestModule() throws Exception
     {
-        describer.describe(describingContext);
+        Construct construct = describer.describe();
 
-        Extension extension = builder.build();
-        assertExtensionProperties(extension);
+        Declaration declaration = construct.getRootConstruct().getDeclaration();
+        assertExtensionProperties(declaration);
 
-        assertTestModuleConfiguration(extension);
-        assertTestModuleOperations(extension);
+        assertTestModuleConfiguration(declaration);
+        assertTestModuleOperations(declaration);
 
-        assertCapabilities(extension);
-
-        verify(serviceRegistry).lookupProviders(any(Class.class), any(ClassLoader.class));
-    }
-
-    @Test
-    public void postProcessorsInvoked() throws Exception
-    {
-        ExtensionDescriberPostProcessor postProcessor1 = mock(ExtensionDescriberPostProcessor.class);
-        ExtensionDescriberPostProcessor postProcessor2 = mock(ExtensionDescriberPostProcessor.class);
-
-        Iterator<ExtensionDescriberPostProcessor> it = Arrays.asList(postProcessor1, postProcessor2).iterator();
-
-        when(serviceRegistry.lookupProviders(same(ExtensionDescriberPostProcessor.class), any(ClassLoader.class)))
-                .thenReturn(it);
-
-        describeTestModule();
-
-        verify(postProcessor1).postProcess(describingContext);
-        verify(postProcessor1).postProcess(describingContext);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void nullServiceRegistry()
-    {
-        describer.setServiceRegistry(null);
+        assertCapabilities(declaration);
     }
 
     @Test
     public void heisengergPointer() throws Exception
     {
-        describingContext = new ImmutableDescribingContext(HeisenbergPointer.class, builder);
+        describer = describerFor(HeisenbergPointer.class);
         describeTestModule();
     }
 
     @Test
     public void heisengergPointerPlusExternalConfig() throws Exception
     {
-        describingContext = new ImmutableDescribingContext(HeisengergPointerPlusExternalConfig.class, builder);
-        describer.describe(describingContext);
+        describer = describerFor(HeisengergPointerPlusExternalConfig.class);
+        Declaration declaration = describer.describe().getRootConstruct().getDeclaration();
 
-        Extension extension = builder.build();
-        assertExtensionProperties(extension);
+        assertExtensionProperties(declaration);
+        assertThat(declaration.getConfigurations().size(), equalTo(2));
 
-        assertThat(extension.getConfigurations().size(), equalTo(2));
-        Configuration configuration = extension.getConfiguration(EXTENDED_CONFIG_NAME);
-        assertThat(configuration, notNullValue());
-        assertThat(configuration.getParameters().size(), equalTo(1));
+        ConfigurationDeclaration configuration = declaration.getConfigurations().get(1);
+        assertThat(configuration, is(notNullValue()));
+        assertThat(configuration.getName(), equalTo(EXTENDED_CONFIG_NAME));
+        assertThat(configuration.getParameters(), hasSize(1));
         assertParameter(configuration.getParameters().get(0), "extendedProperty", "", String.class, STRING, true, true, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void heisengergPointerPlusUnnamedExternalConfig() throws Exception
     {
-        describingContext = new ImmutableDescribingContext(HeisengergPointerPlusUnnamedExternalConfig.class, builder);
-        describer.describe(describingContext);
-
-        describingContext.getExtensionBuilder().build();
+        describer = describerFor(HeisengergPointerPlusUnnamedExternalConfig.class);
+        describer.describe();
     }
 
 
-    private void assertTestModuleConfiguration(Extension extension) throws Exception
+    private void assertTestModuleConfiguration(Declaration declaration) throws Exception
     {
-        assertEquals(1, extension.getConfigurations().size());
-        Configuration conf = extension.getConfigurations().get(0);
-        assertSame(conf, extension.getConfiguration(DEFAULT_CONFIG_NAME));
+        assertThat(declaration.getConfigurations(), hasSize(1));
+        ConfigurationDeclaration conf = declaration.getConfigurations().get(0);
+        assertThat(conf.getName(), equalTo(DEFAULT_CONFIG_NAME));
 
-        List<Parameter> parameters = conf.getParameters();
-        assertEquals(13, parameters.size());
+        List<ParameterDeclaration> parameters = conf.getParameters();
+        assertThat(parameters, hasSize(13));
 
         assertParameter(parameters.get(0), "myName", "", String.class, STRING, false, true, HEISENBERG);
         assertParameter(parameters.get(1), "age", "", Integer.class, INTEGER, false, true, AGE);
@@ -210,66 +168,76 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    private void assertExtensionProperties(Extension extension)
+    private void assertExtensionProperties(Declaration declaration)
     {
-        assertNotNull(extension);
+        assertThat(declaration, is(notNullValue()));
 
-        assertEquals(EXTENSION_NAME, extension.getName());
-        assertEquals(EXTENSION_DESCRIPTION, extension.getDescription());
-        assertEquals(EXTENSION_VERSION, extension.getVersion());
+        assertThat(declaration.getName(), is(EXTENSION_NAME));
+        assertThat(declaration.getDescription(), is(EXTENSION_DESCRIPTION));
+        assertThat(declaration.getVersion(), is(EXTENSION_VERSION));
     }
 
-    private void assertTestModuleOperations(Extension extension) throws Exception
+    private void assertTestModuleOperations(Declaration declaration) throws Exception
     {
-        assertEquals(6, extension.getOperations().size());
-        assertOperation(extension, SAY_MY_NAME_OPERATION, "");
-        assertOperation(extension, GET_ENEMY_OPERATION, "");
-        assertOperation(extension, KILL_OPERATION, "");
-        assertOperation(extension, KILL_CUSTOM_OPERATION, "");
-        assertOperation(extension, HIDE_METH_IN_EVENT_OPERATION, "");
-        assertOperation(extension, HIDE_METH_IN_MESSAGE_OPERATION, "");
+        assertThat(declaration.getOperations(), hasSize(6));
+        assertOperation(declaration, SAY_MY_NAME_OPERATION, "");
+        assertOperation(declaration, GET_ENEMY_OPERATION, "");
+        assertOperation(declaration, KILL_OPERATION, "");
+        assertOperation(declaration, KILL_CUSTOM_OPERATION, "");
+        assertOperation(declaration, HIDE_METH_IN_EVENT_OPERATION, "");
+        assertOperation(declaration, HIDE_METH_IN_MESSAGE_OPERATION, "");
 
-        Operation operation = extension.getOperation(SAY_MY_NAME_OPERATION);
-        assertNotNull(operation);
-        assertTrue(operation.getParameters().isEmpty());
+        OperationDeclaration operation = getOperation(declaration, SAY_MY_NAME_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters().isEmpty(), is(true));
 
-        operation = extension.getOperation(GET_ENEMY_OPERATION);
-        assertNotNull(operation);
-        assertEquals(1, operation.getParameters().size());
+        operation = getOperation(declaration, GET_ENEMY_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters(), hasSize(1));
         assertParameter(operation.getParameters().get(0), "index", "", int.class, INTEGER, true, true, null);
 
-        operation = extension.getOperation(KILL_OPERATION);
-        assertNotNull(operation);
-        assertEquals(1, operation.getParameters().size());
+        operation = getOperation(declaration, KILL_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters(), hasSize(1));
         assertParameter(operation.getParameters().get(0), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
 
-        operation = extension.getOperation(KILL_CUSTOM_OPERATION);
-        assertNotNull(operation);
-        assertEquals(2, operation.getParameters().size());
+        operation = getOperation(declaration, KILL_CUSTOM_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters(), hasSize(2));
         assertParameter(operation.getParameters().get(0), "goodbyeMessage", "", String.class, STRING, false, true, "#[payload]");
         assertParameter(operation.getParameters().get(1), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
 
-        operation = extension.getOperation(HIDE_METH_IN_EVENT_OPERATION);
-        assertNotNull(operation);
-        assertTrue(operation.getParameters().isEmpty());
+        operation = getOperation(declaration, HIDE_METH_IN_EVENT_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters().isEmpty(), is(true));
 
-        operation = extension.getOperation(HIDE_METH_IN_MESSAGE_OPERATION);
-        assertNotNull(operation);
-        assertTrue(operation.getParameters().isEmpty());
+        operation = getOperation(declaration, HIDE_METH_IN_MESSAGE_OPERATION);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getParameters().isEmpty(), is(true));
     }
 
-    private void assertOperation(Extension extension,
+    private void assertOperation(Declaration declaration,
                                  String operationName,
                                  String operationDescription) throws Exception
     {
 
-        Operation operation = extension.getOperation(operationName);
-
-        assertEquals(operationName, operation.getName());
-        assertEquals(operationDescription, operation.getDescription());
+        OperationDeclaration operation = getOperation(declaration, operationName);
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getDescription(), equalTo(operationDescription));
     }
 
-    private void assertParameter(Parameter param,
+    private OperationDeclaration getOperation(Declaration declaration, final String operationName) {
+        return (OperationDeclaration) CollectionUtils.find(declaration.getOperations(), new Predicate()
+        {
+            @Override
+            public boolean evaluate(Object object)
+            {
+                return ((OperationDeclaration) object).getName().equals(operationName);
+            }
+        });
+    }
+
+    private void assertParameter(ParameterDeclaration param,
                                  String name,
                                  String description,
                                  Class<?> type,
@@ -278,29 +246,18 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
                                  boolean dynamic,
                                  Object defaultValue)
     {
-
-        assertEquals(name, param.getName());
-        assertEquals(description, param.getDescription());
-        assertEquals(type, param.getType().getRawType());
-        assertSame(qualifier, param.getType().getQualifier());
-        assertEquals(required, param.isRequired());
-        assertEquals(dynamic, param.isDynamic());
-        assertEquals(defaultValue, param.getDefaultValue());
+        assertThat(param.getName(), equalTo(name));
+        assertThat(param.getDescription(), equalTo(description));
+        assertThat(param.getType(), equalTo(DataType.of(type)));
+        assertThat(param.getType().getQualifier(), is(qualifier));
+        assertThat(param.isRequired(), is(required));
+        assertThat(param.isDynamic(), is(dynamic));
+        assertThat(param.getDefaultValue(), equalTo(defaultValue));
     }
 
-    protected void assertCapabilities(Extension extension)
+    protected void assertCapabilities(Declaration declaration)
     {
         // template method for asserting custom capabilities in modules that define them
-    }
-
-    private <T> void match(List<DataType> dataTypes, T[] array)
-    {
-        assertEquals(dataTypes.size(), array.length);
-
-        for (int i = 0; i < array.length; i++)
-        {
-            assertEquals(dataTypes.get(i).getRawType(), array[i]);
-        }
     }
 
     @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)

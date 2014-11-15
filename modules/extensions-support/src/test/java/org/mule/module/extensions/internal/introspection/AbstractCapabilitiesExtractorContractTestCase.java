@@ -6,10 +6,13 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.Answers.RETURNS_DEEP_STUBS;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.introspection.declaration.Construct;
+import org.mule.extensions.introspection.declaration.DeclarationConstruct;
+import org.mule.extensions.introspection.declaration.HasCapabilities;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
@@ -26,7 +29,10 @@ public abstract class AbstractCapabilitiesExtractorContractTestCase extends Abst
     protected CapabilitiesResolver resolver;
 
     @Mock
-    protected NavigableExtensionBuilder builder;
+    protected HasCapabilities<Construct> capabilitiesCallback;
+
+    @Mock(answer = RETURNS_DEEP_STUBS)
+    protected DeclarationConstruct declarationConstruct;
 
     @Before
     public void before()
@@ -37,19 +43,26 @@ public abstract class AbstractCapabilitiesExtractorContractTestCase extends Abst
     @Test
     public void noCapability()
     {
-        resolver.resolveCapabilities(getClass(), builder);
-        verify(builder, never()).addCapablity(any(XmlCapability.class));
+        resolver.resolveCapabilities(declarationConstruct, getClass(), capabilitiesCallback);
+        verify(capabilitiesCallback, never()).withCapability(anyObject());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void nullClass()
     {
-        resolver.resolveCapabilities(null, builder);
+        resolver.resolveCapabilities(declarationConstruct, null, capabilitiesCallback);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void nullBuilder()
+    public void nullCallback()
     {
-        resolver.resolveCapabilities(getClass(), null);
+        resolver.resolveCapabilities(declarationConstruct, getClass(), null);
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullDeclaration()
+    {
+        resolver.resolveCapabilities(null, getClass(), capabilitiesCallback);
+    }
+
 }

@@ -7,8 +7,8 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.sort;
-import org.mule.common.MuleVersion;
 import org.mule.api.registry.ServiceRegistry;
+import org.mule.common.MuleVersion;
 import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DescribingContext;
 import org.mule.extensions.introspection.Extension;
@@ -25,7 +25,6 @@ import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -79,7 +78,7 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     {
         if (declarations.isEmpty())
         {
-            return Collections.emptyList();
+            return ImmutableList.of();
         }
 
         List<Configuration> configurations = new ArrayList<>(declarations.size());
@@ -103,7 +102,7 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     {
         if (declarations.isEmpty())
         {
-            return Collections.emptyList();
+            return ImmutableList.of();
         }
 
         List<Operation> operations = new ArrayList<>(declarations.size());
@@ -127,7 +126,7 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     {
         if (declarations.isEmpty())
         {
-            return Collections.emptyList();
+            return ImmutableList.of();
         }
 
         List<Parameter> parameters = new ArrayList<>(declarations.size());
