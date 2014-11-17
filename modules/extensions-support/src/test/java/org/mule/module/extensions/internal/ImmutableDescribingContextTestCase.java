@@ -6,12 +6,13 @@
  */
 package org.mule.module.extensions.internal;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static junit.framework.Assert.assertTrue;
-import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.ExtensionDescribingContext;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import org.mule.extensions.introspection.DescribingContext;
+import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
@@ -26,42 +27,34 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class ImmutableDescribingContextTestCase extends AbstractMuleTestCase
 {
 
-    private static final Class<?> extensionType = ImmutableDescribingContextTestCase.class;
-
     @Mock
-    private ExtensionBuilder builder;
+    private DeclarationConstruct construct;
 
-    private ExtensionDescribingContext context;
+    private DescribingContext context;
 
     @Before
     public void before()
     {
-        context = new ImmutableDescribingContext(extensionType, builder);
+        context = new ImmutableDescribingContext(construct);
     }
 
     @Test
     public void getExtensionType()
     {
-        assertSame(extensionType, context.getExtensionType());
-    }
-
-    @Test
-    public void getExtensionBuilder()
-    {
-        assertSame(builder, context.getExtensionBuilder());
+        assertThat(construct, is(sameInstance(context.getDeclarationConstruct())));
     }
 
     @Test
     public void customParameters()
     {
-        assertNotNull(context.getCustomParameters());
-        assertTrue(context.getCustomParameters().isEmpty());
+        assertThat(context.getCustomParameters(), is(notNullValue()));
+        assertThat(context.getCustomParameters().isEmpty(), is(true));
 
         final String key = "key";
         final String value = "value";
 
         context.getCustomParameters().put(key, value);
-        assertEquals(1, context.getCustomParameters().size());
-        assertEquals(value, context.getCustomParameters().get(key));
+        assertThat(context.getCustomParameters().values(), hasSize(1));
+        assertThat(context.getCustomParameters().get(key), is(sameInstance((Object) value)));
     }
 }
