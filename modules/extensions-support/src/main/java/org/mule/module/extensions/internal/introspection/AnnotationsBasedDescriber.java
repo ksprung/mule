@@ -34,17 +34,19 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Implementation of {@link Describer} which generates a {@link Construct} by
- * scanning annotations on a type returned by the abstract method
- * {@link #getExtensionType()}
+ * scanning annotations on a type provided in the constructor
  *
  * @since 3.7.0
  */
-public abstract class AnnotationsBasedDescriber implements Describer
+public class AnnotationsBasedDescriber implements Describer
 {
     private CapabilitiesResolver capabilitiesResolver = new CapabilitiesResolver();
+    private final Class<?> extensionType;
 
-
-    protected abstract Class<?> getExtensionType();
+    public AnnotationsBasedDescriber(Class<?> extensionType)
+    {
+        this.extensionType = extensionType;
+    }
 
     /**
      * {@inheritDoc}
@@ -52,10 +54,9 @@ public abstract class AnnotationsBasedDescriber implements Describer
     @Override
     public final Construct describe()
     {
-        final Class<?> extensionType = getExtensionType();
         checkArgument(extensionType != null, String.format("activator %s does not specify an extension type", getClass().getName()));
 
-        Extension extension = getExtension(getExtensionType());
+        Extension extension = getExtension(extensionType);
         DeclarationConstruct declaration = newDeclarationConstruct(extension);
         declareConfigurations(declaration, extensionType);
         declareOperations(declaration, extensionType);

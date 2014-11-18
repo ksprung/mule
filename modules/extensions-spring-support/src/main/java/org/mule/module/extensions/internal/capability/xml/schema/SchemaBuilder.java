@@ -12,9 +12,9 @@ import static org.mule.extensions.introspection.DataQualifier.OPERATION;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isDynamic;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isIgnored;
 import static org.mule.module.extensions.internal.util.IntrospectionUtils.isRequired;
+import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
-import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
@@ -47,7 +47,6 @@ import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelC
 import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelElement;
 import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelSimpleType;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Union;
-import org.mule.module.extensions.internal.introspection.ImmutableDataType;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.module.extensions.internal.util.NameUtils;
 import org.mule.util.ArrayUtils;
@@ -266,7 +265,7 @@ public class SchemaBuilder
 
     private Attribute createNameAttribute()
     {
-        return createAttribute(SchemaConstants.ATTRIBUTE_NAME_NAME, ImmutableDataType.of(String.class), true, false);
+        return createAttribute(SchemaConstants.ATTRIBUTE_NAME_NAME, DataType.of(String.class), true, false);
     }
 
     public SchemaBuilder registerOperation(Operation operation)

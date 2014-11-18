@@ -7,16 +7,18 @@
 package org.mule.tck.junit4;
 
 import org.mule.api.MuleContext;
+import org.mule.api.registry.SPIServiceRegistry;
+import org.mule.api.registry.ServiceRegistry;
+import org.mule.extensions.introspection.Describer;
 import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.ExtensionBuilder;
 import org.mule.extensions.resources.GenerableResource;
 import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.extensions.resources.spi.GenerableResourceContributor;
-import org.mule.module.extensions.internal.ImmutableDescribingContext;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
+import org.mule.module.extensions.internal.introspection.DefaultExtensionFactory;
+import org.mule.module.extensions.internal.introspection.ExtensionFactory;
 import org.mule.module.extensions.internal.resources.AbstractResourcesGenerator;
 import org.mule.util.ArrayUtils;
+import org.mule.util.ClassUtils;
 import org.mule.util.IOUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -27,8 +29,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.imageio.spi.ServiceRegistry;
 
 import org.apache.commons.io.FileUtils;
 import org.reflections.Reflections;
@@ -56,6 +56,9 @@ import org.reflections.Reflections;
  */
 public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
 {
+
+    private final ServiceRegistry serviceRegistry = new SPIServiceRegistry();
+    private final ExtensionFactory extensionFactory = new DefaultExtensionFactory(serviceRegistry);
 
     @Override
     protected MuleContext createMuleContext() throws Exception
@@ -89,7 +92,7 @@ public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
 
     private List<GenerableResourceContributor> getGenerableResourceContributors()
     {
-        return ImmutableList.copyOf(ServiceRegistry.lookupProviders(GenerableResourceContributor.class));
+        return ImmutableList.copyOf(serviceRegistry.lookupProviders(GenerableResourceContributor.class));
     }
 
     private void discoverExtensions() throws Exception
@@ -100,23 +103,21 @@ public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
         Class<?>[] managedExtensionTypes = getManagedExtensionTypes();
         final boolean filtersExtensions = managedExtensionTypes != null && managedExtensionTypes.length > 0;
 
-        for (Class<?> extensionType : reflections.getTypesAnnotatedWith(org.mule.extensions.annotation.Extension.class))
+        for (Class<? extends Describer> describerType : reflections.getSubTypesOf(Describer.class))
         {
-            if (filtersExtensions && !ArrayUtils.contains(managedExtensionTypes, extensionType))
+            if (filtersExtensions && !ArrayUtils.contains(managedExtensionTypes, describerType))
             {
                 continue;
             }
 
-            ExtensionBuilder builder = DefaultExtensionBuilder.newBuilder();
-
-            new AnnotationsBasedDescriber().describe(new ImmutableDescribingContext(extensionType, builder));
-
-            extensions.add(builder.build());
+            Describer describer = ClassUtils.instanciateClass(describerType);
+            Extension extension = extensionFactory.createFrom(describer.describe());
+            extensions.add(extension);
         }
 
         File targetDirectory = getGenerationTargetDirectory();
 
-        ResourcesGenerator generator = new ExtensionsTestInfrastructureResourcesGenerator(targetDirectory);
+        ResourcesGenerator generator = new ExtensionsTestInfrastructureResourcesGenerator(serviceRegistry, targetDirectory);
 
         List<GenerableResourceContributor> resourceContributors = getGenerableResourceContributors();
         for (Extension extension : extensions)
@@ -201,8 +202,9 @@ public abstract class ExtensionsFunctionalTestCase extends FunctionalTestCase
 
         private File targetDirectory;
 
-        private ExtensionsTestInfrastructureResourcesGenerator(File targetDirectory)
+        private ExtensionsTestInfrastructureResourcesGenerator(ServiceRegistry serviceRegistry, File targetDirectory)
         {
+            super(serviceRegistry);
             this.targetDirectory = targetDirectory;
         }
 

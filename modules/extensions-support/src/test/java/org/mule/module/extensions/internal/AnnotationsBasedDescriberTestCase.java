@@ -86,15 +86,9 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         describer = describerFor(HeisenbergExtension.class);
     }
 
-    protected Describer describerFor(final Class<?> type) {
-        return new AnnotationsBasedDescriber()
-        {
-            @Override
-            protected Class<?> getExtensionType()
-            {
-                return type;
-            }
-        };
+    protected Describer describerFor(final Class<?> type)
+    {
+        return new AnnotationsBasedDescriber(type);
     }
 
     @Test
@@ -226,7 +220,8 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         assertThat(operation.getDescription(), equalTo(operationDescription));
     }
 
-    private OperationDeclaration getOperation(Declaration declaration, final String operationName) {
+    private OperationDeclaration getOperation(Declaration declaration, final String operationName)
+    {
         return (OperationDeclaration) CollectionUtils.find(declaration.getOperations(), new Predicate()
         {
             @Override
@@ -265,6 +260,7 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
     @Configurations(HeisenbergExtension.class)
     public static class HeisenbergPointer extends HeisenbergExtension
     {
+
     }
 
     @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)

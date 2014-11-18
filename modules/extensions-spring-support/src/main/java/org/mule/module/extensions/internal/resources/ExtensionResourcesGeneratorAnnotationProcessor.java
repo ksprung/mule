@@ -8,18 +8,17 @@ package org.mule.module.extensions.internal.resources;
 
 import static org.mule.util.Preconditions.checkState;
 import org.mule.api.registry.SPIServiceRegistry;
-import org.mule.extensions.introspection.CapabilityAwareBuilder;
+import org.mule.extensions.introspection.Describer;
+import org.mule.extensions.introspection.DescribingContext;
 import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.ExtensionBuilder;
-import org.mule.extensions.introspection.ExtensionDescriber;
-import org.mule.extensions.introspection.ExtensionDescribingContext;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.extensions.resources.ResourcesGenerator;
 import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.XmlCapabilityExtractor;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor;
-import org.mule.module.extensions.internal.introspection.DefaultExtensionBuilder;
 import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
+import org.mule.module.extensions.internal.introspection.DefaultExtensionFactory;
+import org.mule.module.extensions.internal.introspection.ExtensionFactory;
 import org.mule.util.ClassUtils;
 import org.mule.util.ExceptionUtils;
 
@@ -56,11 +55,7 @@ import javax.tools.Diagnostic;
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProcessor
 {
-
-    public ExtensionResourcesGeneratorAnnotationProcessor()
-    {
-        super();
-    }
+    private final ExtensionFactory extensionFactory = new DefaultExtensionFactory(new SPIServiceRegistry());
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
@@ -90,32 +85,22 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
 
     private Extension parseExtension(TypeElement extensionElement)
     {
-        ExtensionBuilder builder = DefaultExtensionBuilder.newBuilder();
         Class<?> extensionClass = getClass(extensionElement);
+        Describer describer = new AnnotationsBasedDescriber(extensionClass);
 
-        ExtensionDescribingContext context = new ImmutableDescribingContext(extensionClass, builder);
+        DescribingContext context = new ImmutableDescribingContext(describer.describe().getRootConstruct());
         context.getCustomParameters().put(SchemaDocumenterPostProcessor.EXTENSION_ELEMENT, extensionElement);
         context.getCustomParameters().put(SchemaDocumenterPostProcessor.PROCESSING_ENVIRONMENT, processingEnv);
 
-        buildExtensionDescriber().describe(context);
+        extractXmlCapability(extensionClass, context);
 
-        extractXmlCapability(extensionClass, builder);
-
-        return builder.build();
+        return extensionFactory.createFrom(context.getDeclarationConstruct());
     }
 
-    private ExtensionDescriber buildExtensionDescriber()
-    {
-        ExtensionDescriber describer = new AnnotationsBasedDescriber();
-        describer.setServiceRegistry(new SPIServiceRegistry());
-
-        return describer;
-    }
-
-    private XmlCapability extractXmlCapability(Class<?> extensionClass, CapabilityAwareBuilder<?, ?> builder)
+    private XmlCapability extractXmlCapability(Class<?> extensionClass, DescribingContext context)
     {
         XmlCapabilityExtractor extractor = new XmlCapabilityExtractor();
-        XmlCapability capability = (XmlCapability) extractor.extractCapability(extensionClass, builder);
+        XmlCapability capability = (XmlCapability) extractor.extractCapability(context.getDeclarationConstruct(), extensionClass, context.getDeclarationConstruct());
         checkState(capability != null, "Could not find xml capability for extension " + extensionClass.getName());
 
         return capability;
