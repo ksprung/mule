@@ -1396,7 +1396,6 @@
             </dependency>
 
             <dependency>
-<<<<<<< HEAD
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-framework</artifactId>
                 <version>${grizzlyVersion}</version>
@@ -1423,14 +1422,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
-=======
+            <dependency>
                 <groupId>org.reflections</groupId>
                 <artifactId>reflections</artifactId>
                 <version>${reflectionsVersion}</version>
             </dependency>
-            
->>>>>>> MULE-7641: Extensions API
         </dependencies>
 
     </dependencyManagement>
