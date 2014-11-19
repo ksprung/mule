@@ -12,7 +12,7 @@ import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.declaration.Construct;
 import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.extensions.introspection.declaration.HasCapabilities;
-import org.mule.extensions.introspection.spi.CapabilityExtractor;
+import org.mule.module.extensions.CapabilityExtractor;
 
 import com.google.common.collect.ImmutableList;
 

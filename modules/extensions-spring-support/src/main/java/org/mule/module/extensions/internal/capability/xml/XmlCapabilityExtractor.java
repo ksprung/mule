@@ -13,10 +13,10 @@ import org.mule.extensions.introspection.declaration.Construct;
 import org.mule.extensions.introspection.declaration.Declaration;
 import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.extensions.introspection.declaration.HasCapabilities;
-import org.mule.extensions.introspection.spi.CapabilityExtractor;
+import org.mule.module.extensions.CapabilityExtractor;
 
 /**
- * Implementation of {@link org.mule.extensions.introspection.spi.CapabilityExtractor}
+ * Implementation of {@link CapabilityExtractor}
  * that verifies if the extension is annotated with {@link org.mule.extensions.introspection.capability.XmlCapability}
  * and if so, registers into the builder a {@link org.mule.extensions.introspection.capability.XmlCapability
  *

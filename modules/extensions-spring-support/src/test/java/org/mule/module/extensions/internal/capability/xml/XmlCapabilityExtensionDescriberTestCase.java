@@ -6,35 +6,34 @@
  */
 package org.mule.module.extensions.internal.capability.xml;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import org.mule.extensions.introspection.Extension;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.introspection.declaration.Declaration;
 import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.module.extensions.internal.AnnotationsBasedDescriberTestCase;
 import org.mule.tck.size.SmallTest;
-
-import java.util.Set;
 
 @SmallTest
 public class XmlCapabilityExtensionDescriberTestCase extends AnnotationsBasedDescriberTestCase
 {
 
     @Override
-    protected void assertCapabilities(Extension extension)
+    protected void assertCapabilities(Declaration declaration)
     {
-        assertXmlCapability(extension);
+        assertXmlCapability(declaration);
     }
 
-    private void assertXmlCapability(Extension extension)
+    private void assertXmlCapability(Declaration declaration)
     {
-        Set<XmlCapability> capabilities = extension.getCapabilities(XmlCapability.class);
-        assertNotNull(capabilities);
-        assertEquals(1, capabilities.size());
+        assertThat(declaration.getCapabilities().isEmpty(), is(false));
+        Object capability = declaration.getCapabilities().iterator().next();
+        assertThat(capability, instanceOf(XmlCapability.class));
 
-        XmlCapability xml = capabilities.iterator().next();
-        assertEquals(HeisenbergExtension.SCHEMA_LOCATION, xml.getSchemaLocation());
-        assertEquals(HeisenbergExtension.SCHEMA_VERSION, xml.getSchemaVersion());
-        assertEquals(HeisenbergExtension.NAMESPACE, xml.getNamespace());
+        XmlCapability xml = (XmlCapability) capability;
+        assertThat(xml.getSchemaLocation(), is(HeisenbergExtension.SCHEMA_LOCATION));
+        assertThat(xml.getSchemaVersion(), is(HeisenbergExtension.SCHEMA_VERSION));
+        assertThat(xml.getNamespace(), is(HeisenbergExtension.NAMESPACE));
     }
 }
