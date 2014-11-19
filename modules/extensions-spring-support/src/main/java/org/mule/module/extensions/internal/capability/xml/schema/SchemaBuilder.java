@@ -18,7 +18,7 @@ import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
+import org.mule.module.extensions.internal.introspection.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Annotation;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Attribute;
 import org.mule.module.extensions.internal.capability.xml.schema.model.ComplexContent;

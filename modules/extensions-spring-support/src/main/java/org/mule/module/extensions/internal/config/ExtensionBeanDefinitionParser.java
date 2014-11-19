@@ -13,9 +13,8 @@ import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.extensions.introspection.DataQualifierVisitor;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.SchemaConstants;
-import org.mule.module.extensions.internal.introspection.ImmutableDataType;
+import org.mule.module.extensions.internal.introspection.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.introspection.SimpleTypeDataQualifierVisitor;
 import org.mule.module.extensions.internal.runtime.DefaultObjectBuilder;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
@@ -75,7 +74,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
                                                         String childElementName,
                                                         DataType collectionType)
     {
-        final DataType itemsType = collectionType.getGenericTypes().length > 0 ? collectionType.getGenericTypes()[0] : ImmutableDataType.of(Object.class);
+        final DataType itemsType = collectionType.getGenericTypes().length > 0 ? collectionType.getGenericTypes()[0] : DataType.of(Object.class);
         final List<ValueResolver> resolvers = new LinkedList<>();
 
         for (final Element item : DomUtils.getChildElementsByTagName(collectionElement, childElementName))

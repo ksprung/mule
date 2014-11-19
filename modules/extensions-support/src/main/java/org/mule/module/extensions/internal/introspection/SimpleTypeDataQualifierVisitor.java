@@ -8,7 +8,6 @@ package org.mule.module.extensions.internal.introspection;
 
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataQualifierVisitor;
-import org.mule.module.extensions.internal.BaseDataQualifierVisitor;
 
 /**
  * Base implementation for a {@link DataQualifierVisitor} which adds the new

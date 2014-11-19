@@ -10,16 +10,15 @@ import static org.mule.module.extensions.internal.capability.xml.schema.Annotati
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getJavaDocSummary;
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getMethodDocumentation;
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getMethodsAnnotatedWith;
+import org.mule.api.MuleRuntimeException;
+import org.mule.config.i18n.MessageFactory;
 import org.mule.extensions.annotation.Configurable;
 import org.mule.extensions.annotation.Operation;
 import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.ExtensionConfigurationBuilder;
-import org.mule.extensions.introspection.ExtensionOperationBuilder;
-import org.mule.extensions.introspection.ExtensionParameterBuilder;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionConfigurationBuilder;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionOperationBuilder;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionParameterBuilder;
+import org.mule.extensions.introspection.declaration.ConfigurationDeclaration;
+import org.mule.extensions.introspection.declaration.Declaration;
+import org.mule.extensions.introspection.declaration.OperationDeclaration;
+import org.mule.extensions.introspection.declaration.ParameterDeclaration;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,7 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
 /**
- * Utility class that picks a {@link org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder}
+ * Utility class that picks a {@link Declaration}
  * on which a {@link Extension} has already been described
  * and enriches such description with the javadocs extracted from the extension's acting classes.
  * <p/>
@@ -49,121 +48,74 @@ final class SchemaDocumenter
         this.processingEnv = processingEnv;
     }
 
-    void document(NavigableExtensionBuilder builder, TypeElement extensionElement)
+    void document(Declaration declaration, TypeElement extensionElement)
     {
-        builder.setDescription(getJavaDocSummary(processingEnv, extensionElement));
-        documentConfigurations(builder, extensionElement);
-        documentOperations(builder, extensionElement);
+        declaration.setDescription(getJavaDocSummary(processingEnv, extensionElement));
+        documentConfigurations(declaration, extensionElement);
+        documentOperations(declaration, extensionElement);
     }
 
-    private void documentOperations(NavigableExtensionBuilder builder, TypeElement extensionElement)
+    private void documentOperations(Declaration declaration, TypeElement extensionElement)
     {
         final Map<String, ExecutableElement> methods = getMethodsAnnotatedWith(extensionElement, Operation.class);
 
-        for (ExtensionOperationBuilder ob : builder.getOperations())
+        try
         {
-            NavigableExtensionOperationBuilder operationBuilder = navigable(ob);
-            if (operationBuilder == null)
+            for (OperationDeclaration operation : declaration.getOperations())
             {
-                continue;
-            }
+                ExecutableElement method = methods.get(operation.getName());
 
-            ExecutableElement method = methods.get(operationBuilder.getName());
-
-            if (method == null)
-            {
-                continue;
-            }
-
-            MethodDocumentation documentation = getMethodDocumentation(processingEnv, method);
-            operationBuilder.setDescription(documentation.getSummary());
-            documentOperationParameters(operationBuilder, documentation);
-        }
-    }
-
-    private void documentOperationParameters(NavigableExtensionOperationBuilder builder, MethodDocumentation documentation)
-    {
-        for (ExtensionParameterBuilder pb : builder.getParameters())
-        {
-            NavigableExtensionParameterBuilder parameterBuilder = navigable(pb);
-            if (pb == null)
-            {
-                continue;
-            }
-
-            String description = documentation.getParameters().get(parameterBuilder.getName());
-            if (description != null)
-            {
-                parameterBuilder.setDescription(description);
-            }
-        }
-    }
-
-    private void documentConfigurations(NavigableExtensionBuilder builder, TypeElement extensionElement)
-    {
-        for (ExtensionConfigurationBuilder cb : builder.getConfigurations())
-        {
-            NavigableExtensionConfigurationBuilder configurationBuilder = navigable(cb);
-            if (configurationBuilder == null)
-            {
-                continue;
-            }
-
-            documentConfigurationParameters(configurationBuilder.getParameters(), extensionElement);
-        }
-    }
-
-    private void documentConfigurationParameters(Collection<ExtensionParameterBuilder> builders, TypeElement element)
-    {
-        final Map<String, VariableElement> fields = getFieldsAnnotatedWith(element, Configurable.class);
-        while (element != null && !Object.class.getName().equals(element.getQualifiedName().toString()))
-        {
-            for (ExtensionParameterBuilder pb : builders)
-            {
-                NavigableExtensionParameterBuilder parameterBuilder = navigable(pb);
-                if (parameterBuilder == null)
+                if (method == null)
                 {
                     continue;
                 }
 
-                VariableElement field = fields.get(parameterBuilder.getName());
+                MethodDocumentation documentation = getMethodDocumentation(processingEnv, method);
+                operation.setDescription(documentation.getSummary());
+                documentOperationParameters(operation, documentation);
+            }
+        }
+        catch (Exception e)
+        {
+            throw new MuleRuntimeException(MessageFactory.createStaticMessage("Exception found while trying to document XSD schema"), e);
+        }
+    }
+
+    private void documentOperationParameters(OperationDeclaration operation, MethodDocumentation documentation)
+    {
+        for (ParameterDeclaration parameter : operation.getParameters())
+        {
+            String description = documentation.getParameters().get(parameter.getName());
+            if (description != null)
+            {
+                parameter.setDescription(description);
+            }
+        }
+    }
+
+    private void documentConfigurations(Declaration declaration, TypeElement extensionElement)
+    {
+        for (ConfigurationDeclaration configuration : declaration.getConfigurations())
+        {
+            documentConfigurationParameters(configuration.getParameters(), extensionElement);
+        }
+    }
+
+    private void documentConfigurationParameters(Collection<ParameterDeclaration> parameters, TypeElement element)
+    {
+        final Map<String, VariableElement> fields = getFieldsAnnotatedWith(element, Configurable.class);
+        while (element != null && !Object.class.getName().equals(element.getQualifiedName().toString()))
+        {
+            for (ParameterDeclaration parameter : parameters)
+            {
+                VariableElement field = fields.get(parameter.getName());
                 if (field != null)
                 {
-                    parameterBuilder.setDescription(getJavaDocSummary(processingEnv, field));
+                    parameter.setDescription(getJavaDocSummary(processingEnv, field));
                 }
             }
 
             element = (TypeElement) processingEnv.getTypeUtils().asElement(element.getSuperclass());
         }
-    }
-
-    private NavigableExtensionConfigurationBuilder navigable(ExtensionConfigurationBuilder builder)
-    {
-        if (builder instanceof NavigableExtensionConfigurationBuilder)
-        {
-            return (NavigableExtensionConfigurationBuilder) builder;
-        }
-
-        return null;
-    }
-
-    private NavigableExtensionParameterBuilder navigable(ExtensionParameterBuilder builder)
-    {
-        if (builder instanceof NavigableExtensionParameterBuilder)
-        {
-            return (NavigableExtensionParameterBuilder) builder;
-        }
-
-        return null;
-    }
-
-    private NavigableExtensionOperationBuilder navigable(ExtensionOperationBuilder builder)
-    {
-        if (builder instanceof NavigableExtensionOperationBuilder)
-        {
-            return (NavigableExtensionOperationBuilder) builder;
-        }
-
-        return null;
     }
 }

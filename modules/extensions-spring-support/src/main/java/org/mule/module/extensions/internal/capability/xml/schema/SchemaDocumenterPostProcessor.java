@@ -8,10 +8,7 @@ package org.mule.module.extensions.internal.capability.xml.schema;
 
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.DescribingContext;
-import org.mule.extensions.introspection.ExtensionDescribingContext;
 import org.mule.extensions.introspection.spi.DescriberPostProcessor;
-import org.mule.extensions.introspection.spi.ExtensionDescriberPostProcessor;
-import org.mule.module.extensions.internal.introspection.NavigableExtensionBuilder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
@@ -55,10 +52,10 @@ public final class SchemaDocumenterPostProcessor implements DescriberPostProcess
             return;
         }
 
-        new SchemaDocumenter(processingEnv).document((NavigableExtensionBuilder) context.getExtensionBuilder(), extensionElement);
+        new SchemaDocumenter(processingEnv).document(context.getDeclarationConstruct().getDeclaration(), extensionElement);
     }
 
-    private <T> T getCheckedParameter(ExtensionDescribingContext context, String key, Class<T> expectedType)
+    private <T> T getCheckedParameter(DescribingContext context, String key, Class<T> expectedType)
     {
         Object parameter = context.getCustomParameters().get(key);
         if (parameter == null)
