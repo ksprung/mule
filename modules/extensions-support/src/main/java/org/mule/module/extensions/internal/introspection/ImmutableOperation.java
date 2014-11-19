@@ -6,9 +6,10 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkInstantiable;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.immutableList;
+import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.Operation;
+import org.mule.extensions.introspection.OperationImplementation;
 import org.mule.extensions.introspection.Parameter;
 
 import java.util.List;
@@ -22,18 +23,19 @@ final class ImmutableOperation extends AbstractImmutableDescribed implements Ope
 {
 
     private final List<Parameter> parameters;
-    private final Class<?> declaringClass;
+    private final OperationImplementation implementation;
 
     ImmutableOperation(String name,
                        String description,
-                       Class<?> declaringClass,
+                       OperationImplementation implementation,
                        List<Parameter> parameters)
     {
         super(name, description);
 
-        checkInstantiable(declaringClass);
-
-        this.declaringClass = declaringClass;
+        //TODO: make this validations someplace else
+        //checkInstantiable(declaringClass);
+        checkArgument(implementation != null, String.format("Operation %s cannot have a null implementation", name));
+        this.implementation = implementation;
         this.parameters = immutableList(parameters);
     }
 
@@ -50,8 +52,8 @@ final class ImmutableOperation extends AbstractImmutableDescribed implements Ope
      * {@inheritDoc}
      */
     @Override
-    public Class<?> getDeclaringClass()
+    public OperationImplementation getImplementation()
     {
-        return this.declaringClass;
+        return implementation;
     }
 }

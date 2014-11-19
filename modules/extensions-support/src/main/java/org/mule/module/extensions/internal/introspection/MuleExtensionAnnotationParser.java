@@ -14,10 +14,10 @@ import static org.reflections.ReflectionUtils.withModifier;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.api.NestedProcessor;
-import org.mule.extensions.annotation.Configurable;
-import org.mule.extensions.annotation.Extension;
-import org.mule.extensions.annotation.param.Optional;
-import org.mule.extensions.annotation.param.Payload;
+import org.mule.extensions.annotations.Configurable;
+import org.mule.extensions.annotations.Extension;
+import org.mule.extensions.annotations.param.Optional;
+import org.mule.extensions.annotations.param.Payload;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Operation;
@@ -67,7 +67,7 @@ final class MuleExtensionAnnotationParser
 
     static Collection<Method> getOperationMethods(Class<?> extensionType)
     {
-        return getAllMethods(extensionType, withAnnotation(org.mule.extensions.annotation.Operation.class), withModifier(Modifier.PUBLIC));
+        return getAllMethods(extensionType, withAnnotation(org.mule.extensions.annotations.Operation.class), withModifier(Modifier.PUBLIC));
     }
 
     public static List<ParameterDescriptor> parseParameter(Method method)

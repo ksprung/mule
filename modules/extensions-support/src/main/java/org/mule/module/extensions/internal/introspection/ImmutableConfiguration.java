@@ -6,38 +6,40 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mule.module.extensions.internal.util.IntrospectionUtils.checkInstantiable;
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkNullOrRepeatedNames;
-import static org.mule.module.extensions.internal.util.MuleExtensionUtils.checkSetters;
 import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.ConfigurationInstantiator;
 import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.util.MuleExtensionUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Immutable implementation of {@link Configuration}
  *
  * @since 3.7.0
  */
-final class ImmutableConfiguration extends AbstractImmutableDescribed implements Configuration
+final class ImmutableConfiguration extends AbstractImmutableCapableDescribed implements Configuration
 {
 
     private final List<Parameter> parameters;
-    private final Class<?> declaringClass;
+    private final ConfigurationInstantiator instantiator;
 
     protected ImmutableConfiguration(String name,
                                      String description,
-                                     Class<?> declaringClass,
-                                     List<Parameter> parameters)
+                                     ConfigurationInstantiator instantiator,
+                                     List<Parameter> parameters,
+                                     Set<Object> capabilities)
     {
-        super(name, description);
-        checkInstantiable(declaringClass);
+        super(name, description, capabilities);
         checkNullOrRepeatedNames(parameters, "parameters");
 
         this.parameters = MuleExtensionUtils.immutableList(parameters);
-        checkSetters(declaringClass, this.parameters);
-        this.declaringClass = declaringClass;
+        //TODO: Find where else this validations should go
+
+        //checkSetters(declaringClass, this.parameters);
+        this.instantiator = instantiator;
     }
 
     /**
@@ -53,8 +55,8 @@ final class ImmutableConfiguration extends AbstractImmutableDescribed implements
      * {@inheritDoc}
      */
     @Override
-    public Class<?> getDeclaringClass()
+    public ConfigurationInstantiator getInstantiator()
     {
-        return this.declaringClass;
+        return instantiator;
     }
 }

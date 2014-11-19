@@ -94,8 +94,9 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     {
         return new ImmutableConfiguration(declaration.getName(),
                                           declaration.getDescription(),
-                                          declaration.getDeclaringClass(),
-                                          toParameters(declaration.getParameters()));
+                                          declaration.getConfigurationInstantiator(),
+                                          toParameters(declaration.getParameters()),
+                                          declaration.getCapabilities());
     }
 
     private List<Operation> toOperations(List<OperationDeclaration> declarations)

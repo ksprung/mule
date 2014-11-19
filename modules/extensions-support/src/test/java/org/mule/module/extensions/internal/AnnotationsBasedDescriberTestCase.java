@@ -11,7 +11,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
-import static org.mule.extensions.annotation.Extension.DEFAULT_CONFIG_NAME;
+import static org.mule.extensions.annotations.Extension.DEFAULT_CONFIG_NAME;
 import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
 import static org.mule.extensions.introspection.DataQualifier.DATE_TIME;
 import static org.mule.extensions.introspection.DataQualifier.DECIMAL;
@@ -30,9 +30,9 @@ import static org.mule.module.extensions.HeisenbergExtension.HEISENBERG;
 import static org.mule.module.extensions.HeisenbergExtension.NAMESPACE;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_LOCATION;
 import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
-import org.mule.extensions.annotation.Configurable;
-import org.mule.extensions.annotation.Configurations;
-import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.annotations.Configurable;
+import org.mule.extensions.annotations.Configurations;
+import org.mule.extensions.annotations.capability.Xml;
 import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Describer;
@@ -255,7 +255,7 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         // template method for asserting custom capabilities in modules that define them
     }
 
-    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotations.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations(HeisenbergExtension.class)
     public static class HeisenbergPointer extends HeisenbergExtension
@@ -263,7 +263,7 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotations.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations({HeisenbergExtension.class, NamedHeisenbergAlternateConfig.class})
     public static class HeisengergPointerPlusExternalConfig
@@ -271,7 +271,7 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @org.mule.extensions.annotation.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
+    @org.mule.extensions.annotations.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations({HeisenbergExtension.class, HeisenbergAlternateConfig.class})
     public static class HeisengergPointerPlusUnnamedExternalConfig
@@ -279,7 +279,7 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
 
     }
 
-    @org.mule.extensions.annotation.Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
+    @org.mule.extensions.annotations.Configuration(name = EXTENDED_CONFIG_NAME, description = EXTENDED_CONFIG_DESCRIPTION)
     public static class NamedHeisenbergAlternateConfig extends HeisenbergAlternateConfig
     {
 

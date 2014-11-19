@@ -10,13 +10,13 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mule.module.extensions.internal.introspection.MuleExtensionAnnotationParser.getDefaultValue;
 import static org.mule.module.extensions.internal.introspection.MuleExtensionAnnotationParser.getExtension;
 import static org.mule.util.Preconditions.checkArgument;
-import org.mule.extensions.annotation.Configurable;
-import org.mule.extensions.annotation.Configuration;
-import org.mule.extensions.annotation.Configurations;
-import org.mule.extensions.annotation.Extension;
-import org.mule.extensions.annotation.Operation;
-import org.mule.extensions.annotation.Operations;
-import org.mule.extensions.annotation.param.Optional;
+import org.mule.extensions.annotations.Configurable;
+import org.mule.extensions.annotations.Configuration;
+import org.mule.extensions.annotations.Configurations;
+import org.mule.extensions.annotations.Extension;
+import org.mule.extensions.annotations.Operation;
+import org.mule.extensions.annotations.Operations;
+import org.mule.extensions.annotations.param.Optional;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Describer;
 import org.mule.extensions.introspection.declaration.ConfigurationConstruct;
@@ -100,6 +100,8 @@ public class AnnotationsBasedDescriber implements Describer
             configuration = declaration.withConfig(Extension.DEFAULT_CONFIG_NAME).describedAs(Extension.DEFAULT_CONFIG_DESCRIPTION);
         }
 
+        configuration.instantiatedWith(new TypeAwareConfigurationInstantiator(extensionType));
+
         for (Field field : MuleExtensionAnnotationParser.getConfigurableFields(extensionType))
         {
             Configurable configurable = field.getAnnotation(Configurable.class);
@@ -130,9 +132,9 @@ public class AnnotationsBasedDescriber implements Describer
         Operations operations = extensionType.getAnnotation(Operations.class);
         if (operations != null)
         {
-            for (Class<?> declaringClass : operations.value())
+            for (Class<?> actingClass : operations.value())
             {
-                declareOperation(declaration, declaringClass);
+                declareOperation(declaration, actingClass);
             }
         }
         else
@@ -141,12 +143,15 @@ public class AnnotationsBasedDescriber implements Describer
         }
     }
 
-    private void declareOperation(DeclarationConstruct declaration, Class<?> extensionType)
+    private void declareOperation(DeclarationConstruct declaration, Class<?> actingClass)
     {
-        for (Method method : MuleExtensionAnnotationParser.getOperationMethods(extensionType))
+        for (Method method : MuleExtensionAnnotationParser.getOperationMethods(actingClass))
         {
             Operation annotation = method.getAnnotation(Operation.class);
-            declareOperationParameters(method, declaration.withOperation(resolveOperationName(method, annotation)));
+            OperationConstruct operation = declaration.withOperation(resolveOperationName(method, annotation))
+                    .implementedIn(new TypeAwareOperationImplementation(actingClass));
+
+            declareOperationParameters(method, operation);
         }
     }
 

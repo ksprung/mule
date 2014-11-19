@@ -25,7 +25,8 @@ abstract class AbstractImmutableCapableDescribed extends AbstractImmutableDescri
 
     private Set<Object> capabilities;
 
-    AbstractImmutableCapableDescribed(String name, String description, Set<Object> capabilities) {
+    AbstractImmutableCapableDescribed(String name, String description, Set<Object> capabilities)
+    {
         super(name, description);
         this.capabilities = capabilities != null ? ImmutableSet.copyOf(capabilities) : ImmutableSet.of();
     }
