@@ -34,7 +34,7 @@ import java.util.NoSuchElementException;
  *
  * @since 3.7.0
  */
-public class ResolverSetResult
+public final class ResolverSetResult
 {
 
     /**
@@ -43,7 +43,7 @@ public class ResolverSetResult
      *
      * @since 3.7.0
      */
-    public static class Builder
+    public static final class Builder
     {
 
         private int hashCode = 1;

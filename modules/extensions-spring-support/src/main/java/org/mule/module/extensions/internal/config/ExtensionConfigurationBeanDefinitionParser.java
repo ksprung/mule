@@ -6,15 +6,19 @@
  */
 package org.mule.module.extensions.internal.config;
 
+import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.applyLifecycle;
+import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.parseParameter;
+import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.setNoRecurseOnDefinition;
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
-import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.internal.runtime.resolver.ResolverSet;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
@@ -30,7 +34,7 @@ import org.w3c.dom.Element;
  *
  * @since 3.7.0
  */
-abstract class ExtensionConfigurationBeanDefinitionParser extends ExtensionBeanDefinitionParser
+abstract class ExtensionConfigurationBeanDefinitionParser implements BeanDefinitionParser
 {
 
     private final Extension extension;

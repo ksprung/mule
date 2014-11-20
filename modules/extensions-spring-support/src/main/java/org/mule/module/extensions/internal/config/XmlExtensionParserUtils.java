@@ -43,34 +43,32 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
 /**
- * Base implementation of {@link org.springframework.beans.factory.xml.BeanDefinitionParser}
- * for all parsers capable of handling objects described by the extensions introspection API
+ * Utility methods for XML parsers capable of handling objects described by the extensions introspection API
  *
  * @since 3.7.0
  */
-abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
+final class XmlExtensionParserUtils
 {
 
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'hh:mm:ss";
     private static final String CALENDAR_FORMAT = "yyyy-MM-dd'T'hh:mm:ssX";
 
-    private TemplateParser parser = TemplateParser.createMuleStyleParser();
-    private ConversionService conversionService = new DefaultConversionService();
+    private static final TemplateParser parser = TemplateParser.createMuleStyleParser();
+    private static final ConversionService conversionService = new DefaultConversionService();
 
-    protected boolean hasAttribute(Element element, String attributeName)
+    static final boolean hasAttribute(Element element, String attributeName)
     {
         String value = element.getAttribute(attributeName);
         return !StringUtils.isBlank(value);
     }
 
-    private ValueResolver parseCollectionAsInnerElement(Element collectionElement,
+    private static ValueResolver parseCollectionAsInnerElement(Element collectionElement,
                                                         String childElementName,
                                                         DataType collectionType)
     {
@@ -101,7 +99,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         return CollectionValueResolver.of((Class<? extends Collection>) collectionType.getRawType(), resolvers);
     }
 
-    private ValueResolver parseCollection(Element element,
+    private static ValueResolver parseCollection(Element element,
                                           String fieldName,
                                           String parentElementName,
                                           String childElementName,
@@ -125,19 +123,19 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         return resolver;
     }
 
-    private ValueResolver getResolverFromAttribute(Element element, String attributeName, DataType expectedDataType, Object defaultValue)
+    private static ValueResolver getResolverFromAttribute(Element element, String attributeName, DataType expectedDataType, Object defaultValue)
     {
         return getResolverFromValue(getAttributeValue(element, attributeName, defaultValue), expectedDataType);
     }
 
-    private Object getAttributeValue(Element element, String attributeName, Object defaultValue)
+    static Object getAttributeValue(Element element, String attributeName, Object defaultValue)
     {
         return hasAttribute(element, attributeName)
                ? element.getAttribute(attributeName)
                : defaultValue;
     }
 
-    private ValueResolver getResolverFromValue(final Object value, final DataType expectedDataType)
+    private static ValueResolver getResolverFromValue(final Object value, final DataType expectedDataType)
     {
         if (isExpression(value, parser))
         {
@@ -160,7 +158,6 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
                     else
                     {
                         defaultOperation();
-
                     }
                 }
 
@@ -175,7 +172,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
             return resolverValueHolder.get();
         }
 
-        return null;
+        return new StaticValueResolver(null);
     }
 
     /**
@@ -189,7 +186,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
      * @return a {@link org.springframework.beans.factory.config.BeanDefinition} if the bean could be parsed, {@code null}
      * if the bean is not present on the XML definition
      */
-    private ValueResolver parsePojo(Element element,
+    private static ValueResolver parsePojo(Element element,
                                     String fieldName,
                                     String parentElementName,
                                     DataType pojoType,
@@ -212,7 +209,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         return new ObjectBuilderValueResolver(recursePojoProperties(pojoType.getRawType(), element));
     }
 
-    private ObjectBuilder recursePojoProperties(Class<?> declaringClass, Element element)
+    private static ObjectBuilder recursePojoProperties(Class<?> declaringClass, Element element)
     {
         ObjectBuilder builder = new DefaultObjectBuilder();
         builder.setPrototypeClass(declaringClass);
@@ -251,7 +248,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         return builder;
     }
 
-    private Date doParseDate(Element element,
+    private static Date doParseDate(Element element,
                              String attributeName,
                              String parseFormat,
                              Object defaultValue)
@@ -286,7 +283,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
                 String.format("Could not transform value of type '%s' to Date", value != null ? value.getClass().getName() : "null"));
     }
 
-    protected void applyLifecycle(BeanDefinitionBuilder builder)
+    static final void applyLifecycle(BeanDefinitionBuilder builder)
     {
         Class<?> declaringClass = builder.getBeanDefinition().getBeanClass();
         if (Initialisable.class.isAssignableFrom(declaringClass))
@@ -301,7 +298,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
     }
 
 
-    private ValueResolver parseCalendar(Element element, String attributeName, DataType dataType, Object defaultValue)
+    private static ValueResolver parseCalendar(Element element, String attributeName, DataType dataType, Object defaultValue)
     {
         Object value = getAttributeValue(element, attributeName, defaultValue);
         if (isExpression(value, parser))
@@ -316,7 +313,7 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         return new StaticValueResolver(calendar);
     }
 
-    private ValueResolver parseDate(Element element, String attributeName, DataType dataType, Object defaultValue)
+    private static ValueResolver parseDate(Element element, String attributeName, DataType dataType, Object defaultValue)
     {
         Object value = getAttributeValue(element, attributeName, defaultValue);
         if (isExpression(value, parser))
@@ -329,17 +326,17 @@ abstract class ExtensionBeanDefinitionParser implements BeanDefinitionParser
         }
     }
 
-    protected void setNoRecurseOnDefinition(BeanDefinition definition)
+    static void setNoRecurseOnDefinition(BeanDefinition definition)
     {
         definition.setAttribute(MuleHierarchicalBeanDefinitionParserDelegate.MULE_NO_RECURSE, Boolean.TRUE);
     }
 
-    protected ValueResolver parseParameter(Element element, Parameter parameter)
+    static ValueResolver parseParameter(Element element, Parameter parameter)
     {
         return parseElement(element, parameter.getName(), parameter.getType(), parameter.getDefaultValue());
     }
 
-    private ValueResolver parseElement(final Element element,
+    static ValueResolver parseElement(final Element element,
                                        final String fieldName,
                                        final DataType dataType,
                                        final Object defaultValue)

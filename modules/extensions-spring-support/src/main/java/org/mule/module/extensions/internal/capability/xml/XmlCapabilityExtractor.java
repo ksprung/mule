@@ -7,7 +7,7 @@
 package org.mule.module.extensions.internal.capability.xml;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
-import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.annotations.capability.Xml;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.extensions.introspection.declaration.Construct;
 import org.mule.extensions.introspection.declaration.Declaration;
