@@ -67,10 +67,12 @@ dependencies {
     }
 }
 
+def generatedSourcesFolder = "$projectDir/src/generated/java"
+
 task wsdl2java(type: JavaExec) {
     ext {
         wsdlFile = 'src/test/resources/employeeDirectory.wsdl'
-        outputDir = file("$buildDir/generated/src/test/java")
+        outputDir = file(generatedSourcesFolder)
     }
 
     inputs.file file(wsdlFile)
@@ -93,3 +95,13 @@ task wsdl2java(type: JavaExec) {
 
 compileTestJava.dependsOn wsdl2java
 compileTestJava.source wsdl2java.outputs.files
+
+clean {
+    delete generatedSourcesFolder
+}
+
+idea {
+    module {
+        sourceDirs += file(generatedSourcesFolder)
+    }
+}
