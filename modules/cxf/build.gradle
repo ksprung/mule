@@ -100,6 +100,11 @@ clean {
     delete generatedSourcesFolder
 }
 
+test {
+    // This module requires more permgen than the default
+    jvmArgs += [ "-XX:MaxPermSize=256m" ]
+}
+
 idea {
     module {
         sourceDirs += file(generatedSourcesFolder)

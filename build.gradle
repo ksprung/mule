@@ -216,3 +216,9 @@ task verify(type: ContentsVerifierTask) {
 }
 
 //distTar.dependsOn subProjects.assemble
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2.1'
+
+}

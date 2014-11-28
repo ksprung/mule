@@ -5,17 +5,13 @@ description = ' A Mule transport for Http Connectivity. This transport supplies 
 
 dependencies {
     compile project(':transports:ssl'),
+            project(':modules:http'),
 //        "commons-codec:commons-codec",
         "commons-httpclient:commons-httpclient:3.1",
         "org.apache.geronimo.specs:geronimo-servlet_3.0_spec:1.0", // provided
         "org.apache.tomcat:coyote:6.0.29",
         "org.samba.jcifs:jcifs:1.3.3",
         "joda-time:joda-time:2.5"
-
-    compile("org.mule.modules:mule-module-http:3.6.0-M3-SNAPSHOT") {
-        exclude group: "org.mule"
-        exclude group: "org.mule.modules"
-    }
 
     testCompile project(':tests:functional'),
         project(':transports:tcp'),

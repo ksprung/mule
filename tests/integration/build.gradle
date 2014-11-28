@@ -24,5 +24,17 @@ dependencies {
 
 test {
     maxHeapSize = '512m'
-    jvmArgs '-XX:MaxPermSize=128m'
+    jvmArgs '-XX:MaxPermSize=256m'
+
+    useJUnit()
+
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "failed"
+        exceptionFormat "full"
+
+        // remove standard output/error logging from --info builds
+        // by assigning only 'failed' and 'skipped' events
+        info.events = ["failed", "skipped"]
+    }
 }
