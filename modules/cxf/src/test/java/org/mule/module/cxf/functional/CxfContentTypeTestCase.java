@@ -80,9 +80,4 @@ public class CxfContentTypeTestCase extends FunctionalTestCase
         assertTrue(contentType.contains("charset"));
     }
 
-    @Override
-    public int getTestTimeoutSecs()
-    {
-        return 1000;
-    }
 }
