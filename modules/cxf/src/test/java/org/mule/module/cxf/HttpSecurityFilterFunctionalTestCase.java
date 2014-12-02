@@ -55,7 +55,8 @@ public class HttpSecurityFilterFunctionalTestCase extends AbstractServiceAndFlow
     {
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "http-security-filter-test-service.xml"},
-            {ConfigVariant.FLOW, "http-security-filter-test-flow.xml"}
+            {ConfigVariant.FLOW, "http-security-filter-test-flow.xml"},
+            {ConfigVariant.FLOW, "http-security-filter-test-new-http-flow.xml"}
         });
     }      
  
@@ -169,7 +170,7 @@ public class HttpSecurityFilterFunctionalTestCase extends AbstractServiceAndFlow
     @Test
     public void testAuthenticationAuthorisedWithHandshakeGet() throws Exception
     {
-        doGet(null, "localhost", "anon", "anon", "http://localhost:" + dynamicPort1.getNumber() + "/services/Echo/echo/echo/hello", true, 200);
+         doGet(null, "localhost", "anon", "anon", "http://localhost:" + dynamicPort1.getNumber() + "/services/Echo/echo/echo/hello", true, 200);
     }
 
     @Test
