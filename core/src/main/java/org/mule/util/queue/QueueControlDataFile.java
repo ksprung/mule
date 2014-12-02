@@ -137,17 +137,6 @@ public class QueueControlDataFile
 
     public void close()
     {
-        try
-        {
-            queueFileProvider.close();
-        }
-        catch (IOException e)
-        {
-            logger.warn("failure closing queue data control file: " + e.getMessage());
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(e);
-            }
-        }
+        queueFileProvider.close();
     }
 }

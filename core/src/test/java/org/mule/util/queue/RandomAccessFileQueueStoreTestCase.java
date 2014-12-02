@@ -54,6 +54,6 @@ public class RandomAccessFileQueueStoreTestCase extends AbstractMuleTestCase
 
     private RandomAccessFileQueueStore createRandomAccessFileQueueStore()
     {
-        return new RandomAccessFileQueueStore(new QueueFileProvider(temporaryFolder.getRoot(), "datafile"));
+        return new RandomAccessFileQueueStore(new QueueFileProvider(temporaryFolder.getRoot(), "datafile"), new QueueFileProvider(temporaryFolder.getRoot(), "datafileControl"));
     }
 }

@@ -15,6 +15,9 @@ import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *  Provides access to a RandomAccessFile for queue data.
  *
@@ -25,6 +28,8 @@ public class QueueFileProvider
 
     public static final String OPEN_FILE_OPTIONS = "rw";
     public static final String UTF_8_ENCODING = "UTF-8";
+
+    private static final Logger logger = LoggerFactory.getLogger(QueueFileProvider.class);
     private final boolean newFile;
     private File file;
     private RandomAccessFile queueFile;
@@ -101,12 +106,22 @@ public class QueueFileProvider
     }
 
     /**
-     * closes the random access file.
-     * @throws IOException
+     * closes the random access file silently
      */
-    public void close() throws IOException
+    public void close()
     {
-        queueFile.close();
+        try
+        {
+            queueFile.close();
+        }
+        catch (IOException e)
+        {
+            logger.warn(e.getMessage());
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e.getMessage(), e);
+            }
+        }
     }
 
     /**

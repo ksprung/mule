@@ -287,7 +287,7 @@ public class HttpMessageProcessTemplate extends AbstractTransportMessageProcessT
     protected MuleMessage createMessageFromSource(Object message) throws MuleException
     {
         MuleMessage muleMessage = super.createMessageFromSource(message);
-        String path = muleMessage.getInboundProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
+        String opath = muleMessage.getInboundProperty(HttpConnector.HTTP_REQUEST_PROPERTY);
         int i = path.indexOf('?');
         if (i > -1)
         {

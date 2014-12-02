@@ -20,6 +20,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.apache.commons.lang.SerializationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,7 +40,9 @@ public class DualRandomAccessFileQueueStoreDelegate extends AbstractQueueStoreDe
     private static final String QUEUE_STORE_DIRECTORY = "queuestore";
     private static final Integer MAXIMUM_QUEUE_FILE_SIZE_IN_BYTES = Integer.valueOf(System.getProperty(MAX_LENGTH_PER_FILE_PROPERTY_KEY, Integer.valueOf(ONE_MEGABYTE).toString()));
     private static final String QUEUE_STORE_1_SUFFIX = "-1";
+    private static final String QUEUE_STORE_1_CONTROL_SUFFIX = "-1-crl";
     private static final String QUEUE_STORE_2_SUFFIX = "-2";
+    private static final String QUEUE_STORE_2_CONTROL_SUFFIX = "-2-crl";
     private static final Object QUEUE_DATA_CONTROL_SUFFIX = "-crl";
 
     protected final Log logger = LogFactory.getLog(this.getClass());
@@ -60,8 +63,8 @@ public class DualRandomAccessFileQueueStoreDelegate extends AbstractQueueStoreDe
         {
             Preconditions.checkState(queuesDirectory.mkdirs(), "Could not create queue store directory " + queuesDirectory.getAbsolutePath());
         }
-        randomAccessFileQueueStore1 = new RandomAccessFileQueueStore(new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_1_SUFFIX));
-        randomAccessFileQueueStore2 = new RandomAccessFileQueueStore(new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_2_SUFFIX));
+        randomAccessFileQueueStore1 = new  RandomAccessFileQueueStore(new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_1_SUFFIX), new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_1_CONTROL_SUFFIX));
+        randomAccessFileQueueStore2 = new RandomAccessFileQueueStore(new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_2_SUFFIX), new QueueFileProvider(queuesDirectory, queueName + QUEUE_STORE_2_CONTROL_SUFFIX));
         queueControlDataFile = new QueueControlDataFile(new QueueFileProvider(queuesDirectory, queueName + QUEUE_DATA_CONTROL_SUFFIX), randomAccessFileQueueStore1.getFile(), randomAccessFileQueueStore2.getFile());
         writeFile = queueControlDataFile.getCurrentWriteFile().getAbsolutePath().equals(randomAccessFileQueueStore1.getFile().getAbsolutePath()) ? randomAccessFileQueueStore1 : randomAccessFileQueueStore2;
         readFile = queueControlDataFile.getCurrentReadFile().getAbsolutePath().equals(randomAccessFileQueueStore1.getFile().getAbsolutePath()) ? randomAccessFileQueueStore1 : randomAccessFileQueueStore2;
@@ -140,7 +143,15 @@ public class DualRandomAccessFileQueueStoreDelegate extends AbstractQueueStoreDe
         {
             lock.unlock();
         }
-        return deserialize(bytes);
+        try
+        {
+            return deserialize(bytes);
+        }
+        catch (SerializationException e)
+        {
+            readFile.removeFirst();
+            return null;
+        }
     }
 
     @Override

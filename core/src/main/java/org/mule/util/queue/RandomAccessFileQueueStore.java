@@ -13,13 +13,18 @@ import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.StreamCorruptedException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang.SerializationException;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,17 +35,18 @@ class RandomAccessFileQueueStore
 {
 
     private final Log logger = LogFactory.getLog(this.getClass());
-    protected static final int CONTROL_DATA_SIZE = 5;
-    private static final byte NOT_REMOVED = 0;
-    private static final byte REMOVED = 1;
+    protected static final int CONTROL_DATA_SIZE = 4; //just an int for the message size.
     private final QueueFileProvider queueFileProvider;
+    private final QueueFileProvider queueControlFileProvider;
+    private final Set<Long> entriesRemoved = new HashSet<>();
 
     private LinkedList<Long> orderedKeys = new LinkedList<Long>();
     private long fileTotalSpace = 0;
 
-    public RandomAccessFileQueueStore(QueueFileProvider queueFileProvider)
+    public RandomAccessFileQueueStore(QueueFileProvider queueFileProvider, QueueFileProvider queueControlFileProvider)
     {
         this.queueFileProvider = queueFileProvider;
+        this.queueControlFileProvider = queueControlFileProvider;
         initialise();
     }
 
@@ -78,8 +84,10 @@ class RandomAccessFileQueueStore
             }
             Long filePosition = orderedKeys.getFirst();
             queueFileProvider.getRandomAccessFile().seek(filePosition);
-            queueFileProvider.getRandomAccessFile().writeByte(RandomAccessFileQueueStore.REMOVED);
             byte[] data = readDataInCurrentPosition();
+            logWriteRemoveInPosition(filePosition);
+            queueControlFileProvider.getRandomAccessFile().writeLong(filePosition);
+            entriesRemoved.add(filePosition);
             orderedKeys.removeFirst();
             return data;
         }
@@ -87,6 +95,16 @@ class RandomAccessFileQueueStore
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private void logWriteInPosition(Long filePosition)
+    {
+        logger.error("------ Writing in position " + queueFileProvider.getFile().getName() + " :" + filePosition);
+    }
+
+    private void logWriteRemoveInPosition(Long filePosition)
+    {
+        logger.error("------ Writing in position " + queueControlFileProvider.getFile().getName() + " :" + filePosition);
     }
 
     /**
@@ -126,10 +144,14 @@ class RandomAccessFileQueueStore
     {
         try
         {
+            logger.error("--- doing clear of file: " + queueFileProvider.getFile().getName());
             queueFileProvider.getRandomAccessFile().close();
+            queueControlFileProvider.getRandomAccessFile().close();
             orderedKeys.clear();
+            entriesRemoved.clear();
             fileTotalSpace = 0;
             queueFileProvider.recreate();
+            queueControlFileProvider.recreate();
         }
         catch (IOException e)
         {
@@ -164,8 +186,8 @@ class RandomAccessFileQueueStore
             queueFileProvider.getRandomAccessFile().seek(0);
             while (true)
             {
-                boolean removed = queueFileProvider.getRandomAccessFile().readBoolean();
-                if (!removed)
+                long filePointer = queueFileProvider.getRandomAccessFile().getFilePointer();
+                if (!entriesRemoved.contains(filePointer))
                 {
                     elements.add(readDataInCurrentPosition());
                 }
@@ -208,14 +230,14 @@ class RandomAccessFileQueueStore
             while (true)
             {
                 long currentPosition = queueFileProvider.getRandomAccessFile().getFilePointer();
-                byte removed = queueFileProvider.getRandomAccessFile().readByte();
-                if (removed == 0)
+                if (!entriesRemoved.contains(currentPosition))
                 {
                     byte[] data = readDataInCurrentPosition();
                     if (rawDataSelector.isSelectedData(data))
                     {
-                        queueFileProvider.getRandomAccessFile().seek(currentPosition);
-                        queueFileProvider.getRandomAccessFile().writeByte(REMOVED);
+                        logWriteRemoveInPosition(currentPosition);
+                        queueControlFileProvider.getRandomAccessFile().writeLong(currentPosition);
+                        entriesRemoved.add(currentPosition);
                         orderedKeys.remove(currentPosition);
                         return true;
                     }
@@ -243,18 +265,8 @@ class RandomAccessFileQueueStore
      */
     public synchronized void close()
     {
-        try
-        {
-            this.queueFileProvider.close();
-        }
-        catch (IOException e)
-        {
-            logger.warn(e.getMessage());
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(e);
-            }
-        }
+        queueFileProvider.close();
+        queueControlFileProvider.close();
     }
 
     private byte[] readDataInCurrentPosition() throws IOException
@@ -276,9 +288,9 @@ class RandomAccessFileQueueStore
             long filePointer = queueFileProvider.getRandomAccessFile().getFilePointer();
             int totalBytesRequired = CONTROL_DATA_SIZE + data.length;
             ByteBuffer byteBuffer = ByteBuffer.allocate(totalBytesRequired);
-            byteBuffer.put(NOT_REMOVED);
             byteBuffer.putInt(data.length);
             byteBuffer.put(data);
+            logWriteInPosition(filePointer);
             queueFileProvider.getRandomAccessFile().write(byteBuffer.array());
             fileTotalSpace += totalBytesRequired;
             return filePointer;
@@ -291,22 +303,47 @@ class RandomAccessFileQueueStore
 
     private void initialise()
     {
+        loadEntriesRemoved();
+        loadDataFileEntries();
+    }
+
+    private void loadDataFileEntries()
+    {
         try
         {
+            if (queueFileProvider.getRandomAccessFile().length() == 0)
+            {
+                return;
+            }
             queueFileProvider.getRandomAccessFile().seek(0);
             while (true)
             {
                 long position = queueFileProvider.getRandomAccessFile().getFilePointer();
-                byte removed = queueFileProvider.getRandomAccessFile().readByte();
-                if (removed == NOT_REMOVED)
+                if (!entriesRemoved.contains(position))
                 {
+                    byte[] value = readDataInCurrentPosition();
+                    SerializationUtils.deserialize(value);
+                    //only add the key if it was possible to read the data, if not it's a corrupted entry.
                     orderedKeys.add(position);
-                    moveFilePointerToNextData();
                 }
                 else
                 {
-                    moveFilePointerToNextData();
+                    readDataInCurrentPosition();
                 }
+            }
+        }
+        catch (SerializationException e)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e);
+            }
+        }
+        catch (NegativeArraySizeException e)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e);
             }
         }
         catch (EOFException e)
@@ -327,6 +364,29 @@ class RandomAccessFileQueueStore
         }
     }
 
+    private void loadEntriesRemoved()
+    {
+        try
+        {
+            if (queueControlFileProvider.getRandomAccessFile().length() == 0)
+            {
+                return;
+            }
+            while (true)
+            {
+                entriesRemoved.add(queueControlFileProvider.getRandomAccessFile().readLong());
+            }
+        }
+        catch (EOFException e)
+        {
+            logger.debug("EOF file reached, no more entries to read");
+        }
+        catch (Exception e)
+        {
+            throw new MuleRuntimeException(e);
+        }
+    }
+
     private byte[] readFirstValue()
     {
         try
@@ -337,7 +397,6 @@ class RandomAccessFileQueueStore
             }
             Long filePointer = orderedKeys.getFirst();
             queueFileProvider.getRandomAccessFile().seek(filePointer);
-            queueFileProvider.getRandomAccessFile().readByte(); //Always true since it's a key
             return readDataInCurrentPosition();
         }
         catch (IOException e)
@@ -373,8 +432,7 @@ class RandomAccessFileQueueStore
             queueFileProvider.getRandomAccessFile().seek(0);
             while (true)
             {
-                byte removed = queueFileProvider.getRandomAccessFile().readByte();
-                if (removed == NOT_REMOVED)
+                if (!entriesRemoved.contains(queueFileProvider.getRandomAccessFile().getFilePointer()))
                 {
                     byte[] data = readDataInCurrentPosition();
                     if (rawDataSelector.isSelectedData(data))
@@ -387,6 +445,14 @@ class RandomAccessFileQueueStore
                     moveFilePointerToNextData();
                 }
             }
+        }
+        catch (SerializationException e)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug(e);
+            }
+            return false;
         }
         catch (EOFException e)
         {
