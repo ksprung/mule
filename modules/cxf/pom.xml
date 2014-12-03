@@ -625,13 +625,12 @@
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-scripting</artifactId>
+            <artifactId>mule-module-http</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-http</artifactId>
+            <artifactId>mule-module-scripting</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
