@@ -41,6 +41,7 @@ subprojects {
                 force 'xalan:xalan:2.7.2'
                 force 'org.glassfish.grizzly:grizzly-framework:2.3.16'
                 force 'org.glassfish.grizzly:grizzly-http-server:2.3.16'
+                force 'commons-codec:commons-codec:1.9'
 
                 eachDependency { details ->
                     if (details.requested.group == 'org.springframework') {
