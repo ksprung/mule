@@ -7,6 +7,7 @@
 package org.mule.module.cxf;
 
 import static org.mule.module.cxf.HttpRequestPropertyManager.getRequestPath;
+import static org.mule.module.cxf.HttpRequestPropertyManager.getScheme;
 import org.mule.VoidMuleEvent;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.ExceptionPayload;
@@ -33,7 +34,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -217,11 +217,11 @@ public class CxfInboundMessageProcessor extends AbstractInterceptingMessageProce
 
     private String getUri(MuleEvent event)
     {
-        URI epUri = event.getMessageSourceURI();
-        String host = event.getMessage().getInboundProperty("Host", epUri.getHost());
+        String scheme = getScheme(event);
+        String host = event.getMessage().getInboundProperty("Host");
         String ctx = getRequestPath(event.getMessage());
 
-        return epUri.getScheme() + "://" + host + ctx;
+        return scheme + "://" + host + ctx;
     }
 
     protected MuleEvent sendToDestination(MuleEvent event) throws MuleException, IOException
