@@ -6,6 +6,7 @@
  */
 package org.mule.module.cxf;
 
+import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
 import org.mule.module.http.api.HttpConstants;
 import org.mule.transport.http.HttpConnector;
@@ -22,5 +23,15 @@ public class HttpRequestPropertyManager
             requestPath = message.getInboundProperty(HttpConstants.RequestProperties.HTTP_REQUEST_URI, StringUtils.EMPTY);
         }
         return requestPath;
+    }
+
+    public static String getScheme(MuleEvent event)
+    {
+        String scheme = event.getMessageSourceURI().getScheme();
+        if(scheme == null)
+        {
+            scheme = event.getMessage().getInboundProperty(HttpConstants.RequestProperties.HTTP_SCHEME);
+        }
+        return scheme;
     }
 }
