@@ -24,13 +24,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EvaluateAndTransformValueResolver extends AbstractDynamicValueResolver implements MuleContextAware, Initialisable
 {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EvaluateAndTransformValueResolver.class);
     private static final TemplateParser PARSER = TemplateParser.createMuleStyleParser();
 
     private final String expression;

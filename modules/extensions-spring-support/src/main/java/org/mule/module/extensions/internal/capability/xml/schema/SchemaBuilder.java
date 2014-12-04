@@ -18,7 +18,6 @@ import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.Operation;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.introspection.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Annotation;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Attribute;
 import org.mule.module.extensions.internal.capability.xml.schema.model.ComplexContent;
@@ -47,6 +46,7 @@ import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelC
 import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelElement;
 import org.mule.module.extensions.internal.capability.xml.schema.model.TopLevelSimpleType;
 import org.mule.module.extensions.internal.capability.xml.schema.model.Union;
+import org.mule.module.extensions.internal.introspection.BaseDataQualifierVisitor;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
 import org.mule.module.extensions.internal.util.NameUtils;
 import org.mule.util.ArrayUtils;
@@ -231,18 +231,13 @@ public class SchemaBuilder
                 @Override
                 public void onPojo()
                 {
-                    boolean describable = forceOptional = IntrospectionUtils.isDescribable(configuration.getDeclaringClass(), parameter);
-
+                    forceOptional = false;
                     defaultOperation();
-
-                    if (describable)
-                    {
-                        registerComplexTypeChildElement(all,
-                                                        parameter.getName(),
-                                                        parameter.getDescription(),
-                                                        parameter.getType(),
-                                                        isRequired(parameter, forceOptional));
-                    }
+                    registerComplexTypeChildElement(all,
+                                                    parameter.getName(),
+                                                    parameter.getDescription(),
+                                                    parameter.getType(),
+                                                    isRequired(parameter, forceOptional));
                 }
 
                 @Override

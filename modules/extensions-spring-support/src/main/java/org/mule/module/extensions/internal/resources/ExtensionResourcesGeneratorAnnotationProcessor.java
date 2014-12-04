@@ -109,7 +109,7 @@ public class ExtensionResourcesGeneratorAnnotationProcessor extends AbstractProc
 
     private List<TypeElement> findExtensions(RoundEnvironment env)
     {
-        return ImmutableList.copyOf(ElementFilter.typesIn(env.getElementsAnnotatedWith(org.mule.extensions.annotation.Extension.class)));
+        return ImmutableList.copyOf(ElementFilter.typesIn(env.getElementsAnnotatedWith(org.mule.extensions.annotations.Extension.class)));
     }
 
     private void log(String message)

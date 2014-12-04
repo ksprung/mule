@@ -12,8 +12,8 @@ import static org.mule.module.extensions.internal.capability.xml.schema.Annotati
 import static org.mule.module.extensions.internal.capability.xml.schema.AnnotationProcessorUtils.getMethodsAnnotatedWith;
 import org.mule.api.MuleRuntimeException;
 import org.mule.config.i18n.MessageFactory;
-import org.mule.extensions.annotation.Configurable;
-import org.mule.extensions.annotation.Operation;
+import org.mule.extensions.annotations.Configurable;
+import org.mule.extensions.annotations.Operation;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.declaration.ConfigurationDeclaration;
 import org.mule.extensions.introspection.declaration.Declaration;

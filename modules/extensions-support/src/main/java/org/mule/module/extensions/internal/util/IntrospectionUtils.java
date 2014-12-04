@@ -196,20 +196,6 @@ public class IntrospectionUtils
         return ClassUtils.getConstructor(clazz, new Class[] {}) != null;
     }
 
-    public static boolean isDescribable(Class<?> declaringClass, Parameter parameter)
-    {
-        try
-        {
-            checkInstantiable(declaringClass);
-        }
-        catch (IllegalArgumentException e)
-        {
-            return false;
-        }
-
-        return hasSetter(declaringClass, parameter);
-    }
-
     private static DataType toDataType(ResolvableType type)
     {
         return DataType.of(type.getRawClass(), toRawTypes(type.getGenerics()));

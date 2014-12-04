@@ -6,15 +6,11 @@
  */
 package org.mule.module.extensions.internal.config;
 
-import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.applyLifecycle;
-import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.parseParameter;
 import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.setNoRecurseOnDefinition;
+import static org.mule.module.extensions.internal.config.XmlExtensionParserUtils.toElementDescriptorBeanDefinition;
 import org.mule.config.spring.parsers.generic.AutoIdUtils;
 import org.mule.extensions.introspection.Configuration;
 import org.mule.extensions.introspection.Extension;
-import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.runtime.resolver.ResolverSet;
-import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -34,13 +30,13 @@ import org.w3c.dom.Element;
  *
  * @since 3.7.0
  */
-abstract class ExtensionConfigurationBeanDefinitionParser implements BeanDefinitionParser
+final class ExtensionConfigurationBeanDefinitionParser implements BeanDefinitionParser
 {
 
     private final Extension extension;
     protected final Configuration configuration;
 
-    public ExtensionConfigurationBeanDefinitionParser(Extension extension, Configuration configuration)
+    ExtensionConfigurationBeanDefinitionParser(Extension extension, Configuration configuration)
     {
         this.extension = extension;
         this.configuration = configuration;
@@ -49,33 +45,16 @@ abstract class ExtensionConfigurationBeanDefinitionParser implements BeanDefinit
     @Override
     public final BeanDefinition parse(Element element, ParserContext parserContext)
     {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(getResolverClass());
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ExtensionConfigurationFactoryBean.class);
         builder.setScope(BeanDefinition.SCOPE_SINGLETON);
-        applyLifecycle(builder);
         parseConfigName(element, builder);
-
-        doParse(element, builder, parserContext);
+        builder.addConstructorArgValue(configuration);
+        builder.addConstructorArgValue(toElementDescriptorBeanDefinition(element));
 
         BeanDefinition definition = builder.getBeanDefinition();
         setNoRecurseOnDefinition(definition);
 
         return definition;
-    }
-
-    protected abstract Class<? extends ValueResolver> getResolverClass();
-
-    protected abstract void doParse(Element element, BeanDefinitionBuilder builder, ParserContext parserContext);
-
-    protected ResolverSet getResolverSet(Element element)
-    {
-        ResolverSet resolverSet = new ResolverSet();
-
-        for (Parameter parameter : configuration.getParameters())
-        {
-            resolverSet.add(parameter, parseParameter(element, parameter));
-        }
-
-        return resolverSet;
     }
 
     private void parseConfigName(Element element, BeanDefinitionBuilder builder)

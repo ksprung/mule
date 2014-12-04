@@ -17,6 +17,7 @@ import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
+import org.mule.extensions.introspection.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,11 +45,13 @@ public class ModuleConfigurationValueResolver extends ConfigurationValueResolver
 {
 
     private final ResolverSet resolverSet;
+    private final Configuration configuration;
     private ValueResolver resolver;
 
-    public ModuleConfigurationValueResolver(String name, Class<?> moduleClass, ResolverSet resolverSet)
+    public ModuleConfigurationValueResolver(String name, Configuration configuration, ResolverSet resolverSet)
     {
         super(name);
+        this.configuration = configuration;
         this.resolverSet = resolverSet;
 
         if (resolverSet.isDynamic())

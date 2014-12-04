@@ -7,8 +7,6 @@
 package org.mule.module.extensions.internal.config;
 
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.isExpression;
-import org.mule.api.lifecycle.Disposable;
-import org.mule.api.lifecycle.Initialisable;
 import org.mule.config.spring.MuleHierarchicalBeanDefinitionParserDelegate;
 import org.mule.extensions.introspection.DataQualifierVisitor;
 import org.mule.extensions.introspection.DataType;
@@ -23,6 +21,7 @@ import org.mule.module.extensions.internal.runtime.resolver.CollectionValueResol
 import org.mule.module.extensions.internal.runtime.resolver.EvaluateAndTransformValueResolver;
 import org.mule.module.extensions.internal.runtime.resolver.ObjectBuilderValueResolver;
 import org.mule.module.extensions.internal.runtime.resolver.RegistryLookupValueResolver;
+import org.mule.module.extensions.internal.runtime.resolver.ResolverSet;
 import org.mule.module.extensions.internal.runtime.resolver.StaticValueResolver;
 import org.mule.module.extensions.internal.runtime.resolver.ValueResolver;
 import org.mule.module.extensions.internal.util.IntrospectionUtils;
@@ -40,13 +39,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * Utility methods for XML parsers capable of handling objects described by the extensions introspection API
@@ -62,20 +62,14 @@ final class XmlExtensionParserUtils
     private static final TemplateParser parser = TemplateParser.createMuleStyleParser();
     private static final ConversionService conversionService = new DefaultConversionService();
 
-    static final boolean hasAttribute(Element element, String attributeName)
-    {
-        String value = element.getAttribute(attributeName);
-        return !StringUtils.isBlank(value);
-    }
-
-    private static ValueResolver parseCollectionAsInnerElement(Element collectionElement,
-                                                        String childElementName,
-                                                        DataType collectionType)
+    private static ValueResolver parseCollectionAsInnerElement(ElementDescriptor collectionElement,
+                                                               String childElementName,
+                                                               DataType collectionType)
     {
         final DataType itemsType = collectionType.getGenericTypes().length > 0 ? collectionType.getGenericTypes()[0] : DataType.of(Object.class);
         final List<ValueResolver> resolvers = new LinkedList<>();
 
-        for (final Element item : DomUtils.getChildElementsByTagName(collectionElement, childElementName))
+        for (final ElementDescriptor item : collectionElement.getChildsByName(childElementName))
         {
             DataQualifierVisitor visitor = new BaseDataQualifierVisitor()
             {
@@ -99,17 +93,17 @@ final class XmlExtensionParserUtils
         return CollectionValueResolver.of((Class<? extends Collection>) collectionType.getRawType(), resolvers);
     }
 
-    private static ValueResolver parseCollection(Element element,
-                                          String fieldName,
-                                          String parentElementName,
-                                          String childElementName,
-                                          Object defaultValue,
-                                          DataType collectionDataType)
+    private static ValueResolver parseCollection(ElementDescriptor element,
+                                                 String fieldName,
+                                                 String parentElementName,
+                                                 String childElementName,
+                                                 Object defaultValue,
+                                                 DataType collectionDataType)
     {
         ValueResolver resolver = getResolverFromAttribute(element, fieldName, collectionDataType, defaultValue);
         if (resolver == null)
         {
-            Element collectionElement = DomUtils.getChildElementByTagName(element, parentElementName);
+            ElementDescriptor collectionElement = element.getChildByName(parentElementName);
             if (collectionElement != null)
             {
                 resolver = parseCollectionAsInnerElement(collectionElement, childElementName, collectionDataType);
@@ -123,14 +117,14 @@ final class XmlExtensionParserUtils
         return resolver;
     }
 
-    private static ValueResolver getResolverFromAttribute(Element element, String attributeName, DataType expectedDataType, Object defaultValue)
+    private static ValueResolver getResolverFromAttribute(ElementDescriptor element, String attributeName, DataType expectedDataType, Object defaultValue)
     {
         return getResolverFromValue(getAttributeValue(element, attributeName, defaultValue), expectedDataType);
     }
 
-    static Object getAttributeValue(Element element, String attributeName, Object defaultValue)
+    static Object getAttributeValue(ElementDescriptor element, String attributeName, Object defaultValue)
     {
-        return hasAttribute(element, attributeName)
+        return element.hasAttribute(attributeName)
                ? element.getAttribute(attributeName)
                : defaultValue;
     }
@@ -186,11 +180,11 @@ final class XmlExtensionParserUtils
      * @return a {@link org.springframework.beans.factory.config.BeanDefinition} if the bean could be parsed, {@code null}
      * if the bean is not present on the XML definition
      */
-    private static ValueResolver parsePojo(Element element,
-                                    String fieldName,
-                                    String parentElementName,
-                                    DataType pojoType,
-                                    Object defaultValue)
+    private static ValueResolver parsePojo(ElementDescriptor element,
+                                           String fieldName,
+                                           String parentElementName,
+                                           DataType pojoType,
+                                           Object defaultValue)
     {
         ValueResolver resolver = getResolverFromAttribute(element, fieldName, pojoType, defaultValue);
 
@@ -199,7 +193,7 @@ final class XmlExtensionParserUtils
             return resolver;
         }
 
-        element = DomUtils.getChildElementByTagName(element, parentElementName);
+        element = element.getChildByName(parentElementName);
 
         if (element == null)
         {
@@ -209,7 +203,7 @@ final class XmlExtensionParserUtils
         return new ObjectBuilderValueResolver(recursePojoProperties(pojoType.getRawType(), element));
     }
 
-    private static ObjectBuilder recursePojoProperties(Class<?> declaringClass, Element element)
+    private static ObjectBuilder recursePojoProperties(Class<?> declaringClass, ElementDescriptor element)
     {
         ObjectBuilder builder = new DefaultObjectBuilder();
         builder.setPrototypeClass(declaringClass);
@@ -231,7 +225,7 @@ final class XmlExtensionParserUtils
             if (resolver == null)
             {
                 parameterName = NameUtils.hyphenize(parameterName);
-                Element childElement = DomUtils.getChildElementByTagName(element, parameterName);
+                ElementDescriptor childElement = element.getChildByName(parameterName);
                 if (childElement != null)
                 {
                     ObjectBuilder childBuilder = recursePojoProperties(dataType.getRawType(), childElement);
@@ -248,10 +242,10 @@ final class XmlExtensionParserUtils
         return builder;
     }
 
-    private static Date doParseDate(Element element,
-                             String attributeName,
-                             String parseFormat,
-                             Object defaultValue)
+    private static Date doParseDate(ElementDescriptor element,
+                                    String attributeName,
+                                    String parseFormat,
+                                    Object defaultValue)
     {
 
         Object value = getAttributeValue(element, attributeName, defaultValue);
@@ -283,22 +277,7 @@ final class XmlExtensionParserUtils
                 String.format("Could not transform value of type '%s' to Date", value != null ? value.getClass().getName() : "null"));
     }
 
-    static final void applyLifecycle(BeanDefinitionBuilder builder)
-    {
-        Class<?> declaringClass = builder.getBeanDefinition().getBeanClass();
-        if (Initialisable.class.isAssignableFrom(declaringClass))
-        {
-            builder.setInitMethodName(Initialisable.PHASE_NAME);
-        }
-
-        if (Disposable.class.isAssignableFrom(declaringClass))
-        {
-            builder.setDestroyMethodName(Disposable.PHASE_NAME);
-        }
-    }
-
-
-    private static ValueResolver parseCalendar(Element element, String attributeName, DataType dataType, Object defaultValue)
+    private static ValueResolver parseCalendar(ElementDescriptor element, String attributeName, DataType dataType, Object defaultValue)
     {
         Object value = getAttributeValue(element, attributeName, defaultValue);
         if (isExpression(value, parser))
@@ -313,7 +292,7 @@ final class XmlExtensionParserUtils
         return new StaticValueResolver(calendar);
     }
 
-    private static ValueResolver parseDate(Element element, String attributeName, DataType dataType, Object defaultValue)
+    private static ValueResolver parseDate(ElementDescriptor element, String attributeName, DataType dataType, Object defaultValue)
     {
         Object value = getAttributeValue(element, attributeName, defaultValue);
         if (isExpression(value, parser))
@@ -331,15 +310,15 @@ final class XmlExtensionParserUtils
         definition.setAttribute(MuleHierarchicalBeanDefinitionParserDelegate.MULE_NO_RECURSE, Boolean.TRUE);
     }
 
-    static ValueResolver parseParameter(Element element, Parameter parameter)
+    static ValueResolver parseParameter(ElementDescriptor element, Parameter parameter)
     {
         return parseElement(element, parameter.getName(), parameter.getType(), parameter.getDefaultValue());
     }
 
-    static ValueResolver parseElement(final Element element,
-                                       final String fieldName,
-                                       final DataType dataType,
-                                       final Object defaultValue)
+    static ValueResolver parseElement(final ElementDescriptor element,
+                                      final String fieldName,
+                                      final DataType dataType,
+                                      final Object defaultValue)
     {
         final String hyphenizedFieldName = NameUtils.hyphenize(fieldName);
         final String singularName = NameUtils.singularize(hyphenizedFieldName);
@@ -389,5 +368,52 @@ final class XmlExtensionParserUtils
 
         dataType.getQualifier().accept(visitor);
         return resolverReference.get();
+    }
+
+    static BeanDefinition toElementDescriptorBeanDefinition(Element element)
+    {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ElementDescriptor.class);
+        builder.addConstructorArgValue(element.getLocalName());
+        parseElementDescriptorAttributes(element, builder);
+        parseElementDescriptorChilds(element, builder);
+
+        return builder.getBeanDefinition();
+    }
+
+    static ResolverSet getResolverSet(ElementDescriptor element, List<Parameter> parameters)
+    {
+        ResolverSet resolverSet = new ResolverSet();
+
+        for (Parameter parameter : parameters)
+        {
+            resolverSet.add(parameter, parseParameter(element, parameter));
+        }
+
+        return resolverSet;
+    }
+
+    private static void parseElementDescriptorChilds(Element element, BeanDefinitionBuilder builder)
+    {
+        ManagedMap<String, BeanDefinition> managedChilds = new ManagedMap<>();
+        for (Element child : DomUtils.getChildElements(element))
+        {
+            managedChilds.put(child.getLocalName(), toElementDescriptorBeanDefinition(child));
+        }
+
+        builder.addConstructorArgValue(managedChilds);
+    }
+
+    private static void parseElementDescriptorAttributes(Element element, BeanDefinitionBuilder builder)
+    {
+        ManagedMap<String, String> managedAttributes = new ManagedMap<>();
+        NamedNodeMap attributes = element.getAttributes();
+
+        for (int i = 0; i < attributes.getLength(); i++)
+        {
+            String name = attributes.item(i).getLocalName();
+            managedAttributes.put(name, element.getAttribute(name));
+        }
+
+        builder.addConstructorArgValue(managedAttributes);
     }
 }

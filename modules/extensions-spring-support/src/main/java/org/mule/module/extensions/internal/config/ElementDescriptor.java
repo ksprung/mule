@@ -6,20 +6,33 @@
  */
 package org.mule.module.extensions.internal.config;
 
+import org.mule.util.CollectionUtils;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 public final class ElementDescriptor
 {
 
     private final String name;
-    private final Map<String, String> attributes = new HashMap<>();
-    private final Map<String, ElementDescriptor> childs = new HashMap<>();
+    private final Map<String, String> attributes;
+    private final Multimap<String, ElementDescriptor> childs;
 
-    public ElementDescriptor(String name)
+    public ElementDescriptor(String name, Map<String, String> attributes, List<ElementDescriptor> childs)
     {
         this.name = name;
+        this.attributes = attributes;
+        this.childs = ArrayListMultimap.create();
+        for (ElementDescriptor child : childs)
+        {
+            this.childs.put(child.getName(), child);
+        }
     }
 
     public String getName()
@@ -29,13 +42,12 @@ public final class ElementDescriptor
 
     public boolean hasAttribute(String attributeName)
     {
-        return attributes.containsKey(attributeName);
+        return !StringUtils.isBlank(getAttribute(attributeName));
     }
 
-    public ElementDescriptor addAttribute(String attributeName, String value)
+    public String getAttribute(String attributeName)
     {
-        attributes.put(attributeName, value);
-        return this;
+        return attributes.get(attributeName);
     }
 
     public Collection<ElementDescriptor> getChilds()
@@ -45,12 +57,12 @@ public final class ElementDescriptor
 
     public ElementDescriptor getChildByName(String childName)
     {
-        return childs.get(childName);
+        Collection<ElementDescriptor> values = childs.get(childName);
+        return CollectionUtils.isEmpty(values) ? null : values.iterator().next();
     }
 
-    public ElementDescriptor addChild(ElementDescriptor child)
+    public Collection<ElementDescriptor> getChildsByName(String childName)
     {
-        childs.put(child.getName(), child);
-        return this;
+        return childs.get(childName);
     }
 }
