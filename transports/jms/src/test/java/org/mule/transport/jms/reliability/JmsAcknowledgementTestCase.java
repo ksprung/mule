@@ -10,6 +10,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
+import java.util.concurrent.CountDownLatch;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -64,17 +66,17 @@ public class JmsAcknowledgementTestCase extends AbstractJmsReliabilityTestCase
     public void testAutoAckAsync() throws Exception
     {
         acknowledgeMode = Session.AUTO_ACKNOWLEDGE;
-
+        final CountDownLatch received = new CountDownLatch(1);
         listenOnQueue("sanity", new MessageListener()
         {
             @Override
             public void onMessage(Message message)
             {
-                // Message is processed normally
+                received.countDown();
             }
         });
         putMessageOnQueue("sanity");
-        Thread.sleep(500);
+        received.await();
         closeConsumer();
 
         // Delivery was successful so message should be gone
