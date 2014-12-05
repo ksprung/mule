@@ -75,10 +75,20 @@ subprojects {
             'xmlunit:xmlunit:1.1',
             'junit:junit:4.11'
     }
+
     test {
         ignoreFailures = true
     }
 
+    task testJenkins(dependsOn: test) {
+        description "=== Update the timestamp of the test results so that Jenkins doesn't fail if tests are not run "
+        inputs.files test.outputs.files
+        doLast{
+            def timestamp = System.currentTimeMillis()
+            testResultsDir.eachFile { it.lastModified = timestamp }
+        }
+        check.dependsOn(testJenkins)
+    }
 }
 
 idea {
