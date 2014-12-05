@@ -39,12 +39,13 @@ import org.junit.runners.Parameterized.Parameters;
 public class CxfBasicTestCase extends AbstractServiceAndFlowTestCase
 {
 
-    public static final String BASIC_CONF_NEW_HTTP_FLOW_XML = "basic-conf-new-http-flow.xml";
+    private static final String BASIC_CONF_NEW_HTTP_FLOW_XML = "basic-conf-new-http-flow.xml";
+    private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(Methods.POST.name()).build();
+
     private String echoWsdl;
 
     @Rule
     public DynamicPort dynamicPort = new DynamicPort("port1");
-    public static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(Methods.POST.name()).build();
 
     public CxfBasicTestCase(ConfigVariant variant, String configResources)
     {
