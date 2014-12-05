@@ -9,10 +9,10 @@ package org.mule.module.cxf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
+import static org.mule.module.http.api.HttpConstants.Methods.POST;
 import static org.mule.module.http.api.client.HttpRequestOptionsBuilder.newOptions;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
-import org.mule.module.http.api.HttpConstants;
 import org.mule.module.http.api.client.HttpRequestOptions;
 import org.mule.tck.junit4.FunctionalTestCase;
 import org.mule.tck.junit4.rule.DynamicPort;
@@ -29,7 +29,7 @@ import org.junit.runners.Parameterized;
 public class DatabindingTestCase extends FunctionalTestCase
 {
 
-    private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(HttpConstants.Methods.POST.name()).build();
+    private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(POST.name()).build();
     private static final String DATABINDING_NEWHTTP_CONF_XML = "databinding-newhttp-conf.xml";
 
     @Rule
