@@ -3,13 +3,13 @@ archivesBaseName = 'mule-module-pgp'
 description = 'A Mule implementation of PGP security using bouncy castle libraries.'
 
 dependencies {
-    compile project(':modules:spring-config'),
+    compile project(':module-spring-config'),
         "org.bouncycastle:bcpg-jdk16:1.46"
 
 
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm"),
-        project(":transports:file")
+    testCompile project(":test-functional"),
+        project(":transport-vm"),
+        project(":transport-file")
 }
 

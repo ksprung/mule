@@ -3,7 +3,7 @@ archivesBaseName = 'mule-transport-stdio'
 description = 'A Mule transport used as the interface to Java\'s System.out and System.in objects, typically for testing purposes.'
 
 dependencies {
-    compile project(':modules:spring-config')
+    compile project(':module-spring-config')
 
-    testCompile project(':tests:functional')
+    testCompile project(':test-functional')
 }

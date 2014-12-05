@@ -4,14 +4,14 @@ description = 'A Mule transport for Ftp Connectivity.'
 
 
 dependencies {
-    compile project(':modules:spring-config'),
-        project(":transports:file"),
+    compile project(':module-spring-config'),
+        project(":transport-file"),
         "commons-net:commons-net:2.0",
         "oro:oro:2.0.8"
 
-    testCompile project(':tests:functional'),
-        project(':transports:vm'),
-        project(path: ':transports:file', configuration: 'testFixtures')
+    testCompile project(':test-functional'),
+        project(':transport-vm'),
+        project(path: ':transport-file', configuration: 'testFixtures')
 }
 
 

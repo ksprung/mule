@@ -8,7 +8,7 @@ configurations {
 
 dependencies {
     compile project(':core'),
-        project(':modules:spring-config'),
+        project(':module-spring-config'),
         "org.springframework:spring-context:$springVersion",
         "org.apache.geronimo.specs:geronimo-stax-api_1.0_spec:1.0.1",
         "dom4j:dom4j:1.6.1",
@@ -23,7 +23,7 @@ dependencies {
         "net.java.dev.stax-utils:stax-utils:20080702"
 
     testCompile project(path: ':core', configuration: 'testFixtures'),
-        project(':tests:functional'),
+        project(':test-functional'),
         "xalan:xalan:2.7.1"
 
 

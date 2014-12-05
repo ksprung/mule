@@ -1,8 +1,14 @@
 import org.mule.gradle.ContentsVerifierTask
 
+plugins {
+    id "com.github.fowlie.gradle-jenkins-test" version "0.3"
+}
+
 project.ext {
-    dummyProjects = [ project(":modules"), project(":transports"), project(":tests") ]
     jdkVersion = 1.7
+    ci = false // override on Jenkings  adding -Pci=true to command line
+    modules = rootProject.subprojects.findAll { pr -> pr.path.startsWith(':module') }
+    transports = rootProject.subprojects.findAll { pr -> pr.path.startsWith(':transport') }
 }
 
 allprojects {
@@ -77,17 +83,19 @@ subprojects {
     }
 
     test {
-        ignoreFailures = true
+        ignoreFailures = ci
     }
 
-    task testJenkins(dependsOn: test) {
-        description "=== Update the timestamp of the test results so that Jenkins doesn't fail if tests are not run "
-        inputs.files test.outputs.files
+    task jenkinsTest {
+        description 'Updates the test report timestamps, so Jenkins doesn\'t mark the job as failed.'
+        enabled = ci
         doLast{
-            def timestamp = System.currentTimeMillis()
-            testResultsDir.eachFile { it.lastModified = timestamp }
+            def testResults = project.test.getReports().getJunitXml().getDestination()
+            if (testResults.exists()) testResults.eachFile {
+                it.lastModified = System.currentTimeMillis()
+            }
         }
-        check.dependsOn(testJenkins)
+        test.dependsOn(jenkinsTest)
     }
 }
 
@@ -139,9 +147,6 @@ def perJdkSources(project) {
     }
 }
 
-configure(dummyProjects) {
-
-}
 
 // Distributions: built directly from the top level project
 apply plugin: 'distribution'
@@ -155,15 +160,15 @@ configurations {
 
 dependencies {
     allMule project(':core')
-    allMule project(':tests:functional')
-    allMule project(':modules').subprojects
-    allMule project(':transports').subprojects
+    allMule project(':test-functional')
+    allMule rootProject.subprojects.findAll { pr -> pr.name.startsWith(':module') }
+    allMule rootProject.subprojects.findAll { pr -> pr.name.startsWith(':transport') }
 
-    libBoot project(':modules:boot')
-    libBoot project(':modules:reboot')
+    libBoot project(':module-boot')
+    libBoot project(':module-reboot')
 }
 
-def realProjects = subprojects - dummyProjects
+def realProjects = subprojects
 
 
 distributions {

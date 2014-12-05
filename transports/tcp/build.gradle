@@ -3,11 +3,11 @@ archivesBaseName = 'mule-transport-tcp'
 description = 'A Mule transport for Tcp Connectivity. This transport supplies a tcp Server and client implementation.'
 
 dependencies {
-    compile project(':modules:spring-config')
+    compile project(':module-spring-config')
 
-    testCompile project(':tests:functional'),
-        project(':transports:vm'),
-        project(':modules:client')
+    testCompile project(':test-functional'),
+        project(':transport-vm'),
+        project(':module-client')
 }
 
 exportTestFixture project

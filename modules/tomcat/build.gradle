@@ -4,7 +4,7 @@ description = 'Integrates Mule as a global Tomcat service, to be used with deplo
 
 dependencies {
     compile project(':core'),
-        project(':modules:builders'),
+        project(':module-builders'),
         "org.apache.tomcat:catalina:6.0.20"
 
 }

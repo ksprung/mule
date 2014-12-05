@@ -47,17 +47,17 @@ dependencies {
             "org.apache.cxf:cxf-wstx-msv-validation:$cxfVersion",
             "com.sun.xml.messaging.saaj:saaj-impl:1.3",
             "javax.mail:mail:1.4.3",
-        project(':transports:http'),
-        project(':modules:xml'),
-        project(':modules:spring-security')
+        project(':transport-http'),
+        project(':module-xml'),
+        project(':module-spring-security')
 
-    testCompile project(':tests:functional'),
-        project(':modules:scripting'),
-        project(":transports:servlet"),
-        project(":transports:jetty"),
-        project(":transports:jms"),
-        project(":transports:quartz"),
-        project(":transports:vm"),
+    testCompile project(':test-functional'),
+        project(':module-scripting'),
+        project(":transport-servlet"),
+        project(":transport-jetty"),
+        project(":transport-jms"),
+        project(":transport-quartz"),
+        project(":transport-vm"),
         "org.apache.cxf:cxf-testutils:$cxfVersion",
         "org.apache.activemq:activemq-core:5.5.0"
 

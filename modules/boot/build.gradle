@@ -8,7 +8,7 @@ dependencies {
         'tanukisoft:wrapper:3.2.3',
         "commons-cli:commons-cli:1.2"
 
-    testCompile project(':tests:functional')
+    testCompile project(':test-functional')
 
 
 

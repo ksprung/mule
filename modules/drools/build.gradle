@@ -8,13 +8,13 @@ configurations {
 }
 
 dependencies {
-    compile project(':modules:bpm'),
+    compile project(':module-bpm'),
         "org.drools:drools-core:$droolsVersion"
 
     runtime "org.drools:drools-compiler:$droolsVersion",
         "org.apache.tomcat:jasper-jdt:6.0.29"
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm")
+    testCompile project(":test-functional"),
+        project(":transport-vm")
 }
 

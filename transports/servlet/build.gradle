@@ -3,10 +3,10 @@ archivesBaseName = 'mule-transport-servlet'
 description = 'A Mule transport for Servlet containers.'
 
 dependencies {
-    compile project(':transports:http')
+    compile project(':transport-http')
 
-    testCompile project(':tests:functional'),
-        project(':transports:vm')
+    testCompile project(':test-functional'),
+        project(':transport-vm')
 }
 
 exportTestFixture project

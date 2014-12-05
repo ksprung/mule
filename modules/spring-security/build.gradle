@@ -6,15 +6,15 @@ description = 'Mule Spring Security support exposes Spring Security Authenticati
 
 dependencies {
     compile project(':core'),
-        project(":transports:http"),
+        project(":transport-http"),
         "org.springframework.security:spring-security-core:$springSecurityVersion",
         "org.springframework.security:spring-security-config:$springSecurityVersion",
         "org.springframework.security:spring-security-web:$springSecurityVersion",
         "org.springframework.security:spring-security-ldap:$springSecurityVersion"
 
-    testCompile project(':tests:functional'),
+    testCompile project(':test-functional'),
             "org.springframework:spring-aop:$springVersion",
-            project(":transports:vm")
+            project(":transport-vm")
 
 }
 

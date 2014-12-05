@@ -3,10 +3,10 @@ archivesBaseName = 'mule-module-schedulers'
 description = 'Schedulers for poll'
 
 dependencies {
-    compile project(':modules:spring-config'),
+    compile project(':module-spring-config'),
         "org.quartz-scheduler:quartz:1.8.5"
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm")
+    testCompile project(":test-functional"),
+        project(":transport-vm")
 }
 

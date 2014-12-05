@@ -3,8 +3,8 @@ archivesBaseName = 'mule-module-json'
 description = 'Implementation of JSON transformers for Mule.'
 
 dependencies {
-    compile project(':modules:spring-config'),
-        project(":modules:xml"),
+    compile project(':module-spring-config'),
+        project(":module-xml"),
 
         "org.codehaus.jackson:jackson-core-asl:$jacksonVersion",
         "org.codehaus.jackson:jackson-mapper-asl:$jacksonVersion",
@@ -13,6 +13,6 @@ dependencies {
         "com.github.fge:json-schema-validator:2.2.5"
 
 
-    testCompile project(":tests:functional"),
+    testCompile project(":test-functional"),
         "org.skyscreamer:jsonassert:1.1.1"
 }

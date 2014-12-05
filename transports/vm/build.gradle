@@ -3,8 +3,8 @@ archivesBaseName = 'mule-transport-vm'
 description = 'A Mule transport that enables event sending and receiving over VM or embedded memory queues.'
 
 dependencies {
-    compile project(':modules:xml')
+    compile project(':module-xml')
 
-    testCompile project(':tests:functional'),
-        project(':modules:jboss-transactions')
+    testCompile project(':test-functional'),
+        project(':module-jboss-transactions')
 }

@@ -7,12 +7,12 @@ repositories {
 }
 
 dependencies {
-    compile project(':transports:file'),
+    compile project(':transport-file'),
         "com.jcraft:jsch:0.1.50"
 
-    testCompile project(':tests:functional'),
-            project(":transports:vm"),
-            project(":transports:quartz"),
+    testCompile project(':test-functional'),
+            project(":transport-vm"),
+            project(":transport-quartz"),
             "org.apache.sshd:sshd-core:0.6.0",
             "org.bouncycastle:bcprov-jdk16:1.46"
 }

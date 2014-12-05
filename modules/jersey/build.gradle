@@ -3,10 +3,10 @@ archivesBaseName = 'mule-module-jersey'
 description = 'A module for Jersey, the JAX-RS RI.'
 
 dependencies {
-    compile project(':modules:spring-config'),
-        project(":transports:http"),
-        project(":transports:servlet"),
-        project(":transports:vm"),
+    compile project(':module-spring-config'),
+        project(":transport-http"),
+        project(":transport-servlet"),
+        project(":transport-vm"),
 
 
         "org.glassfish.jersey.core:jersey-common:2.11",
@@ -18,8 +18,8 @@ dependencies {
         "org.codehaus.jackson:jackson-jaxrs:$jacksonVersion"
 
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm"),
-        project(":transports:jetty")
+    testCompile project(":test-functional"),
+        project(":transport-vm"),
+        project(":transport-jetty")
 
 }

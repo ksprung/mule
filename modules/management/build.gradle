@@ -3,8 +3,8 @@ archivesBaseName = 'mule-module-management'
 description = 'Management Extensions for Mule'
 
 dependencies {
-    compile project(':modules:spring-config'),
-        project(":modules:xml"),
+    compile project(':module-spring-config'),
+        project(":module-xml"),
         "mx4j:mx4j-jmx:2.1.1",
         "mx4j:mx4j-impl:2.1.1",
         "mx4j:mx4j-tools:2.1.1",
@@ -13,7 +13,7 @@ dependencies {
         "tanukisoft:wrapper:3.2.3"
 
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm")
+    testCompile project(":test-functional"),
+        project(":transport-vm")
 }
 

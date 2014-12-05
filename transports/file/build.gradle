@@ -4,10 +4,10 @@ description = 'A Mule transport for File Connectivity'
 
 
 dependencies {
-    compile project(':modules:spring-config')
+    compile project(':module-spring-config')
 
-    testCompile project(':tests:functional'),
-        project(':transports:vm')
+    testCompile project(':test-functional'),
+        project(':transport-vm')
 }
 
 exportTestFixture project

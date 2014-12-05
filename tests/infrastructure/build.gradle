@@ -4,8 +4,8 @@ description = 'Tests infrastructure library for creating mule automated test cas
 
 dependencies {
     compile project(':core'),
-        project(':modules:launcher'),
-        project(':tests:functional'),
+        project(':module-launcher'),
+        project(':test-functional'),
         "org.apache.commons:commons-exec:1.1",
         configurations.testCompile.allDependencies
 }

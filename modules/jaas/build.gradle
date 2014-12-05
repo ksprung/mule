@@ -4,8 +4,8 @@ description = 'Mule Jaas Support exposes Jaas Authentication providers and Metho
 
 dependencies {
     compile project(':core'),
-        project(':modules:spring-config')
+        project(':module-spring-config')
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm")
+    testCompile project(":test-functional"),
+        project(":transport-vm")
 }

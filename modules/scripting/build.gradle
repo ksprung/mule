@@ -4,8 +4,8 @@ description = 'Support for Scripting Mule Services and embedding Mule inside scr
 
 dependencies {
     compile project(':core'),
-        project(':modules:spring-config'),
-        project(':modules:builders'),
+        project(':module-spring-config'),
+        project(':module-builders'),
         "org.springframework:spring-context:$springVersion",
         "org.livetribe:livetribe-jsr223:2.0.5"
 
@@ -19,8 +19,8 @@ dependencies {
             "org.jruby:jruby-complete:1.0",
             "javax.script:jruby-engine:1.1:jdk14"
 
-    testCompile project(':tests:functional'),
-            project(':transports:vm')
+    testCompile project(':test-functional'),
+            project(':transport-vm')
 }
 
 

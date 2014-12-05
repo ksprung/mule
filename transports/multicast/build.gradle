@@ -3,8 +3,8 @@ archivesBaseName = 'mule-transport-multicast'
 description = 'A Mule transport for Udp Multicasting. This transport supplies a Multicast Data Packet dispatcher and client implementation.'
 
 dependencies {
-    compile project(':transports:udp')
+    compile project(':transport-udp')
 
-    testCompile project(':tests:functional'),
-            project(":transports:vm")
+    testCompile project(':test-functional'),
+            project(":transport-vm")
 }

@@ -4,13 +4,13 @@ description = 'A Mule transport for receiving and dispatching AJAX events using 
 
 
 dependencies {
-    compile project(':modules:json'),
-        project(":transports:jetty"),
+    compile project(':module-json'),
+        project(":transport-jetty"),
         "org.mortbay.jetty:cometd-client:6.1.26",
         "org.mortbay.jetty:cometd-server:6.1.26"
 
-    testCompile project(':tests:functional'),
-        project(':transports:vm')
+    testCompile project(':test-functional'),
+        project(':transport-vm')
 }
 
 

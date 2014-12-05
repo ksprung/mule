@@ -3,16 +3,16 @@ archivesBaseName = 'mule-module-rss'
 description = 'Mule RSS Endpoints'
 
 dependencies {
-    compile project(':modules:spring-config'),
-        project(":transports:http"),
+    compile project(':module-spring-config'),
+        project(":transport-http"),
         "rome:rome:0.9"
 
 
 
-    testCompile project(":tests:functional"),
-        project(":transports:vm"),
-        project(":transports:jms"),
-        project(":transports:file"),
+    testCompile project(":test-functional"),
+        project(":transport-vm"),
+        project(":transport-jms"),
+        project(":transport-file"),
         "org.apache.activemq:activemq-core:$activeMQVersion",
         "org.simpleframework:simple:4.1.21"
 }

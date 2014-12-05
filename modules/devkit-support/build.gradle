@@ -4,12 +4,12 @@ description = 'Interfaces and classes required by Devkit.'
 
 dependencies {
     compile project(':core'),
-        project(':modules:spring-config'),
-        project(':modules:http'),
+        project(':module-spring-config'),
+        project(':module-http'),
         "oauth.signpost:signpost-core:1.2.1.2"
 
 
-    testCompile project(":tests:functional"),
-        project(":transports:http")
+    testCompile project(":test-functional"),
+        project(":transport-http")
 }
 

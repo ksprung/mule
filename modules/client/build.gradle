@@ -4,8 +4,8 @@ description = 'MuleClient is a simple interface for Mule clients to send and rec
 
 dependencies {
     compile project(':core'),
-        project(':modules:spring-config'),
-        project(":modules:xml")  // used by RemoteDispatcher
+        project(':module-spring-config'),
+        project(":module-xml")  // used by RemoteDispatcher
 
     testCompile project(path: ':core', configuration: 'testFixtures')
 }
