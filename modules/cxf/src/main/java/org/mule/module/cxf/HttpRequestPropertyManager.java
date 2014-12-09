@@ -34,4 +34,21 @@ public class HttpRequestPropertyManager
         }
         return scheme;
     }
+
+    public static String getBasePath(MuleMessage message)
+    {
+        String basePath = message.getInboundProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY);
+        if(basePath == null)
+        {
+            String listenerPath = message.getInboundProperty(HttpConstants.RequestProperties.HTTP_LISTENER_PATH);
+            String requestPath = message.getInboundProperty(HttpConstants.RequestProperties.HTTP_REQUEST_PATH_PROPERTY);
+            if(listenerPath.contains(requestPath)){
+                return requestPath;
+            }
+            int slashCount = StringUtils.countMatches(listenerPath, "/");
+            int matchPrefixIndex = StringUtils.ordinalIndexOf(requestPath, "/", slashCount);
+            basePath = requestPath.substring(0, matchPrefixIndex);
+        }
+        return basePath;
+    }
 }

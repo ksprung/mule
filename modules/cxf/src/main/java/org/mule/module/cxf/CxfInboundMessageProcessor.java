@@ -6,6 +6,7 @@
  */
 package org.mule.module.cxf;
 
+import static org.mule.module.cxf.HttpRequestPropertyManager.getBasePath;
 import static org.mule.module.cxf.HttpRequestPropertyManager.getRequestPath;
 import static org.mule.module.cxf.HttpRequestPropertyManager.getScheme;
 import org.mule.VoidMuleEvent;
@@ -248,7 +249,7 @@ public class CxfInboundMessageProcessor extends AbstractInterceptingMessageProce
             {
                 m.put(Message.HTTP_REQUEST_METHOD, method);
                 m.put(Message.PATH_INFO, path);
-                Object basePath = muleReqMsg.getInboundProperty(HttpConnector.HTTP_CONTEXT_PATH_PROPERTY);
+                String basePath = getBasePath(muleReqMsg);
                 m.put(Message.BASE_PATH, basePath);
 
                 method = method.toUpperCase();
