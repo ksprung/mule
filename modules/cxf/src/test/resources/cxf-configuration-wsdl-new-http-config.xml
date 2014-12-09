@@ -9,7 +9,6 @@
 
     <cxf:configuration configurationLocation="empty-cxf-config.xml" />
     <http:listener-config name="listenerConfig" host="localhost" port="${httpPort}"/>
-    <http:request-config name="requestConfig" host="localhost" port="${port1}"/>
 
     <flow name="testFlow">
         <http:listener path="" config-ref="listenerConfig"/>
