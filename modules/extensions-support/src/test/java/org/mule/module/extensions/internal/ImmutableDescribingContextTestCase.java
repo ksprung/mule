@@ -19,7 +19,6 @@ import org.mule.tck.size.SmallTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @SmallTest
@@ -27,7 +26,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class ImmutableDescribingContextTestCase extends AbstractMuleTestCase
 {
 
-    @Mock
     private DeclarationConstruct construct;
 
     private DescribingContext context;
@@ -35,6 +33,7 @@ public class ImmutableDescribingContextTestCase extends AbstractMuleTestCase
     @Before
     public void before()
     {
+        construct = new DeclarationConstruct("name", "version");
         context = new ImmutableDescribingContext(construct);
     }
 

@@ -13,7 +13,6 @@ import static org.junit.Assert.assertThat;
 import static org.mule.module.extensions.internal.util.ExtensionsTestUtils.getParameter;
 import org.mule.extensions.introspection.Parameter;
 import org.mule.module.extensions.HealthStatus;
-import org.mule.module.extensions.HeisenbergExtension;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
 
@@ -86,15 +85,6 @@ public class ResolverSetResultTestCase extends AbstractMuleTestCase
     public void invalidParameter()
     {
         result.get(getParameter("invalid", String.class));
-    }
-
-    @Test
-    public void toInstance() throws Exception
-    {
-        HeisenbergExtension heisenberg = result.toInstanceOf(HeisenbergExtension.class);
-        assertThat(heisenberg.getMyName(), is(NAME));
-        assertThat(heisenberg.getAge(), is(AGE));
-        assertThat(heisenberg.getInitialHealth(), is(HEALTH));
     }
 
     private void assertResult(ResolverSetResult result)

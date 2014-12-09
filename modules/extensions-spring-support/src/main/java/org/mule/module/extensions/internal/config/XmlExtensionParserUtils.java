@@ -205,8 +205,7 @@ final class XmlExtensionParserUtils
 
     private static ObjectBuilder recursePojoProperties(Class<?> declaringClass, ElementDescriptor element)
     {
-        ObjectBuilder builder = new DefaultObjectBuilder();
-        builder.setPrototypeClass(declaringClass);
+        ObjectBuilder builder = new DefaultObjectBuilder(declaringClass);
 
         for (Map.Entry<Method, DataType> entry : IntrospectionUtils.getSettersDataTypes(declaringClass).entrySet())
         {
@@ -235,7 +234,7 @@ final class XmlExtensionParserUtils
 
             if (resolver != null)
             {
-                builder.addProperty(setter, resolver);
+                builder.addPropertyResolver(setter, resolver);
             }
         }
 

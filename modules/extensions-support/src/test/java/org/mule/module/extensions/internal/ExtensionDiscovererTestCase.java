@@ -74,9 +74,9 @@ public class ExtensionDiscovererTestCase extends AbstractMuleTestCase
 
         assertThat(extensions.get(0), is(sameInstance(extension)));
 
-        verify(serviceRegistry.lookupProviders(Describer.class, getClass().getClassLoader()));
-        verify(describer.describe());
-        verify(extensionFactory.createFrom(construct));
+        verify(serviceRegistry).lookupProviders(Describer.class, getClass().getClassLoader());
+        verify(describer).describe();
+        verify(extensionFactory).createFrom(construct);
     }
 
     @Test(expected = IllegalArgumentException.class)

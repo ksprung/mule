@@ -12,16 +12,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.mule.extensions.annotations.Extension.DEFAULT_CONFIG_NAME;
-import static org.mule.extensions.introspection.DataQualifier.BOOLEAN;
-import static org.mule.extensions.introspection.DataQualifier.DATE_TIME;
-import static org.mule.extensions.introspection.DataQualifier.DECIMAL;
-import static org.mule.extensions.introspection.DataQualifier.ENUM;
-import static org.mule.extensions.introspection.DataQualifier.INTEGER;
-import static org.mule.extensions.introspection.DataQualifier.LIST;
-import static org.mule.extensions.introspection.DataQualifier.MAP;
-import static org.mule.extensions.introspection.DataQualifier.OPERATION;
-import static org.mule.extensions.introspection.DataQualifier.POJO;
-import static org.mule.extensions.introspection.DataQualifier.STRING;
 import static org.mule.module.extensions.HeisenbergExtension.AGE;
 import static org.mule.module.extensions.HeisenbergExtension.EXTENSION_DESCRIPTION;
 import static org.mule.module.extensions.HeisenbergExtension.EXTENSION_NAME;
@@ -33,7 +23,6 @@ import static org.mule.module.extensions.HeisenbergExtension.SCHEMA_VERSION;
 import org.mule.extensions.annotations.Configurable;
 import org.mule.extensions.annotations.Configurations;
 import org.mule.extensions.annotations.capability.Xml;
-import org.mule.extensions.introspection.DataQualifier;
 import org.mule.extensions.introspection.DataType;
 import org.mule.extensions.introspection.Describer;
 import org.mule.extensions.introspection.Operation;
@@ -45,6 +34,7 @@ import org.mule.extensions.introspection.declaration.ParameterDeclaration;
 import org.mule.module.extensions.Door;
 import org.mule.module.extensions.HealthStatus;
 import org.mule.module.extensions.HeisenbergExtension;
+import org.mule.module.extensions.Ricin;
 import org.mule.module.extensions.internal.introspection.AnnotationsBasedDescriber;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
@@ -125,16 +115,8 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         assertThat(configuration, is(notNullValue()));
         assertThat(configuration.getName(), equalTo(EXTENDED_CONFIG_NAME));
         assertThat(configuration.getParameters(), hasSize(1));
-        assertParameter(configuration.getParameters().get(0), "extendedProperty", "", String.class, STRING, true, true, null);
+        assertParameter(configuration.getParameters(), "extendedProperty", "", DataType.of(String.class), true, true, null);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void heisengergPointerPlusUnnamedExternalConfig() throws Exception
-    {
-        describer = describerFor(HeisengergPointerPlusUnnamedExternalConfig.class);
-        describer.describe();
-    }
-
 
     private void assertTestModuleConfiguration(Declaration declaration) throws Exception
     {
@@ -145,20 +127,20 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         List<ParameterDeclaration> parameters = conf.getParameters();
         assertThat(parameters, hasSize(13));
 
-        assertParameter(parameters.get(0), "myName", "", String.class, STRING, false, true, HEISENBERG);
-        assertParameter(parameters.get(1), "age", "", Integer.class, INTEGER, false, true, AGE);
-        assertParameter(parameters.get(2), "enemies", "", List.class, LIST, true, true, null);
-        assertParameter(parameters.get(3), "money", "", BigDecimal.class, DECIMAL, true, true, null);
-        assertParameter(parameters.get(4), "cancer", "", boolean.class, BOOLEAN, true, true, null);
-        assertParameter(parameters.get(4), "cancer", "", boolean.class, BOOLEAN, true, true, null);
-        assertParameter(parameters.get(5), "dateOfBirth", "", Date.class, DATE_TIME, true, true, null);
-        assertParameter(parameters.get(6), "dateOfDeath", "", Calendar.class, DATE_TIME, true, true, null);
-        assertParameter(parameters.get(7), "recipe", "", Map.class, MAP, false, true, null);
-        assertParameter(parameters.get(8), "ricinPacks", "", Set.class, LIST, false, true, null);
-        assertParameter(parameters.get(9), "nextDoor", "", Door.class, POJO, false, true, null);
-        assertParameter(parameters.get(10), "candidateDoors", "", Map.class, MAP, false, true, null);
-        assertParameter(parameters.get(11), "initialHealth", "", HealthStatus.class, ENUM, true, true, null);
-        assertParameter(parameters.get(12), "finalHealth", "", HealthStatus.class, ENUM, true, true, null);
+        assertParameter(parameters, "myName", "", DataType.of(String.class), false, true, HEISENBERG);
+        assertParameter(parameters, "age", "", DataType.of(Integer.class), false, true, AGE);
+        assertParameter(parameters, "enemies", "", DataType.of(List.class, String.class), true, true, null);
+        assertParameter(parameters, "money", "", DataType.of(BigDecimal.class), true, true, null);
+        assertParameter(parameters, "cancer", "", DataType.of(boolean.class), true, true, null);
+        assertParameter(parameters, "cancer", "", DataType.of(boolean.class), true, true, null);
+        assertParameter(parameters, "dateOfBirth", "", DataType.of(Date.class), true, true, null);
+        assertParameter(parameters, "dateOfDeath", "", DataType.of(Calendar.class), true, true, null);
+        assertParameter(parameters, "recipe", "", DataType.of(Map.class, String.class, Long.class), false, true, null);
+        assertParameter(parameters, "ricinPacks", "", DataType.of(Set.class, Ricin.class), false, true, null);
+        assertParameter(parameters, "nextDoor", "", DataType.of(Door.class), false, true, null);
+        assertParameter(parameters, "candidateDoors", "", DataType.of(Map.class, String.class, Door.class), false, true, null);
+        assertParameter(parameters, "initialHealth", "", DataType.of(HealthStatus.class), true, true, null);
+        assertParameter(parameters, "finalHealth", "", DataType.of(HealthStatus.class), true, true, null);
 
     }
 
@@ -188,18 +170,18 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         operation = getOperation(declaration, GET_ENEMY_OPERATION);
         assertThat(operation, is(notNullValue()));
         assertThat(operation.getParameters(), hasSize(1));
-        assertParameter(operation.getParameters().get(0), "index", "", int.class, INTEGER, true, true, null);
+        assertParameter(operation.getParameters(), "index", "", DataType.of(int.class), true, true, null);
 
         operation = getOperation(declaration, KILL_OPERATION);
         assertThat(operation, is(notNullValue()));
         assertThat(operation.getParameters(), hasSize(1));
-        assertParameter(operation.getParameters().get(0), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
+        assertParameter(operation.getParameters(), "enemiesLookup", "", DataType.of(Operation.class), true, true, null);
 
         operation = getOperation(declaration, KILL_CUSTOM_OPERATION);
         assertThat(operation, is(notNullValue()));
         assertThat(operation.getParameters(), hasSize(2));
-        assertParameter(operation.getParameters().get(0), "goodbyeMessage", "", String.class, STRING, false, true, "#[payload]");
-        assertParameter(operation.getParameters().get(1), "enemiesLookup", "", Operation.class, OPERATION, true, true, null);
+        assertParameter(operation.getParameters(), "goodbyeMessage", "", DataType.of(String.class), false, true, "#[payload]");
+        assertParameter(operation.getParameters(), "enemiesLookup", "", DataType.of(Operation.class), true, true, null);
 
         operation = getOperation(declaration, HIDE_METH_IN_EVENT_OPERATION);
         assertThat(operation, is(notNullValue()));
@@ -232,22 +214,35 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
         });
     }
 
-    private void assertParameter(ParameterDeclaration param,
+    private void assertParameter(List<ParameterDeclaration> parameters,
                                  String name,
                                  String description,
-                                 Class<?> type,
-                                 DataQualifier qualifier,
+                                 DataType dataType,
                                  boolean required,
                                  boolean dynamic,
                                  Object defaultValue)
     {
+        ParameterDeclaration param = findParameter(parameters, name);
+        assertThat(param, is(notNullValue()));
+
         assertThat(param.getName(), equalTo(name));
         assertThat(param.getDescription(), equalTo(description));
-        assertThat(param.getType(), equalTo(DataType.of(type)));
-        assertThat(param.getType().getQualifier(), is(qualifier));
+        assertThat(param.getType(), equalTo(dataType));
         assertThat(param.isRequired(), is(required));
         assertThat(param.isDynamic(), is(dynamic));
         assertThat(param.getDefaultValue(), equalTo(defaultValue));
+    }
+
+    private ParameterDeclaration findParameter(List<ParameterDeclaration> parameters, final String name)
+    {
+        return (ParameterDeclaration) CollectionUtils.find(parameters, new Predicate()
+        {
+            @Override
+            public boolean evaluate(Object object)
+            {
+                return name.equals(((ParameterDeclaration) object).getName());
+            }
+        });
     }
 
     protected void assertCapabilities(Declaration declaration)
@@ -267,14 +262,6 @@ public class AnnotationsBasedDescriberTestCase extends AbstractMuleTestCase
     @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
     @Configurations({HeisenbergExtension.class, NamedHeisenbergAlternateConfig.class})
     public static class HeisengergPointerPlusExternalConfig
-    {
-
-    }
-
-    @org.mule.extensions.annotations.Extension(name = EXTENSION_NAME, description = EXTENSION_DESCRIPTION, version = EXTENSION_VERSION)
-    @Xml(schemaLocation = SCHEMA_LOCATION, namespace = NAMESPACE, schemaVersion = SCHEMA_VERSION)
-    @Configurations({HeisenbergExtension.class, HeisenbergAlternateConfig.class})
-    public static class HeisengergPointerPlusUnnamedExternalConfig
     {
 
     }

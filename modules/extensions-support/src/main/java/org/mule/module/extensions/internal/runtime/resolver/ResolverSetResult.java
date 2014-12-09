@@ -6,16 +6,12 @@
  */
 package org.mule.module.extensions.internal.runtime.resolver;
 
-import static org.mule.util.ClassUtils.instanciateClass;
 import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.runtime.ObjectBuilder;
-import org.mule.module.extensions.internal.util.IntrospectionUtils;
-import org.mule.repackaged.internal.org.springframework.util.ReflectionUtils;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableMap;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,7 +30,7 @@ import java.util.NoSuchElementException;
  *
  * @since 3.7.0
  */
-public final class ResolverSetResult
+public class ResolverSetResult
 {
 
     /**
@@ -117,27 +113,9 @@ public final class ResolverSetResult
         return evaluationResult.get(parameter);
     }
 
-    /**
-     * Uses the results to create a new instance of {@code prototypeClass}.
-     * <p/>
-     * {@code prototypeClass} is expected to be compliant with the requirements
-     * of {@link ObjectBuilder}.
-     *
-     * @param prototypeClass an instantiable {@link Class}
-     * @return a new instance of {@code prototypeClass}
-     * @throws Exception
-     */
-    public <T> T toInstanceOf(Class<T> prototypeClass) throws Exception
+    public Map<Parameter, Object> asMap()
     {
-        T object = instanciateClass(prototypeClass);
-
-        for (Map.Entry<Parameter, Object> entry : evaluationResult.entrySet())
-        {
-            Method setter = IntrospectionUtils.getSetter(prototypeClass, entry.getKey());
-            ReflectionUtils.invokeMethod(setter, object, entry.getValue());
-        }
-
-        return object;
+        return ImmutableMap.copyOf(evaluationResult);
     }
 
     /**

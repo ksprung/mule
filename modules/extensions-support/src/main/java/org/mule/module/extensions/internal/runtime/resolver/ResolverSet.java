@@ -19,11 +19,10 @@ import org.mule.api.lifecycle.LifecycleUtils;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.internal.runtime.DefaultObjectBuilder;
 import org.mule.module.extensions.internal.runtime.ObjectBuilder;
-import org.mule.module.extensions.internal.util.IntrospectionUtils;
 
-import java.lang.reflect.Method;
+import com.google.common.collect.ImmutableMap;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -118,26 +117,9 @@ public class ResolverSet implements ValueResolver, Lifecycle, MuleContextAware
         return builder.build();
     }
 
-    /**
-     * Returns a new instance of {@link ObjectBuilder} which builds instances
-     * of {@code prototypeClass} using the {@link ValueResolver}s and
-     * {@link Parameter}s configured into this set
-     *
-     * @param prototypeClass the class which instances you want to create
-     * @return a new {@link ObjectBuilder}
-     */
-    public ObjectBuilder toObjectBuilderOf(Class<?> prototypeClass)
+    public Map<Parameter, ValueResolver> getResolvers()
     {
-        ObjectBuilder builder = new DefaultObjectBuilder();
-        builder.setPrototypeClass(prototypeClass);
-
-        for (Map.Entry<Parameter, ValueResolver> entry : resolvers.entrySet())
-        {
-            Method setter = IntrospectionUtils.getSetter(prototypeClass, entry.getKey());
-            builder.addProperty(setter, entry.getValue());
-        }
-
-        return builder;
+        return ImmutableMap.copyOf(resolvers);
     }
 
     /**

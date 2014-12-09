@@ -47,7 +47,7 @@ public class HeisenbergExtension implements Lifecycle, MuleContextAware
 
     private int initialise = 0;
     private int start = 0;
-    private int stop;
+    private int stop = 0;
     private int dispose = 0;
 
     private MuleContext muleContext;

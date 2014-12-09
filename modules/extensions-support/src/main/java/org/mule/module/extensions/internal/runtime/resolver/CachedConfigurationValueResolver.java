@@ -6,11 +6,17 @@
  */
 package org.mule.module.extensions.internal.runtime.resolver;
 
+import org.mule.VoidMuleEvent;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.lifecycle.Disposable;
 import org.mule.api.lifecycle.LifecycleUtils;
 import org.mule.api.lifecycle.Stoppable;
+import org.mule.extensions.introspection.Configuration;
+import org.mule.extensions.introspection.Parameter;
+import org.mule.module.extensions.internal.runtime.DefaultObjectBuilder;
+import org.mule.module.extensions.internal.runtime.ObjectBuilder;
+import org.mule.module.extensions.internal.util.IntrospectionUtils;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -18,6 +24,8 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 
+import java.lang.reflect.Method;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -30,9 +38,8 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Although each invocation to {@link #resolve(MuleEvent)} is guaranteed to end up
  * in an invocation to {@link #resolverSet#resolve(MuleEvent)}, the resulting
- * {@link ResolverSetResult} might not end up generating a new instance through
- * {@link ResolverSetResult#toInstanceOf(Class)}. This is so because
- * {@link ResolverSetResult} instances are put in a {@link LoadingCache} to
+ * {@link ResolverSetResult} might not end up generating a new instance. This is so because
+ * {@link ResolverSetResult} instances are put in a cache to
  * guarantee that equivalent evaluations of the {@code resolverSet} return the same
  * instance. That cache will automatically expire entries that are not used for
  * an interval configured using {@code expirationInterval}
@@ -44,12 +51,12 @@ import org.slf4j.LoggerFactory;
  *
  * @since 3.7.0
  */
-public class CachedResolverSetValueResolver implements ValueResolver, Stoppable, Disposable
+public class CachedConfigurationValueResolver implements ValueResolver, Stoppable, Disposable
 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CachedResolverSetValueResolver.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CachedConfigurationValueResolver.class);
 
-    private final Class<?> prototypeClass;
+    private final Configuration configuration;
     private final ResolverSet resolverSet;
 
     private final LoadingCache<ResolverSetResult, Object> cache;
@@ -57,17 +64,16 @@ public class CachedResolverSetValueResolver implements ValueResolver, Stoppable,
     /**
      * Creates a new instance
      *
-     * @param prototypeClass     the {@link Class} of objects that this resolver is to produce
+     * @param configuration      the introspection model of the objects this resolver produces
      * @param resolverSet        the {@link ResolverSet} that's going to be evaluated
      * @param expirationInterval the interval for which {@link ResolverSetResult}s are to be cached
      * @param expirationTimeUnit the {@link TimeUnit} corresponding to {@code expirationInterval}
      */
-    public CachedResolverSetValueResolver(Class<?> prototypeClass, ResolverSet resolverSet, long expirationInterval, TimeUnit expirationTimeUnit)
+    public CachedConfigurationValueResolver(Configuration configuration, ResolverSet resolverSet, long expirationInterval, TimeUnit expirationTimeUnit)
     {
-        this.prototypeClass = prototypeClass;
+        this.configuration = configuration;
         this.resolverSet = resolverSet;
         cache = buildCache(expirationInterval, expirationTimeUnit);
-
     }
 
     private LoadingCache<ResolverSetResult, Object> buildCache(long expirationInterval, TimeUnit expirationTimeUnit)
@@ -80,14 +86,26 @@ public class CachedResolverSetValueResolver implements ValueResolver, Stoppable,
                     @Override
                     public Object load(ResolverSetResult key) throws Exception
                     {
-                        return key.toInstanceOf(prototypeClass);
+                        final Class<?> prototypeClass = configuration.getInstantiator().getObjectType();
+                        final ObjectBuilder builder = new DefaultObjectBuilder(prototypeClass);
+
+                        for (Map.Entry<Parameter, Object> entry : key.asMap().entrySet())
+                        {
+                            Method setter = IntrospectionUtils.getSetter(prototypeClass, entry.getKey());
+                            builder.addPropertyValue(setter, entry.getValue());
+                        }
+
+                        //use void event because this builder has no resolvers
+                        return builder.build(VoidMuleEvent.getInstance());
                     }
                 });
     }
 
     /**
      * Evaluates {@link #resolverSet} using the given {@code event} and returns
-     * an instance of {@link #prototypeClass} produce with the result
+     * an instance produced with the result. For equivalent {@link ResolverSetResult}s
+     * it will return the same instance, for as long as the {@code expirationInterval} and
+     * {@code expirationTimeUnit} were specified in the constructor
      *
      * @param event a {@link MuleEvent}
      * @return the resolved value

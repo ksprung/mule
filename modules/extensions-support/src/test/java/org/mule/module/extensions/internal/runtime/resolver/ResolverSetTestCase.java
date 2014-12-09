@@ -16,8 +16,6 @@ import org.mule.api.MuleEvent;
 import org.mule.api.context.MuleContextAware;
 import org.mule.api.lifecycle.Lifecycle;
 import org.mule.extensions.introspection.Parameter;
-import org.mule.module.extensions.HeisenbergExtension;
-import org.mule.module.extensions.internal.runtime.ObjectBuilder;
 import org.mule.module.extensions.internal.util.ExtensionsTestUtils;
 import org.mule.tck.junit4.AbstractMuleTestCase;
 import org.mule.tck.size.SmallTest;
@@ -104,18 +102,6 @@ public class ResolverSetTestCase extends AbstractMuleTestCase
     {
         set.dispose();
         ExtensionsTestUtils.verifyAllDisposed(mapping.values());
-    }
-
-    @Test
-    public void toObjectBuilder() throws Exception
-    {
-        ObjectBuilder builder = set.toObjectBuilderOf(HeisenbergExtension.class);
-        assertThat(builder, is(notNullValue()));
-
-        HeisenbergExtension heisenberg = (HeisenbergExtension) builder.build(event);
-        assertThat(heisenberg, is(notNullValue()));
-        assertThat(heisenberg.getMyName(), is(NAME));
-        assertThat(heisenberg.getAge(), is(AGE));
     }
 
     @Test

@@ -7,6 +7,7 @@
 package org.mule.module.extensions.internal.introspection;
 
 import static org.mule.module.extensions.internal.util.MuleExtensionUtils.sort;
+import static org.mule.util.Preconditions.checkArgument;
 import org.mule.api.registry.ServiceRegistry;
 import org.mule.common.MuleVersion;
 import org.mule.extensions.introspection.Configuration;
@@ -63,6 +64,8 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     private List<Configuration> sortConfigurations(List<Configuration> configurations)
     {
         List<Configuration> sorted = new ArrayList<>(configurations.size());
+
+        // first one is kept as default while the rest are alpha sorted
         sorted.add(configurations.get(0));
 
         if (configurations.size() > 1)
@@ -76,10 +79,7 @@ public final class DefaultExtensionFactory implements ExtensionFactory
 
     private List<Configuration> toConfigurations(List<ConfigurationDeclaration> declarations)
     {
-        if (declarations.isEmpty())
-        {
-            return ImmutableList.of();
-        }
+        checkArgument(!declarations.isEmpty(), "A extension must have at least one configuration");
 
         List<Configuration> configurations = new ArrayList<>(declarations.size());
         for (ConfigurationDeclaration declaration : declarations)
@@ -119,7 +119,7 @@ public final class DefaultExtensionFactory implements ExtensionFactory
     {
         return new ImmutableOperation(declaration.getName(),
                                       declaration.getDescription(),
-                                      null, //TODO: Implement callback
+                                      declaration.getImplementation(),
                                       toParameters(declaration.getParameters()));
     }
 

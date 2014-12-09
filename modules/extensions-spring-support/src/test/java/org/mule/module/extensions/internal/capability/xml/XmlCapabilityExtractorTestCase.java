@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import org.mule.extensions.annotation.capability.Xml;
+import org.mule.extensions.annotations.capability.Xml;
 import org.mule.extensions.introspection.capability.XmlCapability;
 import org.mule.module.extensions.internal.introspection.AbstractCapabilitiesExtractorContractTestCase;
 import org.mule.tck.size.SmallTest;

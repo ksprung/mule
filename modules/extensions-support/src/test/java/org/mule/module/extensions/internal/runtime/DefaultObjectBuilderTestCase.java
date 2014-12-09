@@ -55,8 +55,7 @@ public class DefaultObjectBuilderTestCase extends AbstractMuleTestCase
     @Before
     public void before()
     {
-        builder = new DefaultObjectBuilder();
-        builder.setPrototypeClass(PROTOTYPE_CLASS);
+        builder = new DefaultObjectBuilder(PROTOTYPE_CLASS);
 
         nameSetter = ReflectionUtils.findMethod(PROTOTYPE_CLASS, "setMyName", String.class);
         ageSetter = ReflectionUtils.findMethod(PROTOTYPE_CLASS, "setAge", Integer.class);
@@ -103,8 +102,8 @@ public class DefaultObjectBuilderTestCase extends AbstractMuleTestCase
     @Test
     public void isDynamic() throws Exception
     {
-        builder.addProperty(nameSetter, getResolver(NAME, false));
-        builder.addProperty(ageSetter, getResolver(AGE, true));
+        builder.addPropertyResolver(nameSetter, getResolver(NAME, false));
+        builder.addPropertyResolver(ageSetter, getResolver(AGE, true));
 
         assertThat(builder.isDynamic(), is(true));
     }
@@ -141,36 +140,36 @@ public class DefaultObjectBuilderTestCase extends AbstractMuleTestCase
     @Test(expected = IllegalArgumentException.class)
     public void buildInterface() throws Exception
     {
-        builder.setPrototypeClass(MuleMessage.class);
+        builder = new DefaultObjectBuilder(MuleMessage.class);
         builder.build(event);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void abstractClass() throws Exception
     {
-        builder.setPrototypeClass(TestAbstract.class);
+        builder = new DefaultObjectBuilder(TestAbstract.class);
         builder.build(event);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noDefaultConstructor() throws Exception
     {
-        builder.setPrototypeClass(TestNoDefaultConstructor.class);
+        builder = new DefaultObjectBuilder(TestNoDefaultConstructor.class);
         builder.build(event);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noPublicConstructor() throws Exception
     {
-        builder.setPrototypeClass(NoPublicConstructor.class);
+        builder = new DefaultObjectBuilder(NoPublicConstructor.class);
         builder.build(event);
     }
 
     private void populate(boolean dynamic) throws Exception
     {
-        builder.addProperty(nameSetter, getResolver(NAME, dynamic));
-        builder.addProperty(ageSetter, getResolver(AGE, dynamic));
-        builder.addProperty(healthSetter, getResolver(HEALTH, dynamic));
+        builder.addPropertyResolver(nameSetter, getResolver(NAME, dynamic));
+        builder.addPropertyResolver(ageSetter, getResolver(AGE, dynamic));
+        builder.addPropertyResolver(healthSetter, getResolver(HEALTH, dynamic));
     }
 
     private ValueResolver getResolver(Object value, boolean dynamic) throws Exception

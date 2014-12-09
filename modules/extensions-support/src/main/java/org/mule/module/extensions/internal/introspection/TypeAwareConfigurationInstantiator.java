@@ -39,4 +39,10 @@ final class TypeAwareConfigurationInstantiator implements ConfigurationInstantia
             throw new MuleRuntimeException(createStaticMessage("Could not instantiate configuration of type " + configurationType.getName()), e);
         }
     }
+
+    @Override
+    public Class<?> getObjectType()
+    {
+        return configurationType;
+    }
 }

@@ -18,6 +18,7 @@ import org.mule.api.lifecycle.Lifecycle;
 import org.mule.api.lifecycle.Startable;
 import org.mule.api.lifecycle.Stoppable;
 import org.mule.extensions.introspection.Configuration;
+import org.mule.module.extensions.internal.runtime.ConfigurationResolverSetObjectBuilder;
 
 import java.util.concurrent.TimeUnit;
 
@@ -45,22 +46,20 @@ public class ModuleConfigurationValueResolver extends ConfigurationValueResolver
 {
 
     private final ResolverSet resolverSet;
-    private final Configuration configuration;
     private ValueResolver resolver;
 
     public ModuleConfigurationValueResolver(String name, Configuration configuration, ResolverSet resolverSet)
     {
         super(name);
-        this.configuration = configuration;
         this.resolverSet = resolverSet;
 
         if (resolverSet.isDynamic())
         {
-            resolver = new CachedResolverSetValueResolver(moduleClass, resolverSet, 1, TimeUnit.MINUTES);
+            resolver = new CachedConfigurationValueResolver(configuration, resolverSet, 1, TimeUnit.MINUTES);
         }
         else
         {
-            resolver = new ObjectBuilderValueResolver(resolverSet.toObjectBuilderOf(moduleClass));
+            resolver = new ObjectBuilderValueResolver(new ConfigurationResolverSetObjectBuilder(configuration, resolverSet));
         }
     }
 

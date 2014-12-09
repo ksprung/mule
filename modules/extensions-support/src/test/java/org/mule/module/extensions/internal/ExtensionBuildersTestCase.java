@@ -24,6 +24,7 @@ import static org.mule.extensions.introspection.DataQualifier.LIST;
 import static org.mule.extensions.introspection.DataQualifier.STRING;
 import static org.mule.extensions.introspection.DataType.of;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.ADDRESS;
+import static org.mule.extensions.introspection.declaration.DeclarationTestCase.ARG_LESS;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.BROADCAST;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.BROADCAST_DESCRIPTION;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.CALLBACK;
@@ -32,6 +33,7 @@ import static org.mule.extensions.introspection.declaration.DeclarationTestCase.
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.CONFIG_NAME;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.CONSUMER;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.GO_GET_THEM_TIGER;
+import static org.mule.extensions.introspection.declaration.DeclarationTestCase.HAS_NO_ARGS;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.MTOM_DESCRIPTION;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.MTOM_ENABLED;
 import static org.mule.extensions.introspection.declaration.DeclarationTestCase.OPERATION;
@@ -173,9 +175,10 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     public void operations() throws Exception
     {
         List<Operation> operations = extension.getOperations();
-        assertThat(operations, hasSize(2));
+        assertThat(operations, hasSize(3));
         assertConsumeOperation(operations);
         assertBroadcastOperation(operations);
+        assertArglessOperation(operations);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -187,25 +190,28 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     @Test
     public void configurationsOrder()
     {
+        final String defaultConfiguration = "default";
         final String beta = "beta";
         final String alpha = "alpha";
 
         Extension extension = factory.createFrom(new DeclarationConstruct("test", "1.0")
+                                                         .withConfig(defaultConfiguration).describedAs(defaultConfiguration)
                                                          .withConfig(beta).describedAs(beta)
                                                          .withConfig(alpha).describedAs(alpha));
 
         List<Configuration> configurations = extension.getConfigurations();
-        assertThat(configurations, hasSize(2));
-        assertThat(configurations.get(0).getName(), equalTo(alpha));
-        assertThat(configurations.get(1).getName(), equalTo(beta));
+        assertThat(configurations, hasSize(3));
+        assertThat(configurations.get(1).getName(), equalTo(alpha));
+        assertThat(configurations.get(2).getName(), equalTo(beta));
     }
 
     @Test
     public void operationsAlphaSorted()
     {
-        assertThat(extension.getOperations(), hasSize(2));
-        assertThat(extension.getOperations().get(0).getName(), equalTo(BROADCAST));
-        assertThat(extension.getOperations().get(1).getName(), equalTo(CONSUMER));
+        assertThat(extension.getOperations(), hasSize(3));
+        assertThat(extension.getOperations().get(0).getName(), equalTo(ARG_LESS));
+        assertThat(extension.getOperations().get(1).getName(), equalTo(BROADCAST));
+        assertThat(extension.getOperations().get(2).getName(), equalTo(CONSUMER));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -225,28 +231,17 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
     @Test(expected = IllegalArgumentException.class)
     public void nameWithSpaces()
     {
-        factory.createFrom(new DeclarationConstruct("i have spaces", "1.0"));
-    }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void configurationWithFailedWithoutGetter()
-    {
-        construct.withConfig("fail").describedAs("fail")
-                .with().requiredParameter("notExistent").ofType(String.class).describedAs("no setter");
-
+        construct = new DeclarationConstruct("i have spaces", "1.0").withConfig("default").getRootConstruct();
         factory.createFrom(construct);
     }
 
-    //@Test(expected = IllegalArgumentException.class)
-    //public void configurationWithoutValidConstructor()
-    //{
-    //    construct.withConfig("fail")
-    //    builder.addConfiguration(builder.newConfiguration()
-    //                                     .setName("fail")
-    //                                     .setDescription("fail")
-    //                                     .setDeclaringClass(InvalidConstructorConfiguration.class))
-    //            .build();
-    //}
+    @Test(expected = IllegalArgumentException.class)
+    public void configlessConstruct()
+    {
+
+        factory.createFrom(new DeclarationConstruct("noConfigs", "1.0"));
+    }
 
     @Test
     public void postProcessorsInvoked() throws Exception
@@ -257,6 +252,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         when(serviceRegistry.lookupProviders(same(DescriberPostProcessor.class), any(ClassLoader.class)))
                 .thenReturn(Arrays.asList(postProcessor1, postProcessor2));
 
+        factory = new DefaultExtensionFactory(serviceRegistry);
         factory.createFrom(construct);
 
         assertDescribingContext(postProcessor1);
@@ -275,7 +271,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
 
     private void assertConsumeOperation(List<Operation> operations) throws NoSuchOperationException
     {
-        Operation operation = operations.get(1);
+        Operation operation = operations.get(2);
         assertThat(operation, is(sameInstance(extension.getOperation(CONSUMER))));
 
         assertThat(operation.getName(), equalTo(CONSUMER));
@@ -289,7 +285,7 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
 
     private void assertBroadcastOperation(List<Operation> operations) throws NoSuchOperationException
     {
-        Operation operation = operations.get(0);
+        Operation operation = operations.get(1);
         assertThat(operation, is(sameInstance(extension.getOperation(BROADCAST))));
 
         assertThat(operation.getName(), equalTo(BROADCAST));
@@ -301,6 +297,18 @@ public class ExtensionBuildersTestCase extends AbstractMuleTestCase
         assertParameter(parameters.get(1), MTOM_ENABLED, MTOM_DESCRIPTION, true, false, of(Boolean.class), BOOLEAN, true);
         assertParameter(parameters.get(2), CALLBACK, CALLBACK_DESCRIPTION, false, true, of(Operation.class), DataQualifier.OPERATION, null);
     }
+    private void assertArglessOperation(List<Operation> operations) throws NoSuchOperationException
+    {
+        Operation operation = operations.get(0);
+        assertThat(operation, is(sameInstance(extension.getOperation(ARG_LESS))));
+
+        assertThat(operation.getName(), equalTo(ARG_LESS));
+        assertThat(operation.getDescription(), equalTo(HAS_NO_ARGS));
+
+        List<Parameter> parameters = operation.getParameters();
+        assertThat(parameters.isEmpty(), is(true));
+    }
+
 
     private void assertParameter(Parameter parameter,
                                  String name,

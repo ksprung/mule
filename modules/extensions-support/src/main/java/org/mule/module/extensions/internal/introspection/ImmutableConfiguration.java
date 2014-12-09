@@ -36,9 +36,6 @@ final class ImmutableConfiguration extends AbstractImmutableCapableDescribed imp
         checkNullOrRepeatedNames(parameters, "parameters");
 
         this.parameters = MuleExtensionUtils.immutableList(parameters);
-        //TODO: Find where else this validations should go
-
-        //checkSetters(declaringClass, this.parameters);
         this.instantiator = instantiator;
     }
 
