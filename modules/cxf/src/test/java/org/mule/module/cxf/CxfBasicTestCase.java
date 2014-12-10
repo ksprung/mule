@@ -98,7 +98,9 @@ public class CxfBasicTestCase extends AbstractServiceAndFlowTestCase
     @Test
     public void testEchoServiceEncoding() throws Exception
     {
-        assumeThat(configResources, is(not(equalTo(BASIC_CONF_NEW_HTTP_FLOW_XML)))); // New http module doesn't support urls like "cxf:*"
+        //TODO: refactor to not use cxf:http... since this urls are not supported by the http module
+        assumeThat(configResources, is(not(equalTo(BASIC_CONF_NEW_HTTP_FLOW_XML))));
+
 
         MuleClient client = muleContext.getClient();
         String message = LocaleMessageHandler.getString("test-data",
