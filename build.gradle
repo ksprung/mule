@@ -1,9 +1,5 @@
 import org.mule.gradle.ContentsVerifierTask
 
-plugins {
-    id "com.github.fowlie.gradle-jenkins-test" version "0.3"
-}
-
 project.ext {
     jdkVersion = 1.7
     ci = false // override on Jenkings  adding -Pci=true to command line
