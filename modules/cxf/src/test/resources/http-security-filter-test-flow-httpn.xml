@@ -16,12 +16,6 @@
        http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
        http://www.mulesoft.org/schema/mule/spring-security http://www.mulesoft.org/schema/mule/spring-security/current/mule-spring-security.xsd">
 
-    <!--<https:connector name="httpConnector">-->
-        <!--<https:tls-client path="clientKeystore" storePassword="mulepassword"/>-->
-        <!--<https:tls-key-store path="serverKeystore" keyPassword="mulepassword" storePassword="mulepassword"/>-->
-        <!--<https:tls-server path="trustStore" storePassword="mulepassword"/>-->
-    <!--</https:connector>-->
-
     <http:listener-config name="httpsConfig" host="localhost" port="${port2}">
         <tls:context>
             <tls:trust-store path="trustStore" password="mulepassword"/>
@@ -47,19 +41,15 @@
 
     <flow name="SecureUMO">
         <http:listener config-ref="httpsConfig" path="services/Echo/*" allowedMethods="GET, POST"/>
-        <!--<inbound-endpoint address="https://localhost:${port2}/services/Echo" exchange-pattern="request-response">-->
-            <spring-sec:http-security-filter realm="mule-realm"/>
-            <cxf:simple-service serviceClass="org.mule.component.simple.EchoComponent"/>
-        <!--</inbound-endpoint>-->
+        <spring-sec:http-security-filter realm="mule-realm"/>
+        <cxf:simple-service serviceClass="org.mule.component.simple.EchoComponent"/>
         <echo-component/>
     </flow>
 
     <flow name="AnotherSecureUMO">
         <http:listener config-ref="httpConfig" path="services/Echo/*" allowedMethods="GET, POST"/>
-        <!--<inbound-endpoint address="http://localhost:${port1}/services/Echo" exchange-pattern="request-response">-->
-            <spring-sec:http-security-filter realm="mule-realm"/>
-            <cxf:simple-service serviceClass="org.mule.component.simple.EchoComponent"/>
-        <!--</inbound-endpoint>-->
+        <spring-sec:http-security-filter realm="mule-realm"/>
+        <cxf:simple-service serviceClass="org.mule.component.simple.EchoComponent"/>
         <echo-component/>
     </flow>
 
