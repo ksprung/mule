@@ -11,17 +11,20 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import org.mule.extensions.annotations.capability.Xml;
 import org.mule.extensions.introspection.capability.XmlCapability;
+import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.module.extensions.internal.introspection.AbstractCapabilitiesExtractorContractTestCase;
 import org.mule.tck.size.SmallTest;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @SmallTest
+@RunWith(MockitoJUnitRunner.class)
 public class XmlCapabilityExtractorTestCase extends AbstractCapabilitiesExtractorContractTestCase
 {
 
@@ -57,11 +60,9 @@ public class XmlCapabilityExtractorTestCase extends AbstractCapabilitiesExtracto
     @Test
     public void defaultCapabilityValues()
     {
-        when(declarationConstruct.getDeclaration().getName()).thenReturn(EXTENSION_NAME);
-        when(declarationConstruct.getDeclaration().getVersion()).thenReturn(EXTENSION_VERSION);
-
+        declarationConstruct = new DeclarationConstruct(EXTENSION_NAME, EXTENSION_VERSION);
         resolver.resolveCapabilities(declarationConstruct, DefaultXmlExtension.class, capabilitiesCallback);
-        verify(declarationConstruct).withCapability(captor.capture());
+        verify(capabilitiesCallback).withCapability(captor.capture());
 
         XmlCapability capability = captor.getValue();
         assertThat(capability, is(notNullValue()));

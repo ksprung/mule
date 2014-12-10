@@ -86,19 +86,9 @@ public class ModuleDefinitionParserTestCase extends ExtensionsFunctionalTestCase
     }
 
     @Override
-    protected String[] getDiscoverablePackages()
-    {
-        return new String[] {"org.mule.module.extensions"};
-    }
-
-    /**
-     * Define this to only focus on {@link org.mule.module.extensions.HeisenbergExtension}
-     * and ignore other test extensions present in the same package
-     */
-    @Override
     protected Class<?>[] getManagedExtensionTypes()
     {
-        return new Class[] {HeisenbergExtension.class};
+        return new Class<?>[] {HeisenbergExtension.class};
     }
 
     @Test

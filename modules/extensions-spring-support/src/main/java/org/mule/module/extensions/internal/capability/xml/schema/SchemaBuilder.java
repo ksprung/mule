@@ -209,8 +209,10 @@ public class SchemaBuilder
         final ExtensionType config = registerExtension(configuration.getName(), otherAttributes);
         config.getAttributeOrAttributeGroup().add(createNameAttribute());
 
-        final ExplicitGroup all = new ExplicitGroup();
-        config.setSequence(all);
+        final ExplicitGroup choice = new ExplicitGroup();
+        choice.setMinOccurs(new BigInteger("0"));
+        choice.setMaxOccurs("unbounded");
+        config.setChoice(choice);
 
 
         for (final Parameter parameter : configuration.getParameters())
@@ -225,7 +227,7 @@ public class SchemaBuilder
                 {
                     forceOptional = true;
                     defaultOperation();
-                    generateCollectionElement(all, parameter, true);
+                    generateCollectionElement(choice, parameter, true);
                 }
 
                 @Override
@@ -233,7 +235,7 @@ public class SchemaBuilder
                 {
                     forceOptional = false;
                     defaultOperation();
-                    registerComplexTypeChildElement(all,
+                    registerComplexTypeChildElement(choice,
                                                     parameter.getName(),
                                                     parameter.getDescription(),
                                                     parameter.getType(),
@@ -250,9 +252,9 @@ public class SchemaBuilder
 
         config.setAnnotation(createDocAnnotation(configuration.getDescription()));
 
-        if (all.getParticle().size() == 0)
+        if (choice.getParticle().size() == 0)
         {
-            config.setSequence(null);
+            config.setChoice(null);
         }
 
         return this;

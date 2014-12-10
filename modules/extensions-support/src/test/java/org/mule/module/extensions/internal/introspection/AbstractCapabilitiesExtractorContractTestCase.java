@@ -6,10 +6,10 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mockito.Answers.RETURNS_DEEP_STUBS;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import org.mule.api.registry.SPIServiceRegistry;
 import org.mule.extensions.introspection.declaration.Construct;
 import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.extensions.introspection.declaration.HasCapabilities;
@@ -19,6 +19,7 @@ import org.mule.tck.size.SmallTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -31,13 +32,13 @@ public abstract class AbstractCapabilitiesExtractorContractTestCase extends Abst
     @Mock
     protected HasCapabilities<Construct> capabilitiesCallback;
 
-    @Mock(answer = RETURNS_DEEP_STUBS)
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     protected DeclarationConstruct declarationConstruct;
 
     @Before
     public void before()
     {
-        resolver = new CapabilitiesResolver();
+        resolver = new DefaultCapabilitiesResolver(new SPIServiceRegistry());
     }
 
     @Test

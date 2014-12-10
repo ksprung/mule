@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor.EXTENSION_ELEMENT;
 import static org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor.PROCESSING_ENVIRONMENT;
+import org.mule.extensions.introspection.DescribingContext;
 import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.module.extensions.internal.ImmutableDescribingContext;
 import org.mule.module.extensions.internal.capability.xml.schema.SchemaDocumenterPostProcessor;
@@ -35,7 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SchemaDocumenterPostProcessorTestCase extends AbstractMuleTestCase
 {
 
-    private ImmutableDescribingContext context;
+    private DescribingContext context;
 
     @Mock
     private DeclarationConstruct declaration;
@@ -47,7 +48,7 @@ public class SchemaDocumenterPostProcessorTestCase extends AbstractMuleTestCase
     @Before
     public void before()
     {
-        when(context.getDeclarationConstruct()).thenReturn(declaration);
+        context = new ImmutableDescribingContext(declaration);
         parameters = spy(new HashMap<String, Object>());
         parameters.put(EXTENSION_ELEMENT, mock(TypeElement.class));
         parameters.put(PROCESSING_ENVIRONMENT, mock(ProcessingEnvironment.class));

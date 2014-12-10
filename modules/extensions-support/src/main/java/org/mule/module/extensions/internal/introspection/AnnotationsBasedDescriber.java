@@ -10,6 +10,7 @@ import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mule.module.extensions.internal.introspection.MuleExtensionAnnotationParser.getDefaultValue;
 import static org.mule.module.extensions.internal.introspection.MuleExtensionAnnotationParser.getExtension;
 import static org.mule.util.Preconditions.checkArgument;
+import org.mule.api.registry.SPIServiceRegistry;
 import org.mule.extensions.annotations.Configurable;
 import org.mule.extensions.annotations.Configuration;
 import org.mule.extensions.annotations.Configurations;
@@ -40,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AnnotationsBasedDescriber implements Describer
 {
-    private CapabilitiesResolver capabilitiesResolver = new CapabilitiesResolver();
+    private CapabilitiesResolver capabilitiesResolver = new DefaultCapabilitiesResolver(new SPIServiceRegistry());
     private final Class<?> extensionType;
 
     public AnnotationsBasedDescriber(Class<?> extensionType)
@@ -54,7 +55,7 @@ public class AnnotationsBasedDescriber implements Describer
     @Override
     public final Construct describe()
     {
-        checkArgument(extensionType != null, String.format("activator %s does not specify an extension type", getClass().getName()));
+        checkArgument(extensionType != null, String.format("describer %s does not specify an extension type", getClass().getName()));
 
         Extension extension = getExtension(extensionType);
         DeclarationConstruct declaration = newDeclarationConstruct(extension);

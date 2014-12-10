@@ -6,26 +6,18 @@
  */
 package org.mule.module.extensions.internal.introspection;
 
-import static org.mule.util.Preconditions.checkArgument;
 import org.mule.extensions.introspection.Capable;
 import org.mule.extensions.introspection.Extension;
 import org.mule.extensions.introspection.declaration.Construct;
 import org.mule.extensions.introspection.declaration.DeclarationConstruct;
 import org.mule.extensions.introspection.declaration.HasCapabilities;
-import org.mule.module.extensions.CapabilityExtractor;
-
-import com.google.common.collect.ImmutableList;
-
-import java.util.List;
-import java.util.ServiceLoader;
 
 /**
- * Utility class that extracts all the capabilities in a given extension and registers it on a builder
- * To do this, it relies on {@link CapabilityExtractor} that are obtained via SPI
+ * Extracts all the capabilities in a given extension and registers it on a builder
  *
  * @since 3.7.0
  */
-public final class CapabilitiesResolver
+public interface CapabilitiesResolver
 {
 
     /**
@@ -37,21 +29,5 @@ public final class CapabilitiesResolver
      * @param capableCallback a {@link HasCapabilities} on which the {@link Capable} is to be registered.
      * @throws java.lang.IllegalArgumentException if any argument is {@code null}
      */
-    public void resolveCapabilities(DeclarationConstruct declaration, Class<?> capableType, HasCapabilities<? extends Construct> capableCallback)
-    {
-        checkArgument(declaration != null, "declaration construct cannot be null");
-        checkArgument(capableType != null, "capable type cannot be null");
-        checkArgument(capableCallback != null, "capable callback cannot be null");
-
-        for (CapabilityExtractor extractor : getExtractors())
-        {
-            extractor.extractCapability(declaration, capableType, capableCallback);
-        }
-    }
-
-    private List<CapabilityExtractor> getExtractors()
-    {
-        return ImmutableList.copyOf(ServiceLoader.load(CapabilityExtractor.class, getClass().getClassLoader()));
-    }
-
+    void resolveCapabilities(DeclarationConstruct declaration, Class<?> capableType, HasCapabilities<? extends Construct> capableCallback);
 }
