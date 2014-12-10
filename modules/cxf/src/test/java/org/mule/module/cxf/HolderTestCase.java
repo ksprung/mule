@@ -42,7 +42,7 @@ public class HolderTestCase extends FunctionalTestCase
     {
         return Arrays.asList(new Object[][] {
                 {"holder-conf.xml"},
-                {"holder-new-http-conf.xml"}
+                {"holder-conf-httpn.xml"}
         });
     }
 

@@ -19,7 +19,7 @@
     <flow name="TestComponent">
         <http:listener path="/services/TestComponent" config-ref="listenerConfig" allowedMethods="POST" />
         <cxf:simple-service serviceClass="org.mule.tck.functional.Receiveable"/>
-        <test:component appendString=" Received"/>
+        <test:component appendString=" Received" enableNotifications="true"/>
     </flow>
     
 </mule>

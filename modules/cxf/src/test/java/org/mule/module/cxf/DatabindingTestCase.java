@@ -6,7 +6,11 @@
  */
 package org.mule.module.cxf;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assume.assumeThat;
 import static org.junit.runners.Parameterized.Parameter;
 import static org.junit.runners.Parameterized.Parameters;
 import static org.mule.module.http.api.HttpConstants.Methods.POST;
@@ -30,7 +34,7 @@ public class DatabindingTestCase extends FunctionalTestCase
 {
 
     private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(POST.name()).build();
-    private static final String DATABINDING_NEWHTTP_CONF_XML = "databinding-newhttp-conf.xml";
+    private static final String DATABINDING_NEWHTTP_CONF_XML = "databinding-conf-httpn.xml";
 
     @Rule
     public DynamicPort dynamicPort = new DynamicPort("port1");
@@ -56,10 +60,7 @@ public class DatabindingTestCase extends FunctionalTestCase
     @Test
     public void testEchoWsdl() throws Exception
     {
-        if (DATABINDING_NEWHTTP_CONF_XML.equals(configFile))
-        {
-            return;
-        }
+        assumeThat(configFile, is(not(equalTo(DATABINDING_NEWHTTP_CONF_XML)))); // New http module doesn't support urls like "cxf:*"
         doTest("Echo");
     }
 

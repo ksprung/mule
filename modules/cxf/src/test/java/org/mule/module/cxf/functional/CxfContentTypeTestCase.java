@@ -49,7 +49,7 @@ public class CxfContentTypeTestCase extends FunctionalTestCase
     {
         return Arrays.asList(new Object[][] {
                 {"cxf-echo-service-conf.xml"},
-                {"cxf-echo-service-newhttp-conf.xml"}});
+                {"cxf-echo-service-conf-httpn.xml"}});
     }
 
     @Override

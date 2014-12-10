@@ -48,7 +48,7 @@ public class MtomTestCase extends AbstractServiceAndFlowTestCase
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "mtom-conf-service.xml"},
             {ConfigVariant.FLOW, "mtom-conf-flow.xml"},
-            {ConfigVariant.FLOW, "mtom-conf-new-http-flow.xml"}
+            {ConfigVariant.FLOW, "mtom-conf-flow-httpn.xml"}
         });
     }      
 

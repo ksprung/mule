@@ -76,7 +76,7 @@ public class CxfComponentExceptionStrategyTestCase extends AbstractServiceAndFlo
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "exception-strategy-conf-service.xml"},
             {ConfigVariant.FLOW, "exception-strategy-conf-flow.xml"},
-            {ConfigVariant.FLOW, "exception-strategy-newhttp-conf-flow.xml"}
+            {ConfigVariant.FLOW, "exception-strategy-conf-flow-httpn.xml"}
         });
     }
 

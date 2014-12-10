@@ -56,7 +56,7 @@ public class HttpSecurityFilterFunctionalTestCase extends AbstractServiceAndFlow
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "http-security-filter-test-service.xml"},
             {ConfigVariant.FLOW, "http-security-filter-test-flow.xml"},
-            {ConfigVariant.FLOW, "http-security-filter-test-new-http-flow.xml"}
+            {ConfigVariant.FLOW, "http-security-filter-test-flow-httpn.xml"}
         });
     }      
  

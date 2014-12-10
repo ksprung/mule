@@ -6,9 +6,13 @@
  */
 package org.mule.module.cxf;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeThat;
 import static org.mule.module.http.api.HttpConstants.Methods;
 import static org.mule.module.http.api.client.HttpRequestOptionsBuilder.newOptions;
 import org.mule.DefaultMuleMessage;
@@ -39,7 +43,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class CxfBasicTestCase extends AbstractServiceAndFlowTestCase
 {
 
-    private static final String BASIC_CONF_NEW_HTTP_FLOW_XML = "basic-conf-new-http-flow.xml";
+    private static final String BASIC_CONF_NEW_HTTP_FLOW_XML = "basic-conf-flow-httpn.xml";
     private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(Methods.POST.name()).build();
 
     private String echoWsdl;
@@ -94,11 +98,7 @@ public class CxfBasicTestCase extends AbstractServiceAndFlowTestCase
     @Test
     public void testEchoServiceEncoding() throws Exception
     {
-        if(BASIC_CONF_NEW_HTTP_FLOW_XML.equals(configResources))
-        {
-            // HACK: new http module doesn't support urls like "cxf:*"
-            return;
-        }
+        assumeThat(configResources, is(not(equalTo(BASIC_CONF_NEW_HTTP_FLOW_XML)))); // New http module doesn't support urls like "cxf:*"
 
         MuleClient client = muleContext.getClient();
         String message = LocaleMessageHandler.getString("test-data",

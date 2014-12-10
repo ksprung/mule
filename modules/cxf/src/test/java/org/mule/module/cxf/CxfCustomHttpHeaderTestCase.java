@@ -6,27 +6,35 @@
  */
 package org.mule.module.cxf;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import static org.mule.module.http.api.HttpConstants.Methods.POST;
 import static org.mule.module.http.api.client.HttpRequestOptionsBuilder.newOptions;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleMessage;
 import org.mule.api.config.MuleProperties;
+import org.mule.api.context.notification.ServerNotification;
 import org.mule.module.http.api.client.HttpRequestOptions;
 import org.mule.tck.AbstractServiceAndFlowTestCase;
+import org.mule.tck.functional.FunctionalTestNotification;
+import org.mule.tck.functional.FunctionalTestNotificationListener;
 import org.mule.tck.junit4.rule.DynamicPort;
+import org.mule.util.concurrent.Latch;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-public class CxfCustomHttpHeaderTestCase extends AbstractServiceAndFlowTestCase
+public class CxfCustomHttpHeaderTestCase extends AbstractServiceAndFlowTestCase implements FunctionalTestNotificationListener
 {
 
     private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(POST.name()).disableStatusCodeValidation().build();
@@ -42,6 +50,9 @@ public class CxfCustomHttpHeaderTestCase extends AbstractServiceAndFlowTestCase
 
     private static final String SOAP_RESPONSE = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns1:onReceiveResponse xmlns:ns1=\"http://functional.tck.mule.org/\"><ns1:return xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:type=\"xsd:string\">Test String Received</ns1:return></ns1:onReceiveResponse></soap:Body></soap:Envelope>";
 
+    private List<MuleMessage> notificationMsgList = new ArrayList<MuleMessage>();
+    private Latch latch = new Latch();
+
     @Rule
     public DynamicPort dynamicPort = new DynamicPort("port1");
 
@@ -56,8 +67,20 @@ public class CxfCustomHttpHeaderTestCase extends AbstractServiceAndFlowTestCase
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "headers-conf-service.xml"},
             {ConfigVariant.FLOW, "headers-conf-flow.xml"},
-            {ConfigVariant.FLOW, "headers-newhttp-conf-flow.xml"}
+            {ConfigVariant.FLOW, "headers-conf-flow-httpn.xml"}
         });
+    }
+
+    @Override
+    protected void doSetUp() throws Exception
+    {
+        muleContext.registerListener(this);
+    }
+
+    @Override
+    protected void doTearDown() throws Exception
+    {
+        muleContext.unregisterListener(this);
     }
 
     @Test
@@ -80,14 +103,31 @@ public class CxfCustomHttpHeaderTestCase extends AbstractServiceAndFlowTestCase
         assertNotNull(reply.getPayload());
         assertEquals(SOAP_RESPONSE, reply.getPayloadAsString());
 
+        latch.await(3000, SECONDS);
+
+        assertEquals(1, notificationMsgList.size());
+
         // MULE_USER should be allowed in
-        assertEquals("alan", reply.getOutboundProperty(MuleProperties.MULE_USER_PROPERTY));
+        assertEquals("alan", notificationMsgList.get(0).getInboundProperty(MuleProperties.MULE_USER_PROPERTY));
 
         // mule properties should be removed
-        assertNull(reply.getOutboundProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY));
+        assertNull(notificationMsgList.get(0).getInboundProperty(MuleProperties.MULE_IGNORE_METHOD_PROPERTY));
 
         // custom properties should be allowed in
-        assertEquals(myProperty, reply.getOutboundProperty(myProperty));
+        assertEquals(myProperty, notificationMsgList.get(0).getInboundProperty(myProperty));
     }
 
+    @Override
+    public void onNotification(ServerNotification notification)
+    {
+        if (notification instanceof FunctionalTestNotification)
+        {
+            notificationMsgList.add(((FunctionalTestNotification) notification).getEventContext().getMessage());
+            latch.release();
+        }
+        else
+        {
+            fail("invalid notification: " + notification);
+        }
+    }
 }

@@ -74,7 +74,7 @@ public class CxfErrorBehaviorTestCase extends AbstractServiceAndFlowTestCase
         return Arrays.asList(new Object[][] {
                 {ConfigVariant.SERVICE, "cxf-error-behavior-service.xml"},
                 {ConfigVariant.FLOW, "cxf-error-behavior-flow.xml"},
-                {ConfigVariant.FLOW, "cxf-error-behavior-new-http-flow.xml"}
+                {ConfigVariant.FLOW, "cxf-error-behavior-flow-httpn.xml"}
         });
     }
 

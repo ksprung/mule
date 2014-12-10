@@ -48,7 +48,7 @@ public class ProxyRPCBindingTestCase extends FunctionalTestCase
     {
         return Arrays.asList(new Object[][] {
                 {"proxy-rpc-binding-conf.xml"},
-                {"proxy-rpc-binding-new-http-conf.xml"}
+                {"proxy-rpc-binding-conf-httpn.xml"}
         });
     }
 

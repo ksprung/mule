@@ -37,7 +37,7 @@ public class CxfConfigurationWsdlTestCase extends org.mule.tck.junit4.Functional
     {
         return Arrays.asList(new Object[][] {
                 {"cxf-configuration-wsdl-config.xml"},
-                {"cxf-configuration-wsdl-new-http-config.xml"}
+                {"cxf-configuration-wsdl-config-httpn.xml"}
         });
     }
 

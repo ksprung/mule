@@ -24,7 +24,7 @@ public class MtomProxyTestCase extends MtomTestCase
     {
         return Arrays.asList(new Object[][]{            
             {ConfigVariant.FLOW, "mtom-proxy-conf.xml"},
-            {ConfigVariant.FLOW, "mtom-proxy-new-http-conf.xml"}
+            {ConfigVariant.FLOW, "mtom-proxy-conf-httpn.xml"}
         });
     }          
 }

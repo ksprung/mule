@@ -66,7 +66,7 @@ public class GZIPEncodingTestCase extends FunctionalTestCase
     {
         return Arrays.asList(new Object[][] {
                 {"gzip-encoding-conf.xml"},
-                {"gzip-encoding-newhttp-conf.xml"}
+                {"gzip-encoding-conf-httpn.xml"}
         });
     }
 
