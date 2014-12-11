@@ -35,7 +35,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class HttpSecurityTestCase extends AbstractServiceAndFlowTestCase
 {
 
-    private static final String HTTP_SECURITY_NEWHTTP_CONF_FLOW_XML = "http-security-conf-flow-httpn.xml";
+    private static final String HTTP_SECURITY_CONF_FLOW_HTTPN_XML = "http-security-conf-flow-httpn.xml";
 
     private static String soapRequest =
         "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:unk=\"http://unknown.namespace/\">" +
@@ -64,7 +64,7 @@ public class HttpSecurityTestCase extends AbstractServiceAndFlowTestCase
         return Arrays.asList(new Object[][]{
             {ConfigVariant.SERVICE, "http-security-conf-service.xml"},
             {ConfigVariant.FLOW, "http-security-conf-flow.xml"},
-            {ConfigVariant.FLOW, HTTP_SECURITY_NEWHTTP_CONF_FLOW_XML}
+            {ConfigVariant.FLOW, HTTP_SECURITY_CONF_FLOW_HTTPN_XML}
         });
     }
 
@@ -100,7 +100,7 @@ public class HttpSecurityTestCase extends AbstractServiceAndFlowTestCase
     @Test
     public void testBasicAuthWithCxfClient() throws Exception
     {
-        assumeThat(configResources, is(not(equalTo(HTTP_SECURITY_NEWHTTP_CONF_FLOW_XML)))); // New http module doesn't support urls like "cxf:*"
+        assumeThat(configResources, is(not(equalTo(HTTP_SECURITY_CONF_FLOW_HTTPN_XML)))); // New http module doesn't support urls like "cxf:*"
 
         MuleClient client = muleContext.getClient();
 
