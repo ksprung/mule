@@ -34,7 +34,7 @@ public class DatabindingTestCase extends FunctionalTestCase
 {
 
     private static final HttpRequestOptions HTTP_REQUEST_OPTIONS = newOptions().method(POST.name()).build();
-    private static final String DATABINDING_NEWHTTP_CONF_XML = "databinding-conf-httpn.xml";
+    private static final String DATABINDING_CONF_HTTPN_XML = "databinding-conf-httpn.xml";
 
     @Rule
     public DynamicPort dynamicPort = new DynamicPort("port1");
@@ -47,7 +47,7 @@ public class DatabindingTestCase extends FunctionalTestCase
     {
         return Arrays.asList(new Object[][] {
                 {"databinding-conf.xml"},
-                {DATABINDING_NEWHTTP_CONF_XML}
+                {DATABINDING_CONF_HTTPN_XML}
         });
     }
 
@@ -60,7 +60,7 @@ public class DatabindingTestCase extends FunctionalTestCase
     @Test
     public void testEchoWsdl() throws Exception
     {
-        assumeThat(configFile, is(not(equalTo(DATABINDING_NEWHTTP_CONF_XML)))); // New http module doesn't support urls like "cxf:*"
+        assumeThat(configFile, is(not(equalTo(DATABINDING_CONF_HTTPN_XML)))); // New http module doesn't support urls like "cxf:*"
         doTest("Echo");
     }
 
